@@ -2,7 +2,7 @@ module lbtc::treasury_tests;
 
 use lbtc::treasury::{Self, ControlledTreasury, AdminCap, MinterCap, PauserCap};
 use std::string;
-use sui::coin::{Self, Coin};
+use sui::coin::{Self};
 use sui::deny_list::{Self, DenyList};
 use sui::test_scenario::{Self as ts, Scenario};
 use sui::test_utils;

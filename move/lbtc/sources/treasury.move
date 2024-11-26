@@ -79,7 +79,7 @@ public struct BurnEvent<phantom T> has copy, drop {
 // === DF Keys ===
 
 /// Namespace for dynamic fields: one for each of the capabilities.
-public struct RoleKey<phantom T, phantom Cap> has copy, store, drop { owner: address }
+public struct RoleKey<phantom T> has copy, store, drop { owner: address }
 
 // Note all "address" can represent multi-signature addresses and be authorized at any threshold
 
@@ -335,7 +335,7 @@ public fun has_cap<T, Cap: store>(
     treasury: &ControlledTreasury<T>,
     owner: address,
 ): bool {
-    treasury.roles.contains(RoleKey<T, Cap> { owner })
+    treasury.roles.contains(RoleKey<Cap> { owner })
 }
 
 /// Checks if global pause is enabled for the next epoch.
@@ -370,7 +370,7 @@ fun get_cap<T, Cap: store + drop>(
     treasury: &ControlledTreasury<T>,
     owner: address,
 ): &Cap {
-    treasury.roles.borrow(RoleKey<T, Cap> { owner })
+    treasury.roles.borrow(RoleKey<Cap> { owner })
 }
 
 /// Get a mutable ref to the capability for the `owner`.
@@ -378,7 +378,7 @@ fun get_cap_mut<T, Cap: store + drop>(
     treasury: &mut ControlledTreasury<T>,
     owner: address,
 ): &mut Cap {
-    treasury.roles.borrow_mut(RoleKey<T, Cap> { owner })
+    treasury.roles.borrow_mut(RoleKey<Cap> { owner })
 }
 
 /// Adds a capability `cap` for `owner`.
@@ -387,7 +387,7 @@ fun add_cap<T, Cap: store + drop>(
     owner: address,
     cap: Cap,
 ) {
-    treasury.roles.add(RoleKey<T, Cap> { owner }, cap)
+    treasury.roles.add(RoleKey<Cap> { owner }, cap)
 }
 
 /// Remove a `Cap` from the `owner`.
@@ -395,5 +395,5 @@ fun remove_cap<T, Cap: store + drop>(
     treasury: &mut ControlledTreasury<T>,
     owner: address,
 ): Cap {
-    treasury.roles.remove(RoleKey<T, Cap> { owner })
+    treasury.roles.remove(RoleKey<Cap> { owner })
 }
