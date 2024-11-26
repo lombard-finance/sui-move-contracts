@@ -2,7 +2,7 @@ module lbtc::treasury_tests;
 
 use lbtc::treasury::{Self, ControlledTreasury, AdminCap, MinterCap, PauserCap};
 use std::string;
-use sui::coin::{Self};
+use sui::coin::{Self, Coin};
 use sui::deny_list::{Self, DenyList};
 use sui::test_scenario::{Self as ts, Scenario};
 use sui::test_utils;
@@ -10,8 +10,8 @@ use sui::test_utils;
 const TREASURY_ADMIN: address = @0x3;
 const MINTER: address = @0x4;
 const PAUSER: address = @0x5;
-// const USER: address = @0x6;
-// const MINT_LIMIT: u64 = 1_000_000;
+const USER: address = @0x6;
+const MINT_LIMIT: u64 = 1_000_000;
 
 public struct TREASURY_TESTS has drop {}
 
@@ -70,6 +70,30 @@ fun test_global_pause_is_disabled_for_next_epoch() {
             ts.ctx()
         ),
     );
+
+    test_utils::destroy(treasury);
+    ts::return_shared(denylist);
+
+    ts.end();
+}
+
+#[test, expected_failure(abort_code = ::lbtc::treasury::EMintNotAllowed)]
+fun test_cannot_mint_and_transfer_when_global_pause_enabled() {
+    // Start a test transaction scenario
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    ts.next_tx(TREASURY_ADMIN);
+    treasury.assign_pauser(PAUSER, ts.ctx());
+    treasury.assign_minter(MINTER, MINT_LIMIT, ts.ctx());
+
+    // Enable global pause
+    ts.next_tx(PAUSER);
+    let mut denylist: DenyList = ts.take_shared();
+    treasury::enable_global_pause(&mut treasury, &mut denylist, ts.ctx());
+
+    ts.next_epoch(MINTER);
+    treasury::mint_and_transfer(&mut treasury, 1_000, USER,  &denylist, ts.ctx());
 
     test_utils::destroy(treasury);
     ts::return_shared(denylist);

@@ -28,6 +28,8 @@ const EMintLimitExceeded: u64 = 1;
 const ERecordExists: u64 = 2;
 /// Trying to remove the last admin.
 const EAdminsCantBeZero: u64 = 3;
+/// Cannot mint new tokens when global pause is enabled.
+const EMintNotAllowed: u64 = 4;
 
 // A structure that wraps the treasury cap of a coin and manages capabilities
 // for granular and flexible policy control. Capabilities include:
@@ -104,7 +106,7 @@ public(package) fun new<T>(
     deny_cap: DenyCapV2<T>,
     owner: address,
     ctx: &mut TxContext,
-): ControlledTreasury<T> { 
+): ControlledTreasury<T> {
     let mut treasury = ControlledTreasury {
         id: object::new(ctx),
         treasury_cap,
@@ -240,20 +242,25 @@ public(package) fun remove_capability<T, C: store + drop>(
 /// Aborts if:
 /// - sender does not have MinterCap assigned to them
 /// - the amount is higher than the defined limit on MinterCap
+/// - global pause is enabled
 ///
 /// Emits: MintEvent
 public fun mint_and_transfer<T>(
     treasury: &mut ControlledTreasury<T>,
     amount: u64,
     to: address,
+    denylist: &DenyList,
     ctx: &mut TxContext,
 ) {
     assert!(treasury.has_cap<T, MinterCap>(ctx.sender()), ENoAuthRecord);
 
-    // get the MinterCap and check the limit; if a new epoch - reset it
+    // Ensure global pause is not enabled before continuing
+    assert!(!is_global_pause_enabled<T>(denylist), EMintNotAllowed);
+
+    // Get the MinterCap and check the limit; if a new epoch - reset it
     let MinterCap { limit, epoch, mut left } = get_cap_mut(treasury, ctx.sender());
 
-    // reset the limit if a new epoch
+    // Reset the limit if this is a new epoch
     if (ctx.epoch() > *epoch) {
         left = limit;
         *epoch = ctx.epoch();
