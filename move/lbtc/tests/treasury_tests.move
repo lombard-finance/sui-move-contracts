@@ -23,13 +23,20 @@ fun test_global_pause_is_enabled_for_next_epoch() {
     let mut ts = ts::begin(TREASURY_ADMIN);
     let mut treasury= create_test_currency(&mut ts);
 
-    // Assign PauserRole to Pauser address.
-    treasury.assign_pauser(PAUSER, ts.ctx());
+    // Get the default multisig setup
+    let (pks, weights, threshold) = multisig_tests::default_multisig_setup();
+    let multisig_address = lbtc::multisig::derive_multisig_address(pks, weights, threshold);
+
+    // Assign PauserCap to the multisig address
+    ts.next_tx(TREASURY_ADMIN);
+    treasury.assign_pauser(multisig_address, ts.ctx());
 
     // Enable global pause
-    ts.next_tx(PAUSER);
+    ts.next_tx(multisig_address);
     let mut denylist: DenyList = ts.take_shared();
-    treasury::enable_global_pause(&mut treasury, &mut denylist, ts.ctx());
+    treasury::enable_global_pause(&mut treasury, &mut denylist,  pks,
+        weights,
+        threshold,ts.ctx());
 
     // Ensure the global pause is active for next epoch
     ts.next_epoch(TREASURY_ADMIN);
@@ -52,17 +59,35 @@ fun test_global_pause_is_disabled_for_next_epoch() {
     let mut ts = ts::begin(TREASURY_ADMIN);
     let mut treasury = create_test_currency(&mut ts);
 
-    // Assign PauserRole to Pauser address.
-    treasury.assign_pauser(PAUSER, ts.ctx());
+    // Get the default multisig setup
+    let (pks, weights, threshold) = multisig_tests::default_multisig_setup();
+    let multisig_address = lbtc::multisig::derive_multisig_address(pks, weights, threshold);
 
-    // Enable global pause
-    ts.next_tx(PAUSER);
+    // Assign PauserCap to the multisig address
+    ts.next_tx(TREASURY_ADMIN);
+    treasury.assign_pauser(multisig_address, ts.ctx());
+
+    ts.next_tx(multisig_address);
     let mut denylist: DenyList = ts.take_shared();
-    treasury::enable_global_pause(&mut treasury, &mut denylist, ts.ctx());
+    treasury::enable_global_pause(
+      &mut treasury, 
+      &mut denylist,
+      pks,
+      weights,
+      threshold,
+      ts.ctx()
+    );
 
     // Disable global pause
-    ts.next_tx(PAUSER);
-    treasury::disable_global_pause(&mut treasury, &mut denylist, ts.ctx());
+    ts.next_tx(multisig_address);
+    treasury::disable_global_pause(
+      &mut treasury, 
+      &mut denylist,
+      pks,
+      weights,
+      threshold,
+      ts.ctx()
+    );
 
     // Ensure the global pause is inactive for next epoch
     ts.next_epoch(TREASURY_ADMIN);
@@ -128,13 +153,20 @@ fun test_cannot_mint_and_transfer_when_global_pause_enabled() {
 
    // Assign roles
     ts.next_tx(TREASURY_ADMIN);
-    treasury.assign_pauser(PAUSER, ts.ctx());
+    treasury.assign_pauser(multisig_address, ts.ctx());
     treasury.assign_minter(multisig_address, MINT_LIMIT, ts.ctx());
 
     // Enable global pause
-    ts.next_tx(PAUSER);
+    ts.next_tx(multisig_address);
     let mut denylist: DenyList = ts.take_shared();
-    treasury::enable_global_pause(&mut treasury, &mut denylist, ts.ctx());
+    treasury::enable_global_pause(
+      &mut treasury, 
+      &mut denylist,
+      pks,
+      weights,
+      threshold,
+      ts.ctx()
+    );
 
     ts.next_epoch(multisig_address);
     treasury::mint_and_transfer(
