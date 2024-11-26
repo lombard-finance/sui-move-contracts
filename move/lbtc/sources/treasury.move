@@ -22,6 +22,7 @@
 /// This module handles the `TreasuryCap`
 module lbtc::treasury;
 
+use lbtc::multisig;
 use std::string::{Self, String};
 use std::type_name;
 use sui::bag::{Self, Bag};
@@ -39,6 +40,8 @@ const ERecordExists: u64 = 2;
 const EAdminsCantBeZero: u64 = 3;
 /// Mint operation attempted while global pause is enabled.
 const EMintNotAllowed: u64 = 4;
+// Sender is not a multisig address.
+const ENoMultisigSender: u64 = 5;
 
 /// Represents a controlled treasury for managing a regulated coin.
 public struct ControlledTreasury<phantom T> has key {
@@ -242,6 +245,7 @@ public(package) fun remove_capability<T, C: store + drop>(
 ///
 /// Aborts if:
 /// - sender does not have MinterCap assigned to them
+/// - sender is not a multisig address
 /// - the amount is higher than the defined limit on MinterCap
 /// - global pause is enabled
 ///
@@ -251,8 +255,18 @@ public fun mint_and_transfer<T>(
     amount: u64,
     to: address,
     denylist: &DenyList,
+    pks: vector<vector<u8>>,
+    weights: vector<u8>,
+    threshold: u16,
     ctx: &mut TxContext,
 ) {
+    // Ensure the sender is a valid multisig address
+    assert!(
+        multisig::is_sender_multisig(pks, weights, threshold, ctx),
+        ENoMultisigSender,
+    );
+
+    // Ensure the sender is authorized with minter role
     assert!(treasury.has_cap<T, MinterCap>(ctx.sender()), ENoAuthRecord);
 
     // Ensure global pause is not enabled before continuing
@@ -303,11 +317,22 @@ public(package) fun burn<T>(
 ///
 /// Aborts if:
 /// - Sender does not have the required `PauserCap`.
+/// - Sender is not a valid multisig address.
 public fun enable_global_pause<T>(
     treasury: &mut ControlledTreasury<T>,
     deny_list: &mut DenyList,
+    pks: vector<vector<u8>>,
+    weights: vector<u8>,
+    threshold: u16,
     ctx: &mut TxContext,
 ) {
+    // Ensure the sender is a valid multisig address
+    assert!(
+        multisig::is_sender_multisig(pks, weights, threshold, ctx),
+        ENoMultisigSender,
+    );
+
+    // Ensure the sender has PauserCap
     assert!(treasury.has_cap<T, PauserCap>(ctx.sender()), ENoAuthRecord);
 
     coin::deny_list_v2_enable_global_pause(deny_list, &mut treasury.deny_cap, ctx);
@@ -318,11 +343,22 @@ public fun enable_global_pause<T>(
 ///
 /// Aborts if:
 /// - Sender does not have the required `PauserCap`.
+/// - Sender is not a valid multisig address.
 public fun disable_global_pause<T>(
     treasury: &mut ControlledTreasury<T>,
     deny_list: &mut DenyList,
+    pks: vector<vector<u8>>,
+    weights: vector<u8>,
+    threshold: u16,
     ctx: &mut TxContext,
 ) {
+    // Ensure the sender is a valid multisig address
+    assert!(
+        multisig::is_sender_multisig(pks, weights, threshold, ctx),
+        ENoMultisigSender,
+    );
+
+    // Ensure the sender has PauserCap
     assert!(treasury.has_cap<T, PauserCap>(ctx.sender()), ENoAuthRecord);
 
     coin::deny_list_v2_disable_global_pause(deny_list, &mut treasury.deny_cap, ctx);
