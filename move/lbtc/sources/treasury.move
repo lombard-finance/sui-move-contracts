@@ -22,6 +22,7 @@
 /// This module handles the `TreasuryCap`
 module lbtc::treasury;
 
+use lbtc::multisig;
 use std::string::{Self, String};
 use std::type_name;
 use sui::bag::{Self, Bag};
@@ -242,6 +243,7 @@ public(package) fun remove_capability<T, C: store + drop>(
 ///
 /// Aborts if:
 /// - sender does not have MinterCap assigned to them
+/// - sender is not a multisig address
 /// - the amount is higher than the defined limit on MinterCap
 /// - global pause is enabled
 ///
@@ -251,8 +253,15 @@ public fun mint_and_transfer<T>(
     amount: u64,
     to: address,
     denylist: &DenyList,
+    pks: vector<vector<u8>>,
+    weights: vector<u8>,
+    threshold: u16,
     ctx: &mut TxContext,
 ) {
+    // Ensure the sender is a valid multisig address
+    assert!(multisig::is_sender_multisig(pks, weights, threshold, ctx), ENoAuthRecord);
+
+    // Ensure the sender is authorized with minter role
     assert!(treasury.has_cap<T, MinterCap>(ctx.sender()), ENoAuthRecord);
 
     // Ensure global pause is not enabled before continuing

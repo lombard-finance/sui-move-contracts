@@ -1,3 +1,4 @@
+#[test_only]
 module lbtc::treasury_tests;
 
 use lbtc::treasury::{Self, ControlledTreasury, AdminCap, MinterCap, PauserCap};
@@ -6,6 +7,7 @@ use sui::coin::{Self};
 use sui::deny_list::{Self, DenyList};
 use sui::test_scenario::{Self as ts, Scenario};
 use sui::test_utils;
+use lbtc::multisig_tests;
 
 const TREASURY_ADMIN: address = @0x3;
 const MINTER: address = @0x4;
@@ -77,23 +79,74 @@ fun test_global_pause_is_disabled_for_next_epoch() {
     ts.end();
 }
 
+#[test]
+fun test_mint_and_transfer_with_multisig_sender() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    // Get the default multisig setup
+    let (pks, weights, threshold) = multisig_tests::default_multisig_setup();
+
+    // Derive the multisig address
+    let multisig_address = lbtc::multisig::derive_multisig_address(pks, weights, threshold);
+
+    // Assign MinterCap to the multisig address
+    ts.next_tx(TREASURY_ADMIN);
+    treasury.assign_minter(multisig_address, MINT_LIMIT, ts.ctx());
+
+    // Mint and transfer tokens using the multisig address
+    ts.next_tx(multisig_address);
+    let denylist: DenyList = ts.take_shared();
+    treasury::mint_and_transfer(
+        &mut treasury,
+        1000,
+        USER,
+        &denylist,
+        pks,
+        weights,
+        threshold,
+        ts.ctx(),
+    );
+
+    test_utils::destroy(treasury);
+    ts::return_shared(denylist);
+
+    ts.end();
+}
+
 #[test, expected_failure(abort_code = ::lbtc::treasury::EMintNotAllowed)]
 fun test_cannot_mint_and_transfer_when_global_pause_enabled() {
     // Start a test transaction scenario
     let mut ts = ts::begin(TREASURY_ADMIN);
     let mut treasury = create_test_currency(&mut ts);
 
+    // Get the default multisig setup
+    let (pks, weights, threshold) = multisig_tests::default_multisig_setup();
+
+    // Derive the multisig address
+    let multisig_address = lbtc::multisig::derive_multisig_address(pks, weights, threshold);
+
+   // Assign roles
     ts.next_tx(TREASURY_ADMIN);
     treasury.assign_pauser(PAUSER, ts.ctx());
-    treasury.assign_minter(MINTER, MINT_LIMIT, ts.ctx());
+    treasury.assign_minter(multisig_address, MINT_LIMIT, ts.ctx());
 
     // Enable global pause
     ts.next_tx(PAUSER);
     let mut denylist: DenyList = ts.take_shared();
     treasury::enable_global_pause(&mut treasury, &mut denylist, ts.ctx());
 
-    ts.next_epoch(MINTER);
-    treasury::mint_and_transfer(&mut treasury, 1_000, USER,  &denylist, ts.ctx());
+    ts.next_epoch(multisig_address);
+    treasury::mint_and_transfer(
+        &mut treasury,
+        1000,
+        USER,
+        &denylist,
+        pks,
+        weights,
+        threshold,
+        ts.ctx(),
+    );
 
     test_utils::destroy(treasury);
     ts::return_shared(denylist);
