@@ -6,6 +6,8 @@ use sui::url;
 
 // === Constants ===
 
+const ALLOW_GLOBAL_PAUSE: bool = true;
+
 // TODO: Need to get the real values for coin metadata
 const SYMBOL: vector<u8> = b"LBTC";
 const NAME: vector<u8> = b"LBTC";
@@ -26,7 +28,7 @@ fun init(otw: LBTC, ctx: &mut TxContext) {
         NAME,
         DESCRIPTION,
         option::some(url::new_unsafe(ICON_URL.to_ascii_string())),
-        true,
+        ALLOW_GLOBAL_PAUSE,
         ctx,
     );
 

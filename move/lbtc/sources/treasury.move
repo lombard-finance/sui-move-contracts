@@ -240,7 +240,6 @@ public(package) fun remove_capability<T, C: store + drop>(
 /// Aborts if:
 /// - sender does not have MinterCap assigned to them
 /// - the amount is higher than the defined limit on MinterCap
-/// - the receiver is not Whitelisted
 ///
 /// Emits: MintEvent
 public fun mint_and_transfer<T>(

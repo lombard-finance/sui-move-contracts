@@ -1,29 +1,87 @@
 module lbtc::treasury_tests;
 
-use lbtc::treasury::{Self, AdminCap, MinterCap, PauserCap};
+use lbtc::treasury::{Self, ControlledTreasury, AdminCap, MinterCap, PauserCap};
 use std::string;
-use sui::coin::{Self, DenyCapV2, TreasuryCap};
-use sui::test_scenario as ts;
+use sui::coin::{Self};
+use sui::deny_list::{Self, DenyList};
+use sui::test_scenario::{Self as ts, Scenario};
 use sui::test_utils;
 
 const TREASURY_ADMIN: address = @0x3;
 const MINTER: address = @0x4;
+const PAUSER: address = @0x5;
+// const USER: address = @0x6;
+// const MINT_LIMIT: u64 = 1_000_000;
 
 public struct TREASURY_TESTS has drop {}
+
+#[test]
+fun test_global_pause_is_enabled_for_next_epoch() {
+    // Start a test transaction scenario
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury= create_test_currency(&mut ts);
+
+    // Assign PauserRole to Pauser address.
+    treasury.assign_pauser(PAUSER, ts.ctx());
+
+    // Enable global pause
+    ts.next_tx(PAUSER);
+    let mut denylist: DenyList = ts.take_shared();
+    treasury::enable_global_pause(&mut treasury, &mut denylist, ts.ctx());
+
+    // Ensure the global pause is active for next epoch
+    ts.next_epoch(TREASURY_ADMIN);
+    assert!(
+        coin::deny_list_v2_is_global_pause_enabled_current_epoch<TREASURY_TESTS>(
+            &denylist,
+            ts.ctx()
+        ),
+    );
+
+    test_utils::destroy(treasury);
+    ts::return_shared(denylist);
+
+    ts.end();
+}
+
+#[test]
+fun test_global_pause_is_disabled_for_next_epoch() {
+    // Start a test transaction scenario
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    // Assign PauserRole to Pauser address.
+    treasury.assign_pauser(PAUSER, ts.ctx());
+
+    // Enable global pause
+    ts.next_tx(PAUSER);
+    let mut denylist: DenyList = ts.take_shared();
+    treasury::enable_global_pause(&mut treasury, &mut denylist, ts.ctx());
+
+    // Disable global pause
+    ts.next_tx(PAUSER);
+    treasury::disable_global_pause(&mut treasury, &mut denylist, ts.ctx());
+
+    // Ensure the global pause is inactive for next epoch
+    ts.next_epoch(TREASURY_ADMIN);
+    assert!(
+        !coin::deny_list_v2_is_global_pause_enabled_current_epoch<TREASURY_TESTS>(
+            &denylist,
+            ts.ctx()
+        ),
+    );
+
+    test_utils::destroy(treasury);
+    ts::return_shared(denylist);
+
+    ts.end();
+}
 
 #[test]
 fun test_multiple_roles_for_single_address() {
     // Start a test transaction scenario
     let mut ts = ts::begin(TREASURY_ADMIN);
-
-    // Initialize the ControlledTreasury with a dummy TreasuryCap and DenyCap
-    let (treasury_cap, deny_cap) = create_test_currency(ts.ctx());
-    let mut treasury = treasury::new<TREASURY_TESTS>(
-        treasury_cap,
-        deny_cap,
-        TREASURY_ADMIN,
-        ts.ctx(),
-    );
+    let mut treasury = create_test_currency(&mut ts);
 
     // Ensure the initial admin has an AdminCap
     ts.next_tx(TREASURY_ADMIN);
@@ -57,13 +115,7 @@ fun test_multiple_roles_for_single_address() {
 fun test_duplicate_role_assignment() {
     let mut ts = ts::begin(TREASURY_ADMIN);
 
-    let (treasury_cap, deny_cap) = create_test_currency(ts.ctx());
-    let mut treasury = treasury::new<TREASURY_TESTS>(
-        treasury_cap,
-        deny_cap,
-        TREASURY_ADMIN,
-        ts.ctx(),
-    );
+    let mut treasury = create_test_currency(&mut ts);
 
     ts.next_tx(TREASURY_ADMIN);
     treasury.assign_minter(MINTER, 1000, ts.ctx());
@@ -79,13 +131,7 @@ fun test_duplicate_role_assignment() {
 fun test_role_removal() {
     let mut ts = ts::begin(TREASURY_ADMIN);
 
-    let (treasury_cap, deny_cap) = create_test_currency(ts.ctx());
-    let mut treasury = treasury::new<TREASURY_TESTS>(
-        treasury_cap,
-        deny_cap,
-        TREASURY_ADMIN,
-        ts.ctx(),
-    );
+    let mut treasury = create_test_currency(&mut ts);
 
     ts.next_tx(TREASURY_ADMIN);
     treasury.assign_minter(MINTER, 1000, ts.ctx());
@@ -105,19 +151,30 @@ fun test_role_removal() {
 
 #[test_only]
 public(package) fun create_test_currency(
-    ctx: &mut TxContext,
-): (TreasuryCap<TREASURY_TESTS>, DenyCapV2<TREASURY_TESTS>) {
-    let (treasury, deny_cap, metadata) = coin::create_regulated_currency_v2(
+    ts: &mut Scenario,
+): ControlledTreasury<TREASURY_TESTS> {
+    ts.next_tx(@0);
+    deny_list::create_for_test(ts.ctx());
+
+    ts.next_tx(TREASURY_ADMIN);
+    let (treasury_cap, deny_cap, metadata) = coin::create_regulated_currency_v2(
         TREASURY_TESTS {},
         6,
         b"TESTCOIN",
         b"",
         b"",
         option::none(),
-        false,
-        ctx,
+        true,
+        ts.ctx(),
     );
 
     transfer::public_freeze_object(metadata);
-    (treasury, deny_cap)
+
+    ts.next_tx(TREASURY_ADMIN);
+    treasury::new<TREASURY_TESTS>(
+        treasury_cap,
+        deny_cap,
+        TREASURY_ADMIN,
+        ts.ctx(),
+    )
 }
