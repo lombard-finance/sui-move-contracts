@@ -44,17 +44,21 @@ public struct ControlledTreasury<phantom T> has key {
     roles: Bag,
 }
 
-/// An administrator capability that may manage permissions
+// === Roles / Capabilities ===
+
+/// An administrator capability that can manage permissions for `ControlledTreasury`.
 public struct AdminCap has store, drop {}
 
 /// Define a mint capability that may mint coins, with a limit.
 public struct MinterCap has store, drop {
+    // TODO: Talk about this limit which could be best practice to enforce some check over
+    // the amount of tokens that can be minted
     limit: u64,
     epoch: u64,
     left: u64,
 }
 
-/// A capability for pausing and unpausing the coin.
+/// A capability for enforcing global pause/unpause of the coin.
 public struct PauserCap has store, drop {}
 
 // === Events ===
@@ -95,12 +99,12 @@ public(package) fun new_pauser_cap(): PauserCap { PauserCap {} }
 
 /// Create a new controlled treasury by wrapping the `TreasuryCap` of a coin.
 /// The `ControlledTreasury` has to be shared after the creation.
-public fun new<T>(
+public(package) fun new<T>(
     treasury_cap: TreasuryCap<T>,
     deny_cap: DenyCapV2<T>,
     owner: address,
     ctx: &mut TxContext,
-): ControlledTreasury<T> {
+): ControlledTreasury<T> { 
     let mut treasury = ControlledTreasury {
         id: object::new(ctx),
         treasury_cap,
