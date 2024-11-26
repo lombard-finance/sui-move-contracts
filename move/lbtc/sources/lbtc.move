@@ -1,3 +1,8 @@
+// Copyright (c) Mysten Labs, Inc.
+// SPDX-License-Identifier: Apache-2.0
+
+/// This module creates the `LBTC` regulated coin and initializes its treasury management
+/// system using `ControlledTreasury`.
 module lbtc::lbtc;
 
 use lbtc::treasury;

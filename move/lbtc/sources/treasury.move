@@ -1,14 +1,23 @@
 // Copyright (c) Mysten Labs, Inc.
 // SPDX-License-Identifier: Apache-2.0
 
-/// A smart contract to manage the treasury and associated caps of a controlled coin.
+/// This module manages the treasury and associated capabilities of a controlled, regulated coin.
 ///
-/// Features:
-/// - An admin can assign Minter and Pauser roles.
-/// - Minter can mint tokens to specified addresses, respecting limits.
-/// - Pauser can globally pause and unpause the coin.
-/// - Admins manage permissions and ensure operational safety.
-/// - Events track mint and burn operations.
+/// ### Features:
+/// - **Role-based Access Control**:
+///   - `AdminCap`: Allows management of roles and permissions.
+///   - `MinterCap`: Allows minting of coins within set limits.
+///   - `PauserCap`: Allows pausing and unpausing all coin transactions globally.
+/// - **Controlled Minting**:
+///   - Mint operations are limited by `MinterCap` settings and can be dynamically
+///     updated with epoch-specific limits.
+/// - **Global Pause Mechanism**:
+///   - Transactions can be globally paused and unpaused using the `PauserCap`.
+/// - **Dynamic Field Storage**:
+///   - Roles are stored dynamically in a `Bag` structure to support flexible role
+///     assignment and management.
+/// - **Event Tracking**:
+///   - Emits events for mint and burn operations to provide transparency.
 
 /// This module handles the `TreasuryCap`
 module lbtc::treasury;
@@ -20,47 +29,39 @@ use sui::coin::{Self, Coin, DenyCapV2, TreasuryCap};
 use sui::deny_list::DenyList;
 use sui::event;
 
-/// The capability record does not exist.
+/// No authorization record exists for the action.
 const ENoAuthRecord: u64 = 0;
-/// The limit for minting has been exceeded.
+/// Mint operation exceeds the allowed limit.
 const EMintLimitExceeded: u64 = 1;
-/// Trying to add a capability that already exists.
+/// Attempt to assign a role that already exists.
 const ERecordExists: u64 = 2;
-/// Trying to remove the last admin.
+/// At least one admin must exist.
 const EAdminsCantBeZero: u64 = 3;
-/// Cannot mint new tokens when global pause is enabled.
+/// Mint operation attempted while global pause is enabled.
 const EMintNotAllowed: u64 = 4;
 
-// A structure that wraps the treasury cap of a coin and manages capabilities
-// for granular and flexible policy control. Capabilities include:
-// - `MinterCap` for controlled minting.
-// - `PauserCap` for global pause/unpause.
-// The structure uses `Bag` for dynamic field storage to assign roles dynamically.
+/// Represents a controlled treasury for managing a regulated coin.
 public struct ControlledTreasury<phantom T> has key {
-    id: UID,
-    /// Number of currently active admins.
-    /// Can't ever be zero, as the treasury would be locked.
-    admin_count: u8,
-    treasury_cap: TreasuryCap<T>,
-    deny_cap: DenyCapV2<T>, // Retained for compatibility
-    roles: Bag,
+    id: UID, // Unique identifier for the treasury.
+    admin_count: u8, // Number of active admins; must always be > 0.
+    treasury_cap: TreasuryCap<T>, // Treasury cap for mint and burn operations.
+    deny_cap: DenyCapV2<T>, // Deny list capability for regulating addresses.
+    roles: Bag, // Dynamic storage for role assignments.
 }
 
 // === Roles / Capabilities ===
 
-/// An administrator capability that can manage permissions for `ControlledTreasury`.
+/// Allows management of roles and permissions for a `ControlledTreasury`.
 public struct AdminCap has store, drop {}
 
-/// Define a mint capability that may mint coins, with a limit.
+/// Allows minting of coins with a specified limit and epoch tracking.
 public struct MinterCap has store, drop {
-    // TODO: Talk about this limit which could be best practice to enforce some check over
-    // the amount of tokens that can be minted
-    limit: u64,
-    epoch: u64,
-    left: u64,
+    limit: u64, // Maximum number of coins that can be minted.
+    epoch: u64, // Current epoch for minting limits.
+    left: u64, // Remaining minting allowance in the current epoch.
 }
 
-/// A capability for enforcing global pause/unpause of the coin.
+/// Allows global pause and unpause of coin transactions.
 public struct PauserCap has store, drop {}
 
 // === Events ===
@@ -99,8 +100,8 @@ public(package) fun new_minter_cap(limit: u64, ctx: &TxContext): MinterCap {
 /// Create a new `PauserCap` to assign.
 public(package) fun new_pauser_cap(): PauserCap { PauserCap {} }
 
-/// Create a new controlled treasury by wrapping the `TreasuryCap` of a coin.
-/// The `ControlledTreasury` has to be shared after the creation.
+/// Creates a new controlled treasury by wrapping a `TreasuryCap` and `DenyCapV2`.
+/// The treasury must be shared to allow usage across multiple transactions.
 public(package) fun new<T>(
     treasury_cap: TreasuryCap<T>,
     deny_cap: DenyCapV2<T>,
@@ -150,8 +151,8 @@ public(package) fun deconstruct<T>(
 
 // === Role (Cap) Management ===
 
-/// Assigns a MinterCap to an address.
-/// Safeguarded to only be callable by an AdminCap holder.
+/// Assigns a `MinterCap` to an address, allowing them to mint coins
+/// within defined limits.
 public fun assign_minter<T>(
     treasury: &mut ControlledTreasury<T>,
     owner: address,
@@ -168,8 +169,8 @@ public fun assign_minter<T>(
     treasury.add_cap(owner, new_minter_cap(limit, ctx));
 }
 
-/// Assigns a PauserCap to an address.
-/// Safeguarded to only be callable by an AdminCap holder.
+/// Assigns a `PauserCap` to an address, allowing them to globally pause/unpause
+/// the coin.
 #[allow(unused_mut_parameter)]
 public(package) fun assign_pauser<T>(
     treasury: &mut ControlledTreasury<T>,
@@ -237,7 +238,7 @@ public(package) fun remove_capability<T, C: store + drop>(
 
 // === Mint operations ===
 
-// Allow an authorized multi-sig to mint and transfer coins to a whitelisted address
+/// Mints and transfers coins to a specified address.
 ///
 /// Aborts if:
 /// - sender does not have MinterCap assigned to them
@@ -299,6 +300,7 @@ public(package) fun burn<T>(
 
 /// Enables the global pause for the coin.
 /// Requires: `PauserCap`
+///
 /// Aborts if:
 /// - Sender does not have the required `PauserCap`.
 public fun enable_global_pause<T>(
@@ -313,6 +315,9 @@ public fun enable_global_pause<T>(
 
 /// Disables the global pause for the coin.
 /// Requires the sender to have the `PauserCap` assigned.
+///
+/// Aborts if:
+/// - Sender does not have the required `PauserCap`.
 public fun disable_global_pause<T>(
     treasury: &mut ControlledTreasury<T>,
     deny_list: &mut DenyList,
