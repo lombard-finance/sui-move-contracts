@@ -29,7 +29,8 @@ fun test_global_pause_is_enabled_for_next_epoch() {
 
     // Assign PauserCap to the multisig address
     ts.next_tx(TREASURY_ADMIN);
-    treasury.assign_pauser(multisig_address, ts.ctx());
+    let pauser_cap = treasury::new_pauser_cap();
+    treasury.add_capability<TREASURY_TESTS, PauserCap>(multisig_address, pauser_cap, ts.ctx());
 
     // Enable global pause
     ts.next_tx(multisig_address);
@@ -65,7 +66,8 @@ fun test_global_pause_is_disabled_for_next_epoch() {
 
     // Assign PauserCap to the multisig address
     ts.next_tx(TREASURY_ADMIN);
-    treasury.assign_pauser(multisig_address, ts.ctx());
+    let pauser_cap = treasury::new_pauser_cap();
+    treasury.add_capability<TREASURY_TESTS, PauserCap>(multisig_address, pauser_cap, ts.ctx());
 
     ts.next_tx(multisig_address);
     let mut denylist: DenyList = ts.take_shared();
@@ -117,7 +119,8 @@ fun test_mint_and_transfer_with_multisig_sender() {
 
     // Assign MinterCap to the multisig address
     ts.next_tx(TREASURY_ADMIN);
-    treasury.assign_minter(multisig_address, MINT_LIMIT, ts.ctx());
+    let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
+    treasury.add_capability<TREASURY_TESTS, MinterCap>(multisig_address, minter_cap, ts.ctx());
 
     // Mint and transfer tokens using the multisig address
     ts.next_tx(multisig_address);
@@ -152,7 +155,8 @@ fun test_mint_over_limit() {
 
     // Assign MinterCap to the multisig address
     ts.next_tx(TREASURY_ADMIN);
-    treasury.assign_minter(multisig_address, MINT_LIMIT, ts.ctx());
+    let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
+    treasury.add_capability<TREASURY_TESTS, MinterCap>(multisig_address, minter_cap, ts.ctx());
 
     // Attempt to mint more than the allowed limit
     ts.next_tx(multisig_address);
@@ -180,7 +184,8 @@ fun test_minting_with_non_multisig_sender() {
 
     // Assign MinterCap to TREASURY_ADMIN (a non-multisig address)
     ts.next_tx(TREASURY_ADMIN);
-    treasury.assign_minter(TREASURY_ADMIN, MINT_LIMIT, ts.ctx());
+    let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
+    treasury.add_capability<TREASURY_TESTS, MinterCap>(TREASURY_ADMIN, minter_cap, ts.ctx());
 
     // Attempt to mint
     ts.next_tx(TREASURY_ADMIN);
@@ -217,8 +222,10 @@ fun test_cannot_mint_and_transfer_when_global_pause_enabled() {
 
    // Assign roles
     ts.next_tx(TREASURY_ADMIN);
-    treasury.assign_pauser(multisig_address, ts.ctx());
-    treasury.assign_minter(multisig_address, MINT_LIMIT, ts.ctx());
+    let pauser_cap = treasury::new_pauser_cap();
+    treasury.add_capability<TREASURY_TESTS, PauserCap>(multisig_address, pauser_cap, ts.ctx());
+    let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
+    treasury.add_capability<TREASURY_TESTS, MinterCap>(multisig_address, minter_cap, ts.ctx());
 
     // Enable global pause
     ts.next_tx(multisig_address);
@@ -291,14 +298,16 @@ fun test_multiple_roles_for_single_address() {
     assert!(treasury.has_cap<TREASURY_TESTS, AdminCap>(TREASURY_ADMIN));
 
     // Assign MinterCap to the same address
-    treasury.assign_minter(TREASURY_ADMIN, 1000, ts.ctx());
+    let minter_cap = treasury::new_minter_cap(1000, ts.ctx());
+    treasury.add_capability<TREASURY_TESTS, MinterCap>(TREASURY_ADMIN, minter_cap, ts.ctx());
 
     // Verify that the address has MinterCap
     ts.next_tx(TREASURY_ADMIN);
     assert!(treasury.has_cap<TREASURY_TESTS, MinterCap>(TREASURY_ADMIN));
 
     // Assign PauserCap to the same address
-    treasury.assign_pauser(TREASURY_ADMIN, ts.ctx());
+    let pauser_cap = treasury::new_pauser_cap();
+    treasury.add_capability<TREASURY_TESTS, PauserCap>(TREASURY_ADMIN, pauser_cap, ts.ctx());
 
     // Verify that the address has PauserCap
     ts.next_tx(TREASURY_ADMIN);
@@ -321,7 +330,8 @@ fun test_unauthorized_role_assignment() {
 
     // Attempt to assign MinterCap as USER (who is not an admin)
     ts.next_tx(USER);
-    treasury.assign_minter(MINTER, 1000, ts.ctx());
+    let minter_cap = treasury::new_minter_cap(1000, ts.ctx());
+    treasury.add_capability<TREASURY_TESTS, MinterCap>(MINTER, minter_cap, ts.ctx());
 
     test_utils::destroy(treasury);
     ts.end();
@@ -334,10 +344,12 @@ fun test_duplicate_role_assignment() {
     let mut treasury = create_test_currency(&mut ts);
 
     ts.next_tx(TREASURY_ADMIN);
-    treasury.assign_minter(MINTER, 1000, ts.ctx());
+    let minter_cap = treasury::new_minter_cap(1000, ts.ctx());
+    treasury.add_capability<TREASURY_TESTS, MinterCap>(MINTER, minter_cap, ts.ctx());
 
     // Attempt to assign MinterCap again to the same address
-    treasury.assign_minter(MINTER, 1000, ts.ctx());
+    let minter_cap = treasury::new_minter_cap(1000, ts.ctx());
+    treasury.add_capability<TREASURY_TESTS, MinterCap>(MINTER, minter_cap, ts.ctx());
 
     test_utils::destroy(treasury);
     ts.end();
@@ -350,7 +362,8 @@ fun test_role_removal() {
     let mut treasury = create_test_currency(&mut ts);
 
     ts.next_tx(TREASURY_ADMIN);
-    treasury.assign_minter(MINTER, 1000, ts.ctx());
+    let minter_cap = treasury::new_minter_cap(1000, ts.ctx());
+    treasury.add_capability<TREASURY_TESTS, MinterCap>(MINTER, minter_cap, ts.ctx());
 
     ts.next_tx(TREASURY_ADMIN);
     assert!(treasury.has_cap<TREASURY_TESTS, MinterCap>(MINTER));
@@ -391,7 +404,8 @@ fun test_burn_coins() {
 
     // Assign MinterCap to the multisig address
     ts.next_tx(TREASURY_ADMIN);
-    treasury.assign_minter(multisig_address, MINT_LIMIT, ts.ctx());
+    let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
+    treasury.add_capability<TREASURY_TESTS, MinterCap>(multisig_address, minter_cap, ts.ctx());
 
     // Mint and transfer tokens to USER
     ts.next_tx(multisig_address);

@@ -89,10 +89,10 @@ public struct RoleKey<phantom T> has copy, store, drop { owner: address }
 // === Capabilities ===
 
 /// Create a new `AdminCap` to assign.
-public(package) fun new_admin_cap(): AdminCap { AdminCap {} }
+public fun new_admin_cap(): AdminCap { AdminCap {} }
 
 /// Create a new `MinterCap` to assign.
-public(package) fun new_minter_cap(limit: u64, ctx: &TxContext): MinterCap {
+public fun new_minter_cap(limit: u64, ctx: &TxContext): MinterCap {
     MinterCap {
         limit,
         epoch: ctx.epoch(),
@@ -101,7 +101,7 @@ public(package) fun new_minter_cap(limit: u64, ctx: &TxContext): MinterCap {
 }
 
 /// Create a new `PauserCap` to assign.
-public(package) fun new_pauser_cap(): PauserCap { PauserCap {} }
+public fun new_pauser_cap(): PauserCap { PauserCap {} }
 
 /// Creates a new controlled treasury by wrapping a `TreasuryCap` and `DenyCapV2`.
 /// The treasury must be shared to allow usage across multiple transactions.
@@ -154,42 +154,6 @@ public(package) fun deconstruct<T>(
 
 // === Role (Cap) Management ===
 
-/// Assigns a `MinterCap` to an address, allowing them to mint coins
-/// within defined limits.
-public fun assign_minter<T>(
-    treasury: &mut ControlledTreasury<T>,
-    owner: address,
-    limit: u64,
-    ctx: &mut TxContext,
-) {
-    // Ensure the sender has AdminCap
-    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
-
-    // Ensure the owner does not already have a MinterCap
-    assert!(!treasury.has_cap<T, MinterCap>(owner), ERecordExists);
-
-    // Create and add the MinterCap to the roles
-    treasury.add_cap(owner, new_minter_cap(limit, ctx));
-}
-
-/// Assigns a `PauserCap` to an address, allowing them to globally pause/unpause
-/// the coin.
-#[allow(unused_mut_parameter)]
-public fun assign_pauser<T>(
-    treasury: &mut ControlledTreasury<T>,
-    owner: address,
-    ctx: &mut TxContext,
-) {
-    // Ensure the sender has AdminCap
-    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
-
-    // Ensure the owner does not already have a PauserCap
-    assert!(!treasury.has_cap<T, PauserCap>(owner), ERecordExists);
-
-    // Create and add the PauserCap to the roles
-    add_cap(treasury, owner, new_pauser_cap());
-}
-
 /// Allow the admin to add capabilities to the treasury
 /// Authorization checks that a capability under the given name is owned by the caller.
 ///
@@ -197,7 +161,7 @@ public fun assign_pauser<T>(
 /// - the sender does not have AdminCap
 /// - the receiver already has a `C` cap
 #[allow(unused_mut_parameter)]
-public(package) fun add_capability<T, C: store + drop>(
+public fun add_capability<T, C: store + drop>(
     treasury: &mut ControlledTreasury<T>,
     owner: address,
     cap: C,
@@ -221,7 +185,7 @@ public(package) fun add_capability<T, C: store + drop>(
 /// - the sender does not have `AdminCap`
 /// - the receiver does not have `C` cap
 #[allow(unused_mut_parameter)]
-public(package) fun remove_capability<T, C: store + drop>(
+public fun remove_capability<T, C: store + drop>(
     treasury: &mut ControlledTreasury<T>,
     owner: address,
     ctx: &mut TxContext,
