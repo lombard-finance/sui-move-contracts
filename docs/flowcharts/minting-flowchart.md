@@ -1,9 +1,9 @@
 ```mermaid
 flowchart TD
-    L[Lombard] --> |uses| MR[ Minter Role ]
-    MR --> |borrow| TC[/TreasuryCap/]
-    TC --> |call| MF[Mint Function]
-    MF --> |Verify| MS[Multi-Sig Account] 
-	  MS --> |Mint Tokens| LBTC[/LBTC/]
-	  LBTC --> |transfer to| UR[User Sui Address]
+    L[Multisig Address] --> |uses| CT[/ControlledTreasury/]
+    CT --> |is authorized with| MC[MinterCap]
+    MC --> |calls| MF[mint_and_transfer]
+    MF --> |verify| MS[Multisig Sender Address]
+    MS --> |mint| LBTC[/LBTC Token/]
+    LBTC --> |transfer to| UR[User Sui Address]
 ```

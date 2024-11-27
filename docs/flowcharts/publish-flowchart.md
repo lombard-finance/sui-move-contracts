@@ -1,12 +1,11 @@
 ```mermaid
 flowchart TD
-    L[Lombard Publishing Address] -->|Publishes| P[Smart Contract]
-    P --> |Execute| I[init fun]
-    I --> |Claim and keep|A[/Publisher/]
-    A -->|transfer| LA[Lombard Publishing Address]
-    I --> |call| CRC[create_regulated_currency_v2]
+    L[Lombard Multisig Address] -->|Publishes| SC[Smart Contract]
+    SC --> |executes| I[Init Function]
+    I --> |calls| CRC[create_regulated_currency_v2]
     CRC --> |returns| TC[/TreasuryCap/]
     CRC --> |returns| DC[/DenyCapV2/]
-    TC --> |wrap into| TO[/WrappedTreasury/]
-    DC --> |wrap into| TO[/WrappedTreasury/]
+    TC --> |wrap into| CT[/ControlledTreasury/]
+    DC --> |wrap into| CT[/ControlledTreasury/]
+    CT --> |assigns AdminCap| LM[Lombard Multisig Address]
 ```
