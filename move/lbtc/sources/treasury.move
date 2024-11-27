@@ -175,7 +175,7 @@ public fun assign_minter<T>(
 /// Assigns a `PauserCap` to an address, allowing them to globally pause/unpause
 /// the coin.
 #[allow(unused_mut_parameter)]
-public(package) fun assign_pauser<T>(
+public fun assign_pauser<T>(
     treasury: &mut ControlledTreasury<T>,
     owner: address,
     ctx: &mut TxContext,
