@@ -280,7 +280,6 @@ fun test_unauthorized_global_pause() {
     ts.end();
 }
 
-
 #[test]
 fun test_multiple_roles_for_single_address() {
     // Start a test transaction scenario
@@ -433,7 +432,6 @@ fun test_deconstruct_treasury() {
 
     ts.end();
 }
-
 
 #[test_only]
 public(package) fun create_test_currency(

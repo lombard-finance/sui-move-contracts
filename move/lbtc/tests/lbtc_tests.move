@@ -10,7 +10,7 @@ module lbtc::lbtc_tests {
     /// No authorization record exists for the action.
     const ENoAuthRecord: u64 = 0;
 
-     #[test]
+    #[test]
     fun test_init_success() {
         // Begin a new test scenario with ADMIN_USER
         let mut scenario_val = ts::begin(ADMIN_USER);
