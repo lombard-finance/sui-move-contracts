@@ -43,3 +43,8 @@ fun init(otw: LBTC, ctx: &mut TxContext) {
     // Create a `ControlledTreasury` and store the `TreasuryCap` and `DecyCapV2`.
     treasury::new(treasury_cap, deny_cap, ctx.sender(), ctx).share()
 }
+
+#[test_only]
+public fun init_for_testing(ctx: &mut TxContext) {
+    init(LBTC {}, ctx);
+}

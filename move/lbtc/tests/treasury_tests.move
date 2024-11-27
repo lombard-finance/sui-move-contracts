@@ -3,7 +3,7 @@ module lbtc::treasury_tests;
 
 use lbtc::treasury::{Self, ControlledTreasury, AdminCap, MinterCap, PauserCap};
 use std::string;
-use sui::coin::{Self};
+use sui::coin::{Self, Coin};
 use sui::deny_list::{Self, DenyList};
 use sui::test_scenario::{Self as ts, Scenario};
 use sui::test_utils;
@@ -139,6 +139,70 @@ fun test_mint_and_transfer_with_multisig_sender() {
     ts.end();
 }
 
+#[test, expected_failure(abort_code = ::lbtc::treasury::EMintLimitExceeded)]
+fun test_mint_over_limit() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    // Get the default multisig setup
+    let (pks, weights, threshold) = multisig_tests::default_multisig_setup();
+
+    // Derive the multisig address
+    let multisig_address = lbtc::multisig::derive_multisig_address(pks, weights, threshold);
+
+    // Assign MinterCap to the multisig address
+    ts.next_tx(TREASURY_ADMIN);
+    treasury.assign_minter(multisig_address, MINT_LIMIT, ts.ctx());
+
+    // Attempt to mint more than the allowed limit
+    ts.next_tx(multisig_address);
+    let denylist: DenyList = ts.take_shared();
+    treasury::mint_and_transfer(
+        &mut treasury,
+        MINT_LIMIT + 1, // Exceeds the limit
+        USER,
+        &denylist,
+        pks,
+        weights,
+        threshold,
+        ts.ctx(),
+    );
+
+    test_utils::destroy(treasury);
+    ts::return_shared(denylist);
+    ts.end();
+}
+
+#[test, expected_failure(abort_code = ::lbtc::treasury::ENoMultisigSender)]
+fun test_minting_with_non_multisig_sender() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    // Assign MinterCap to TREASURY_ADMIN (a non-multisig address)
+    ts.next_tx(TREASURY_ADMIN);
+    treasury.assign_minter(TREASURY_ADMIN, MINT_LIMIT, ts.ctx());
+
+    // Attempt to mint
+    ts.next_tx(TREASURY_ADMIN);
+    let denylist: DenyList = ts.take_shared();
+    let (pks, weights, threshold) = multisig_tests::default_multisig_setup();
+
+    treasury::mint_and_transfer(
+        &mut treasury,
+        1000,
+        USER,
+        &denylist,
+        pks,
+        weights,
+        threshold,
+        ts.ctx(),
+    );
+
+    test_utils::destroy(treasury);
+    ts::return_shared(denylist);
+    ts.end();
+}
+
 #[test, expected_failure(abort_code = ::lbtc::treasury::EMintNotAllowed)]
 fun test_cannot_mint_and_transfer_when_global_pause_enabled() {
     // Start a test transaction scenario
@@ -186,6 +250,37 @@ fun test_cannot_mint_and_transfer_when_global_pause_enabled() {
     ts.end();
 }
 
+#[test, expected_failure(abort_code = ::lbtc::treasury::ENoAuthRecord)]
+fun test_unauthorized_global_pause() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    // Get the default multisig setup
+    let (pks, weights, threshold) = multisig_tests::default_multisig_setup();
+
+    // Derive the multisig address
+    let multisig_address = lbtc::multisig::derive_multisig_address(pks, weights, threshold);
+
+    // Do NOT assign PauserCap to the multisig address
+
+    // Attempt to enable global pause
+    ts.next_tx(multisig_address);
+    let mut denylist: DenyList = ts.take_shared();
+    treasury::enable_global_pause(
+        &mut treasury,
+        &mut denylist,
+        pks,
+        weights,
+        threshold,
+        ts.ctx(),
+    );
+
+    test_utils::destroy(treasury);
+    ts::return_shared(denylist);
+    ts.end();
+}
+
+
 #[test]
 fun test_multiple_roles_for_single_address() {
     // Start a test transaction scenario
@@ -215,6 +310,19 @@ fun test_multiple_roles_for_single_address() {
     assert!(roles.contains(&string::utf8(b"AdminCap")));
     assert!(roles.contains(&string::utf8(b"MinterCap")));
     assert!(roles.contains(&string::utf8(b"PauserCap")));
+
+    test_utils::destroy(treasury);
+    ts.end();
+}
+
+#[test, expected_failure(abort_code = ::lbtc::treasury::ENoAuthRecord)]
+fun test_unauthorized_role_assignment() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    // Attempt to assign MinterCap as USER (who is not an admin)
+    ts.next_tx(USER);
+    treasury.assign_minter(MINTER, 1000, ts.ctx());
 
     test_utils::destroy(treasury);
     ts.end();
@@ -257,6 +365,75 @@ fun test_role_removal() {
     test_utils::destroy(treasury);
     ts.end();
 }
+
+#[test, expected_failure(abort_code = ::lbtc::treasury::EAdminsCantBeZero)]
+fun test_cannot_remove_last_admin() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    // Attempt to remove AdminCap from TREASURY_ADMIN
+    ts.next_tx(TREASURY_ADMIN);
+    treasury.remove_capability<TREASURY_TESTS, AdminCap>(TREASURY_ADMIN, ts.ctx());
+
+    test_utils::destroy(treasury);
+    ts.end();
+}
+
+#[test]
+fun test_burn_coins() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    // Get the default multisig setup
+    let (pks, weights, threshold) = multisig_tests::default_multisig_setup();
+
+    // Derive the multisig address
+    let multisig_address = lbtc::multisig::derive_multisig_address(pks, weights, threshold);
+
+    // Assign MinterCap to the multisig address
+    ts.next_tx(TREASURY_ADMIN);
+    treasury.assign_minter(multisig_address, MINT_LIMIT, ts.ctx());
+
+    // Mint and transfer tokens to USER
+    ts.next_tx(multisig_address);
+    let denylist: DenyList = ts.take_shared();
+    treasury::mint_and_transfer(
+        &mut treasury,
+        1000,
+        USER,
+        &denylist,
+        pks,
+        weights,
+        threshold,
+        ts.ctx(),
+    );
+    ts::return_shared(denylist);
+
+    // USER burns the coins
+    ts.next_tx(USER);
+    let coin: Coin<TREASURY_TESTS> = ts.take_from_sender();
+    treasury::burn(&mut treasury, coin, ts.ctx());
+
+    test_utils::destroy(treasury);
+    ts.end();
+}
+
+#[test]
+fun test_deconstruct_treasury() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let treasury = create_test_currency(&mut ts);
+
+    ts.next_tx(TREASURY_ADMIN);
+    let (treasury_cap, deny_cap, roles) = treasury::deconstruct(treasury, ts.ctx());
+
+    // Clean up
+    test_utils::destroy(treasury_cap);
+    test_utils::destroy(deny_cap);
+    test_utils::destroy(roles);
+
+    ts.end();
+}
+
 
 #[test_only]
 public(package) fun create_test_currency(
