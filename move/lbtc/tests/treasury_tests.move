@@ -11,7 +11,6 @@ use lbtc::multisig_tests;
 
 const TREASURY_ADMIN: address = @0x3;
 const MINTER: address = @0x4;
-const PAUSER: address = @0x5;
 const USER: address = @0x6;
 const MINT_LIMIT: u64 = 1_000_000;
 
