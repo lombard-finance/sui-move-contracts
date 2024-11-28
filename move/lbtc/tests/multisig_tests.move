@@ -1,7 +1,7 @@
 #[test_only]
 module lbtc::multisig_tests;
-  use sui::test_scenario::{Self as ts};
-    use lbtc::multisig::{derive_multisig_address, is_sender_multisig, ed25519_key_to_address};
+    use sui::test_scenario::{Self as ts};
+    use lbtc::multisig::{derive_multisig_address, is_sender_multisig, ed25519_key_to_address, secp256k1_key_to_address, secp256r1_key_to_address};
  
 #[test]
 fun test_derive_multisig_address_success() {
@@ -50,6 +50,43 @@ fun test_ed25519_key_to_address_invalid_key() {
 
     // Attempt to convert invalid key
     let _address = ed25519_key_to_address(&invalid_pk);
+}
+
+#[test]
+fun test_ed25519_key_to_address_success() {
+    let valid_pk = vector[0x00, 2, 3, 4]; // Valid key (start with 0x00)
+    // Attempt to convert valid key
+    let _address = ed25519_key_to_address(&valid_pk);
+}
+
+#[test, expected_failure(abort_code = ::lbtc::multisig::EInvalidPublicKey)]
+fun test_secp256k1_key_to_address_invalid_key() {
+    let invalid_pk = vector[2, 3, 4, 5]; // Invalid key (does not start with 0x01)
+
+    // Attempt to convert invalid key
+    let _address = secp256k1_key_to_address(&invalid_pk);
+}
+
+#[test]
+fun test_secp256k1_key_to_address_success() {
+    let valid_pk = vector[0x01, 2, 3, 4]; // Valid key (start with 0x01)
+    // Attempt to convert valid key
+    let _address = secp256k1_key_to_address(&valid_pk);
+}
+
+#[test, expected_failure(abort_code = ::lbtc::multisig::EInvalidPublicKey)]
+fun test_secp256r1_key_to_address_invalid_key() {
+    let invalid_pk = vector[1, 2, 3, 4]; // Invalid key (does not start with 0x02)
+
+    // Attempt to convert invalid key
+    let _address = secp256r1_key_to_address(&invalid_pk);
+}
+
+#[test]
+fun test_secp256r1_key_to_address_success() {
+    let valid_pk = vector[0x02, 2, 3, 4]; // Valid key (start with 0x02)
+    // Attempt to convert valid key
+    let _address = secp256r1_key_to_address(&valid_pk);
 }
 
 #[test]
