@@ -89,8 +89,6 @@ fun test_secp256r1_key_to_address_success() {
     let _address = secp256r1_key_to_address(&valid_pk);
 }
 
-
-
 #[test]
 fun test_is_sender_multisig_success() {
     let mut ts = ts::begin(@0x0);
