@@ -1,0 +1,38 @@
+{
+  "name": "setup",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "config": {
+    "package_id": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d"
+  },
+  "scripts": {
+    "generateTypes": "env-cmd -f .env pnpm typemove-sui --target-dir=./src/types --abi-dir=./src/abis $npm_package_config_package_id --network=testnet",
+    "testMultisig": "env-cmd -f .env ts-node src/tests/testMultisig.ts",
+    "testAddAdmin": "env-cmd -f .env ts-node src/tests/testAddAdmin.ts",
+    "testAddMinter": "env-cmd -f .env ts-node src/tests/testAddMinter.ts",
+    "testRemoveMinter": "env-cmd -f .env ts-node src/tests/testRemoveMinter.ts",
+    "testAddPauser": "env-cmd -f .env ts-node src/tests/testAddPauser.ts",
+    "testRemovePauser": "env-cmd -f .env ts-node src/tests/testRemovePauser.ts",
+    "testMintAndTransfer": "env-cmd -f .env ts-node src/tests/testMintAndTransfer.ts",
+    "testEnableGlobalPause": "env-cmd -f .env ts-node src/tests/testEnableGlobalPause.ts",
+    "testDisableGlobalPause": "env-cmd -f .env ts-node src/tests/testDisableGlobalPause.ts",
+    "testCapabilities": "env-cmd -f .env ts-node src/tests/testCapabilities.ts",
+    "testE2E": "env-cmd -f .env ts-node src/e2e/main.ts",
+    "testListCapabilities": "env-cmd -f .env ts-node src/tests/testListCapabilities.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mysten/sui": "^1.15.1",
+    "@typemove/move": "^1.7.1",
+    "@typemove/sui": "^1.7.1",
+    "@types/node": "^22.10.0",
+    "dotenv": "^16.4.5",
+    "env-cmd": "^10.1.0",
+    "ts-node": "^10.9.2",
+    "tslib": "^2.8.1",
+    "typescript": "^5.7.2"
+  }
+}
