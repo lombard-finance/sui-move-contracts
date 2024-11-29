@@ -105,7 +105,7 @@ echo "Admin Multisig Address: $admin_multisig_address"
 sui client faucet --address $admin_multisig_address
 
 # Get a gas coin for the multisig address
-gas_coin=$(sui client gas $admin_multisig_address --json | jq -r '.[0].gasCoinId')
+gas_coin=$(sui client gas $admin_multisig_address --json | jq -r '.[3].gasCoinId')
 
 # Prepare to publish the Move package
 publish_res_bytes=$(sui client publish \
@@ -134,18 +134,30 @@ admin_multi_sig=$(sui keytool multi-sig-combine-partial-sig \
 publish_res=$(sui client execute-signed-tx --tx-bytes $publish_res_bytes --signatures $admin_multi_sig --json)
 echo $publish_res > .publish.res.json
 
-# Extract the Package ID from the publish result
+# Extract the env variables from the publish result
 packageId=$(echo "$publish_res" | jq -r '.effects.created[] | select(.owner == "Immutable" and .reference.version == 1) | .reference.objectId')
+createdObjects=$(echo "$publish_res" | jq -r '.objectChanges[] | select(.type == "created")')
+sharedControlledTreasury=$(echo "$createdObjects" |  jq -r 'select (.objectType | contains("treasury::ControlledTreasury")).objectId')
+upgradeCap=$(echo "$createdObjects" | jq -r 'select (.objectType | contains("package::UpgradeCap")).objectId')
+txDigest=$(echo "$publish_res" | jq -r '.effects.transactionDigest')
 
 echo "Package ID: $packageId"
 
 # Generate the .env file with the necessary variables
 cat >.env<<-ENV
-NETWORK=$NETWORK
-FULLNODE_URL=$FULLNODE_URL
+SUI_NETWORK=$FULLNODE_URL
+SUI_ENV=$NETWORK
+TX_DIGEST=$txDigest
+UPGRADE_CAP=$upgradeCap
 PACKAGE_ID=$packageId
-user1_SK=$user1_sk
-user2_SK=$user2_sk
+SHARED_CONTROLLED_TREASURY=$sharedControlledTreasury
+MULTISIG_ADDRESS=$admin_multisig_address
+USER_1_ADDRESS=$user1_address
+USER_2_ADDRESS=$user2_address
+USER_1_PK=$user1_pk
+USER_2_PK=$user2_pk
+USER_1_SK=$user1_sk
+USER_1_SK=$user2_sk
 ENV
 
 echo "Environment variables have been set in .env file."
