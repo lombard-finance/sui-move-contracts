@@ -105,7 +105,7 @@ echo "Admin Multisig Address: $admin_multisig_address"
 sui client faucet --address $admin_multisig_address
 
 # Get a gas coin for the multisig address
-gas_coin=$(sui client gas $admin_multisig_address --json | jq -r '.[3].gasCoinId')
+gas_coin=$(sui client gas $admin_multisig_address --json | jq -r '.[0].gasCoinId')
 
 # Prepare to publish the Move package
 publish_res_bytes=$(sui client publish \
