@@ -139,6 +139,6 @@ tx.setGasBudget(500000000);
 
 tx.build({ client }).then(bytes => {
     const base64String = Buffer.from(bytes).toString('base64');
+    console.log(base64String);
     fs.writeFileSync('tx_bytes', base64String);
 });
-
