@@ -116,7 +116,6 @@ if [ $DEPLOYMENT ]; then
     echo $upgradeCap > upgrade_cap
 
     echo "Return values saved!"
-    echo "Please consult the README on how to update the ABIs for transaction building."
 fi
 if [ $UPGRADE ]; then
     # Extract the env variables from the publish result
@@ -131,5 +130,5 @@ if [ $UPGRADE ]; then
     echo $upgradeCap > upgrade_cap
 
     echo "Return values saved!"
-    echo "Please consult the README on how to update the ABIs for transaction building."
+    echo "Don't forget to regenerate the ABI types with `yarn hardhat generateTypes`"
 fi

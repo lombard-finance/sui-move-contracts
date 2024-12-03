@@ -58,7 +58,9 @@ This step works just like the contract deployment phase - except that the --depl
 
 ### Upgrading a contract
 
-This works exactly like the contract [deployment step](Deploying-the-contract), but instead of passing `--deployment`, you should pass `--upgrade`, and the initial bytes are generated with `create_upgrade_bytes.sh`. Another thing to keep in mind is that the `Move.toml` file will need to include a `published-at` field in the `package` section, pointing towards the address of the previously deployed contract.
+This works exactly like the contract [deployment step](Deploying-the-contract), but instead of passing `--deployment`, you should pass `--upgrade`, and the initial bytes are generated with `create_upgrade_bytes.sh`. Another thing to keep in mind is that the `Move.toml` file will need to include a `published-at` field in the `package` section, pointing towards the address of the previously deployed contract. 
+
+> Note also that the ABI types should be upgraded for new logic to be accessible - this should coincide with extra work done on the scripts so that all function signatures remain correct.
 
 ## Tools
 
