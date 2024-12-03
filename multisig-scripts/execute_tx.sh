@@ -18,6 +18,7 @@ done
 ENV=
 SIGNATURES=
 DEPLOYMENT=
+UPGRADE=
 
 while [ $# -gt 0 ]; do
     case "$1" in
@@ -35,6 +36,9 @@ while [ $# -gt 0 ]; do
         ;;
     --deployment)
         DEPLOYMENT="1"
+        ;;
+    --upgrade)
+        UPGRADE="1"
         ;;
     *)
         echo "Unknown arg $1"
@@ -102,6 +106,21 @@ echo "$publish_res"
 if [ $DEPLOYMENT ]; then
     # Extract the env variables from the publish result
     packageId=$(echo "$publish_res" | jq -r '.effects.created[] | select(.owner == "Immutable" and .reference.version == 1) | .reference.objectId')
+    createdObjects=$(echo "$publish_res" | jq -r '.objectChanges[] | select(.type == "created")')
+    sharedControlledTreasury=$(echo "$createdObjects" |  jq -r 'select (.objectType | contains("treasury::ControlledTreasury")).objectId')
+    upgradeCap=$(echo "$createdObjects" | jq -r 'select (.objectType | contains("package::UpgradeCap")).objectId')
+    txDigest=$(echo "$publish_res" | jq -r '.effects.transactionDigest')
+
+    echo $packageId > package_id
+    echo $sharedControlledTreasury > shared_controlled_treasury
+    echo $upgradeCap > upgrade_cap
+
+    echo "Return values saved!"
+    echo "Please consult the README on how to update the ABIs for transaction building."
+fi
+if [ $UPGRADE ]; then
+    # Extract the env variables from the publish result
+    packageId=$(echo "$publish_res" | jq -r '.effects.created[] | select(.owner == "Immutable") | .reference.objectId')
     createdObjects=$(echo "$publish_res" | jq -r '.objectChanges[] | select(.type == "created")')
     sharedControlledTreasury=$(echo "$createdObjects" |  jq -r 'select (.objectType | contains("treasury::ControlledTreasury")).objectId')
     upgradeCap=$(echo "$createdObjects" | jq -r 'select (.objectType | contains("package::UpgradeCap")).objectId')

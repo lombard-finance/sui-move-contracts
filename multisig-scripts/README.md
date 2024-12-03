@@ -58,7 +58,7 @@ This step works just like the contract deployment phase - except that the --depl
 
 ### Upgrading a contract
 
-This works exactly like the contract [deployment step](Deploying-the-contract).
+This works exactly like the contract [deployment step](Deploying-the-contract), but instead of passing `--deployment`, you should pass `--upgrade`.
 
 ## Tools
 
