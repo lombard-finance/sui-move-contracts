@@ -109,6 +109,8 @@ if [ $DEPLOYMENT ]; then
 
     echo $packageId > package_id
     echo $sharedControlledTreasury > shared_controlled_treasury
+    echo $upgradeCap > upgrade_cap
+
     echo "Return values saved!"
     echo "Please consult the README on how to update the ABIs for transaction building."
 fi

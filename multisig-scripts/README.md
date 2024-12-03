@@ -56,6 +56,10 @@ This step works just like the contract deployment phase - except that the --depl
 - `--env=<testnet|mainnet>`, to denote where we will broadcast this transaction. In case of `testnet`, we also make a call to the Sui testnet faucet.
 - `--signatures=<file>`, passes the name of the file containing all signatures needed to complete the transaction, with each signature separated by a newline.
 
+### Upgrading a contract
+
+This works exactly like the contract [deployment step](Deploying-the-contract).
+
 ## Tools
 
 ### Transaction deobfuscation
