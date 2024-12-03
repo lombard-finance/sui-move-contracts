@@ -29,15 +29,9 @@ Then, when all signers have given their signatures, the coordinator can publish 
 - `--signatures=<file>`, passes the name of the file containing all signatures needed to complete the transaction, with each signature separated by a newline.
 - `--deployment`, which tells the script that this is a contract deployment.
 
+**NOTE:** Signatures need to be ordered in the same way as the public keys in the keyfile!
+
 This script will then combine all signatures with the current `tx_bytes` file and generate a complete transaction, and proceed to broadcast it. It will also save the returned package ID and shared controlled treasury UID, which are needed to make changes on the contracts.
-
-**NOTE:** This does not update the contract types which are used for transaction building - this is a bit tricky to do but an easy way to circumvent this is by using this bash command (do this inside the `setup` folder only!):
-
-`grep -l 0xbe707cb2ed4703f8a6764a656c0adb7a7a0ed709739e63d56ccfc986e1259e6c | xargs gsed -i "s:0xbe707cb2ed4703f8a6764a656c0adb7a7a0ed709739e63d56ccfc986e1259e6c:<PACKAGE_ID>:g"`
-
-Or, if you're on Linux:
-
-`grep -l 0xbe707cb2ed4703f8a6764a656c0adb7a7a0ed709739e63d56ccfc986e1259e6c | xargs sed -i "s:0xbe707cb2ed4703f8a6764a656c0adb7a7a0ed709739e63d56ccfc986e1259e6c:<PACKAGE_ID>:g"`
 
 ### Generating any kind of transaction bytes
 
@@ -61,3 +55,13 @@ This step works just like the contract deployment phase - except that the --depl
 
 - `--env=<testnet|mainnet>`, to denote where we will broadcast this transaction. In case of `testnet`, we also make a call to the Sui testnet faucet.
 - `--signatures=<file>`, passes the name of the file containing all signatures needed to complete the transaction, with each signature separated by a newline.
+
+## Tools
+
+### Transaction deobfuscation
+
+In case you are sent a Base64 string of a transaction and want to check out what it really is doing, you can use the `deobfuscate_bytes.sh` script. You can simply call it like suchs:
+
+`./deobfuscate_bytes.sh <tx_bytes>`
+
+This will give you all the information of the proposed state update.
