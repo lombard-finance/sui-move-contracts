@@ -82,3 +82,4 @@ publish_res_bytes=$(sui client upgrade \
   --serialize-unsigned-transaction \
   $MOVE_PACKAGE_PATH)
 echo $publish_res_bytes > tx_bytes
+echo $publish_res_bytes
