@@ -6,7 +6,7 @@ import {
   createMultisigSigner,
   executeMultisigTransaction,
 } from "../helpers/multisigHelper";
-import { treasury } from "../types/0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d";
+import { treasury } from "../types/0x0bf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad";
 import { LBTC_COIN_TYPE } from "../config";
 
 // Define the participant structure for multisig
@@ -37,6 +37,8 @@ export async function mintAndTransfer(
   amount: number,
   recipient: string,
   denylist: string,
+  txid: Uint8Array,
+  idx: number,
   multisigConfig: MultisigConfig
 ): Promise<any> {
   const tx = new Transaction();
@@ -69,6 +71,8 @@ export async function mintAndTransfer(
       tx.pure.vector("vector<u8>", publicKeys), // Public keys
       tx.pure.vector("u8", weights), // Weights
       tx.pure.u16(threshold), // Threshold
+      tx.pure.vector("u8", Array.from(txid)), // Placeholder BTC deposit transaction ID
+      tx.pure.u32(idx), // Placeholder BTC deposit index
     ],
     [LBTC_COIN_TYPE]
   );

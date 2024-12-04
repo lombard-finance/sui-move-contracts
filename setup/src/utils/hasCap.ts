@@ -1,5 +1,5 @@
 import { SuiClient } from "@mysten/sui/client";
-import { treasury } from "../types/0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d";
+import { treasury } from "../types/0x0bf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad";
 import { LBTC_COIN_TYPE, PACKAGE_ID } from "../config";
 
 /**

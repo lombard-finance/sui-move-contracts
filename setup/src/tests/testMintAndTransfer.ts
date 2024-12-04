@@ -8,6 +8,9 @@ import {
 import { mintAndTransfer } from "../utils/mintAndTransfer";
 import { getMultisigConfig } from "../helpers/getMultisigConfig";
 
+const DUMMY_TXID = new TextEncoder().encode("abcd");
+const DUMMY_IDX: number = 0;
+
 async function testMintAndTransfer() {
   try {
     // Retrieve our default multisig configuration
@@ -20,6 +23,8 @@ async function testMintAndTransfer() {
       ONE_LBTC, // Amount to mint
       MULTISIG.ADDRESS, // Recipient address
       DENYLIST, // Denylist global object
+      DUMMY_TXID, // Placeholder BTC deposit transaction ID
+      DUMMY_IDX, // Placeholder BTC deposit index
       multisigConfig // Multisig configuration
     );
 

@@ -13,6 +13,8 @@ const TREASURY_ADMIN: address = @0x3;
 const MINTER: address = @0x4;
 const USER: address = @0x6;
 const MINT_LIMIT: u64 = 1_000_000;
+const TXID: vector<u8> = b"abcd";
+const IDX: u32 = 0;
 
 public struct TREASURY_TESTS has drop {}
 
@@ -132,6 +134,8 @@ fun test_mint_and_transfer_with_multisig_sender() {
         pks,
         weights,
         threshold,
+        TXID,
+        IDX,
         ts.ctx(),
     );
 
@@ -168,6 +172,8 @@ fun test_mint_over_limit() {
         pks,
         weights,
         threshold,
+        TXID,
+        IDX,
         ts.ctx(),
     );
 
@@ -199,6 +205,8 @@ fun test_minting_with_non_multisig_sender() {
         pks,
         weights,
         threshold,
+        TXID,
+        IDX,
         ts.ctx(),
     );
 
@@ -247,6 +255,8 @@ fun test_cannot_mint_and_transfer_when_global_pause_enabled() {
         pks,
         weights,
         threshold,
+        TXID,
+        IDX,
         ts.ctx(),
     );
 
@@ -417,6 +427,8 @@ fun test_burn_coins() {
         pks,
         weights,
         threshold,
+        TXID,
+        IDX,
         ts.ctx(),
     );
     ts::return_shared(denylist);

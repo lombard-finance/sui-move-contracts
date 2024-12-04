@@ -10,7 +10,7 @@ import {
   createMultisigSigner,
 } from "../helpers/multisigHelper";
 import { Transaction } from "@mysten/sui/transactions";
-import { treasury } from "../types/0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d";
+import { treasury } from "../types/0x0bf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad";
 import { getMultisigConfig } from "../helpers/getMultisigConfig";
 
 async function testDisableGlobalPause() {

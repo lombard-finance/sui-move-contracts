@@ -26,6 +26,9 @@ import { hasCap } from "../utils/hasCap";
 import { isGlobalPauseEnabled } from "../utils/isGlobalPauseEnabled";
 import { getMultisigConfig } from "../helpers/getMultisigConfig";
 
+const DUMMY_TXID = new TextEncoder().encode("abcd");
+const DUMMY_IDX: number = 0;
+
 async function e2eMintAndTransferTest() {
   try {
     /**
@@ -163,6 +166,8 @@ async function e2eMintAndTransferTest() {
       ONE_LBTC * BTC_AMOUNT, // Amount to mint (1 LBTC per BTC in this case)
       userAddress, // User's Sui address
       DENYLIST, // Denylist global object
+      DUMMY_TXID, // Placeholder BTC deposit transaction ID
+      DUMMY_IDX, // Placeholder BTC deposit index
       multisigConfig // Multisig configuration
     );
 

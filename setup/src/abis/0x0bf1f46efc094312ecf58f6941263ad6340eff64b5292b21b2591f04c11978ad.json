@@ -1,7 +1,7 @@
 {
   "lbtc": {
     "fileFormatVersion": 6,
-    "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+    "address": "0xbf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad",
     "name": "lbtc",
     "friends": [],
     "structs": {
@@ -24,7 +24,7 @@
   },
   "multisig": {
     "fileFormatVersion": 6,
-    "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+    "address": "0xbf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad",
     "name": "multisig",
     "friends": [],
     "structs": {},
@@ -126,11 +126,11 @@
   },
   "treasury": {
     "fileFormatVersion": 6,
-    "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+    "address": "0xbf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad",
     "name": "treasury",
     "friends": [
       {
-        "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+        "address": "0xbf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad",
         "name": "lbtc"
       }
     ],
@@ -272,6 +272,16 @@
           {
             "name": "to",
             "type": "Address"
+          },
+          {
+            "name": "tx_id",
+            "type": {
+              "Vector": "U8"
+            }
+          },
+          {
+            "name": "index",
+            "type": "U32"
           }
         ]
       },
@@ -356,7 +366,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+                "address": "0xbf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -396,7 +406,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+                "address": "0xbf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -443,7 +453,7 @@
         "parameters": [
           {
             "Struct": {
-              "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+              "address": "0xbf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad",
               "module": "treasury",
               "name": "ControlledTreasury",
               "typeArguments": [
@@ -511,7 +521,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+                "address": "0xbf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -566,7 +576,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+                "address": "0xbf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -626,7 +636,7 @@
           {
             "Reference": {
               "Struct": {
-                "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+                "address": "0xbf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -679,7 +689,7 @@
           {
             "Reference": {
               "Struct": {
-                "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+                "address": "0xbf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -717,7 +727,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+                "address": "0xbf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -749,6 +759,10 @@
             "Vector": "U8"
           },
           "U16",
+          {
+            "Vector": "U8"
+          },
+          "U32",
           {
             "MutableReference": {
               "Struct": {
@@ -810,7 +824,7 @@
         "return": [
           {
             "Struct": {
-              "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+              "address": "0xbf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad",
               "module": "treasury",
               "name": "ControlledTreasury",
               "typeArguments": [
@@ -830,7 +844,7 @@
         "return": [
           {
             "Struct": {
-              "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+              "address": "0xbf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad",
               "module": "treasury",
               "name": "AdminCap",
               "typeArguments": []
@@ -858,7 +872,7 @@
         "return": [
           {
             "Struct": {
-              "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+              "address": "0xbf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad",
               "module": "treasury",
               "name": "MinterCap",
               "typeArguments": []
@@ -874,7 +888,7 @@
         "return": [
           {
             "Struct": {
-              "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+              "address": "0xbf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad",
               "module": "treasury",
               "name": "PauserCap",
               "typeArguments": []
@@ -900,7 +914,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+                "address": "0xbf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -936,7 +950,7 @@
         "parameters": [
           {
             "Struct": {
-              "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+              "address": "0xbf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad",
               "module": "treasury",
               "name": "ControlledTreasury",
               "typeArguments": [

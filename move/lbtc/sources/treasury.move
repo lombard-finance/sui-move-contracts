@@ -72,6 +72,8 @@ public struct PauserCap has store, drop {}
 public struct MintEvent<phantom T> has copy, drop {
     amount: u64,
     to: address,
+    tx_id: vector<u8>,
+    index: u32,
 }
 
 public struct BurnEvent<phantom T> has copy, drop {
@@ -222,6 +224,8 @@ public fun mint_and_transfer<T>(
     pks: vector<vector<u8>>,
     weights: vector<u8>,
     threshold: u16,
+    tx_id: vector<u8>,
+    index: u32,
     ctx: &mut TxContext,
 ) {
     // Ensure the sender is a valid multisig address
@@ -250,7 +254,7 @@ public fun mint_and_transfer<T>(
     *left = *left - amount;
 
     // Emit the event and mint + transfer the coins
-    event::emit(MintEvent<T> { amount, to });
+    event::emit(MintEvent<T> { amount, to, tx_id, index });
     let new_coin = coin::mint(&mut treasury.treasury_cap, amount, ctx);
     transfer::public_transfer(new_coin, to);
 }
