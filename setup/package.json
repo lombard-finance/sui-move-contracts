@@ -20,8 +20,7 @@
     "testCapabilities": "env-cmd -f .env ts-node src/tests/testCapabilities.ts",
     "testE2E": "env-cmd -f .env ts-node src/e2e/main.ts",
     "testListCapabilities": "env-cmd -f .env ts-node src/tests/testListCapabilities.ts",
-    "testLedgerSigning": "env-cmd -f .env ts-node src/tests/testLedgerSigning.ts",
-    "connectToLedger": "env-cmd -f .env ts-node src/tests/connectToLedger.ts"
+    "testLedgerSigning": "env-cmd -f .env ts-node src/tests/testLedgerSigning.ts"
   },
   "keywords": [],
   "author": "",
