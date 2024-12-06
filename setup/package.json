@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "config": {
-    "package_id": "0x0bf1f46efc094312ecf58f6941263ad6340eff64b5292b21b2591f04c11978ad"
+    "package_id": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22"
   },
   "scripts": {
     "generateTypes": "env-cmd -f .env pnpm typemove-sui --target-dir=./src/types --abi-dir=./src/abis $npm_package_config_package_id --network=testnet",

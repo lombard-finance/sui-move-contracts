@@ -38,6 +38,8 @@ public fun new_timelock(
     delay_ms: u64,
     ctx: &mut TxContext,
 ): TimelockCap {
+    assert!(delay_ms == MS_24_HOURS || delay_ms == MS_48_HOURS, EInvalidDelayValue);
+
     TimelockCap {
         id: object::new(ctx),
         upgrade_cap,
@@ -56,7 +58,7 @@ public fun authorize_upgrade(
     let epoch_start_time_ms = ctx.epoch_timestamp_ms();
 
     assert!(
-        timelock.last_authorized_time == 0 || epoch_start_time_ms >= timelock.last_authorized_time + MS_24_HOURS,
+        timelock.last_authorized_time == 0 || epoch_start_time_ms >= timelock.last_authorized_time + timelock.delay_ms,
         ENotEnoughTimeElapsed,
     );
 
