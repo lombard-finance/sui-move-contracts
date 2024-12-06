@@ -22,7 +22,7 @@ async function signAndVerifyMessage() {
     const message = new TextEncoder().encode("Spok");
 
     // Add the intent message to the payload
-    const intentMessage = messageWithIntent("TransactionData", message);
+    const intentMessage = messageWithIntent("PersonalMessage", message);
 
     // Generate the digest to be signed
     const digest = blake2b(intentMessage, { dkLen: 32 });
