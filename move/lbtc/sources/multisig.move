@@ -16,6 +16,7 @@
 /// - `EInvalidPublicKey`: Public key format or type is invalid.
 module lbtc::multisig;
 
+use lbtc::pk_util;
 use sui::address;
 use sui::bcs;
 use sui::hash::blake2b256;
@@ -102,8 +103,9 @@ public fun secp256r1_key_to_address(pk: &vector<u8>): address {
 
 // === Internal ===
 
-/// Converts a public key to an address based on its type.
+/// Converts a public key to an address based on its type, with validation for length and prefix.
 fun address_from_bytes(pk: &vector<u8>, flag: u8): address {
+    assert!(pk_util::is_valid_key(pk), EInvalidPublicKey);
     assert!(pk[0] == flag, EInvalidPublicKey);
     address::from_bytes(blake2b256(pk))
 }

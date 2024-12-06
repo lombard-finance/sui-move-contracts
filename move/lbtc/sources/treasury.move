@@ -23,6 +23,7 @@
 module lbtc::treasury;
 
 use lbtc::multisig;
+use lbtc::pk_util;
 use std::string::{Self, String};
 use std::type_name;
 use sui::bag::{Self, Bag};
@@ -42,6 +43,8 @@ const EAdminsCantBeZero: u64 = 3;
 const EMintNotAllowed: u64 = 4;
 // Sender is not a multisig address.
 const ENoMultisigSender: u64 = 5;
+// Mint amount cannot be zero.
+const EMintAmountCannotBeZero: u64 = 6;
 
 /// Represents a controlled treasury for managing a regulated coin.
 public struct ControlledTreasury<phantom T> has key {
@@ -72,6 +75,8 @@ public struct PauserCap has store, drop {}
 public struct MintEvent<phantom T> has copy, drop {
     amount: u64,
     to: address,
+    tx_id: vector<u8>,
+    index: u32,
 }
 
 public struct BurnEvent<phantom T> has copy, drop {
@@ -93,6 +98,7 @@ public fun new_admin_cap(): AdminCap { AdminCap {} }
 
 /// Create a new `MinterCap` to assign.
 public fun new_minter_cap(limit: u64, ctx: &TxContext): MinterCap {
+    assert!(limit > 0, EMintAmountCannotBeZero);
     MinterCap {
         limit,
         epoch: ctx.epoch(),
@@ -105,7 +111,7 @@ public fun new_pauser_cap(): PauserCap { PauserCap {} }
 
 /// Creates a new controlled treasury by wrapping a `TreasuryCap` and `DenyCapV2`.
 /// The treasury must be shared to allow usage across multiple transactions.
-public(package) fun new<T>(
+public fun new<T>(
     treasury_cap: TreasuryCap<T>,
     deny_cap: DenyCapV2<T>,
     owner: address,
@@ -132,7 +138,7 @@ public fun share<T>(treasury: ControlledTreasury<T>) {
 /// Unpack the `ControlledTreasury` and return the treasury cap, deny cap and the Bag.
 /// The Bag must be cleared by the admin to be unpacked.
 #[allow(unused_mut_parameter)]
-public(package) fun deconstruct<T>(
+public fun deconstruct<T>(
     treasury: ControlledTreasury<T>,
     ctx: &mut TxContext,
 ): (TreasuryCap<T>, DenyCapV2<T>, Bag) {
@@ -222,8 +228,16 @@ public fun mint_and_transfer<T>(
     pks: vector<vector<u8>>,
     weights: vector<u8>,
     threshold: u16,
+    tx_id: vector<u8>,
+    index: u32,
     ctx: &mut TxContext,
 ) {
+    // Check if the amount is greater than 0
+    assert!(amount > 0, EMintAmountCannotBeZero);
+
+    // Public key schema validation
+    pk_util::validate_pks(&pks);
+
     // Ensure the sender is a valid multisig address
     assert!(
         multisig::is_sender_multisig(pks, weights, threshold, ctx),
@@ -237,11 +251,11 @@ public fun mint_and_transfer<T>(
     assert!(!is_global_pause_enabled<T>(denylist), EMintNotAllowed);
 
     // Get the MinterCap and check the limit; if a new epoch - reset it
-    let MinterCap { limit, epoch, mut left } = get_cap_mut(treasury, ctx.sender());
+    let MinterCap { limit, epoch, left } = get_cap_mut(treasury, ctx.sender());
 
     // Reset the limit if this is a new epoch
     if (ctx.epoch() > *epoch) {
-        left = limit;
+        *left = *limit;
         *epoch = ctx.epoch();
     };
 
@@ -250,7 +264,7 @@ public fun mint_and_transfer<T>(
     *left = *left - amount;
 
     // Emit the event and mint + transfer the coins
-    event::emit(MintEvent<T> { amount, to });
+    event::emit(MintEvent<T> { amount, to, tx_id, index });
     let new_coin = coin::mint(&mut treasury.treasury_cap, amount, ctx);
     transfer::public_transfer(new_coin, to);
 }
@@ -290,6 +304,9 @@ public fun enable_global_pause<T>(
     threshold: u16,
     ctx: &mut TxContext,
 ) {
+    // Public key schema validation
+    pk_util::validate_pks(&pks);
+
     // Ensure the sender is a valid multisig address
     assert!(
         multisig::is_sender_multisig(pks, weights, threshold, ctx),
@@ -316,6 +333,9 @@ public fun disable_global_pause<T>(
     threshold: u16,
     ctx: &mut TxContext,
 ) {
+    // Public key schema validation
+    pk_util::validate_pks(&pks);
+
     // Ensure the sender is a valid multisig address
     assert!(
         multisig::is_sender_multisig(pks, weights, threshold, ctx),

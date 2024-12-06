@@ -1,7 +1,7 @@
 {
   "lbtc": {
     "fileFormatVersion": 6,
-    "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+    "address": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22",
     "name": "lbtc",
     "friends": [],
     "structs": {
@@ -24,7 +24,7 @@
   },
   "multisig": {
     "fileFormatVersion": 6,
-    "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+    "address": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22",
     "name": "multisig",
     "friends": [],
     "structs": {},
@@ -124,16 +124,55 @@
       }
     }
   },
-  "treasury": {
+  "pk_util": {
     "fileFormatVersion": 6,
-    "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
-    "name": "treasury",
+    "address": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22",
+    "name": "pk_util",
     "friends": [
       {
-        "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
-        "name": "lbtc"
+        "address": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22",
+        "name": "multisig"
       }
     ],
+    "structs": {},
+    "exposedFunctions": {
+      "is_valid_key": {
+        "visibility": "Friend",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Vector": "U8"
+            }
+          }
+        ],
+        "return": [
+          "Bool"
+        ]
+      },
+      "validate_pks": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Vector": {
+                "Vector": "U8"
+              }
+            }
+          }
+        ],
+        "return": []
+      }
+    }
+  },
+  "treasury": {
+    "fileFormatVersion": 6,
+    "address": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22",
+    "name": "treasury",
+    "friends": [],
     "structs": {
       "AdminCap": {
         "abilities": {
@@ -272,6 +311,16 @@
           {
             "name": "to",
             "type": "Address"
+          },
+          {
+            "name": "tx_id",
+            "type": {
+              "Vector": "U8"
+            }
+          },
+          {
+            "name": "index",
+            "type": "U32"
           }
         ]
       },
@@ -356,7 +405,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+                "address": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -396,7 +445,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+                "address": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -433,7 +482,7 @@
         "return": []
       },
       "deconstruct": {
-        "visibility": "Friend",
+        "visibility": "Public",
         "isEntry": false,
         "typeParameters": [
           {
@@ -443,7 +492,7 @@
         "parameters": [
           {
             "Struct": {
-              "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+              "address": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22",
               "module": "treasury",
               "name": "ControlledTreasury",
               "typeArguments": [
@@ -511,7 +560,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+                "address": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -566,7 +615,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+                "address": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -626,7 +675,7 @@
           {
             "Reference": {
               "Struct": {
-                "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+                "address": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -679,7 +728,7 @@
           {
             "Reference": {
               "Struct": {
-                "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+                "address": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -717,7 +766,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+                "address": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -750,6 +799,10 @@
           },
           "U16",
           {
+            "Vector": "U8"
+          },
+          "U32",
+          {
             "MutableReference": {
               "Struct": {
                 "address": "0x2",
@@ -763,7 +816,7 @@
         "return": []
       },
       "new": {
-        "visibility": "Friend",
+        "visibility": "Public",
         "isEntry": false,
         "typeParameters": [
           {
@@ -810,7 +863,7 @@
         "return": [
           {
             "Struct": {
-              "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+              "address": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22",
               "module": "treasury",
               "name": "ControlledTreasury",
               "typeArguments": [
@@ -830,7 +883,7 @@
         "return": [
           {
             "Struct": {
-              "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+              "address": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22",
               "module": "treasury",
               "name": "AdminCap",
               "typeArguments": []
@@ -858,7 +911,7 @@
         "return": [
           {
             "Struct": {
-              "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+              "address": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22",
               "module": "treasury",
               "name": "MinterCap",
               "typeArguments": []
@@ -874,7 +927,7 @@
         "return": [
           {
             "Struct": {
-              "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+              "address": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22",
               "module": "treasury",
               "name": "PauserCap",
               "typeArguments": []
@@ -900,7 +953,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+                "address": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -936,7 +989,7 @@
         "parameters": [
           {
             "Struct": {
-              "address": "0x6bdf953e819eaa24deab01a2d1c2ac74b530d37c79560d289d71a7fc5394d10d",
+              "address": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22",
               "module": "treasury",
               "name": "ControlledTreasury",
               "typeArguments": [
