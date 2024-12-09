@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "config": {
-    "package_id": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22"
+    "package_id": "0x03ab53a30d03a9390f683b71eba7e5c371350858a66210214d11704e8df3b1a2"
   },
   "scripts": {
-    "generateTypes": "env-cmd -f .env pnpm typemove-sui --target-dir=./src/types --abi-dir=./src/abis $npm_package_config_package_id --network=testnet",
+    "generateTypes": "env-cmd -f .env pnpm typemove-sui --target-dir=./src/types --abi-dir=./src/abis $npm_package_config_package_id --network=mainnet",
     "testMultisig": "env-cmd -f .env ts-node src/tests/testMultisig.ts",
     "testAddAdmin": "env-cmd -f .env ts-node src/tests/testAddAdmin.ts",
     "testAddMinter": "env-cmd -f .env ts-node src/tests/testAddMinter.ts",

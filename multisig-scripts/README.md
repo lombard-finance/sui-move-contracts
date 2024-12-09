@@ -46,6 +46,7 @@ The coordinator can now build all types of transactions for the contract with th
     - `mintAndTransfer`, which takes an address and an amount in satoshis
     - `removeMinter`, which takes an address
     - `removePauser`, which takes an address
+    - `burn`, which takes a coin object
 
 The argument are supposed to be passed after the command. The script will then build the transaction bytes and pipe them into `tx_bytes` for signing.
 

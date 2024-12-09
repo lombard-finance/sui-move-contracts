@@ -26,8 +26,7 @@ while [ $# -gt 0 ]; do
         ENV="${1#*=}"
         case ${ENV} in
         "testnet") ;;
-        "devnet") ;;
-        "local") ;;
+        "mainnet") ;;
         *) echo "unknown env {$ENV}"
             exit 1
         esac #end inner case

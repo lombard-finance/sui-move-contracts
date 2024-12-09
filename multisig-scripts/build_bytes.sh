@@ -82,6 +82,13 @@ case "$1" in
         fi
         ts-node ../setup/src/utils/commandCall.ts $PACKAGE_ID $COMMAND $TREASURY_ADDRESS $ADMIN_MULTISIG_ADDRESS $2
         ;;
+    "burn")
+        if [ -z "$2" ]; then
+            echo "Error: missing arguments! Need coin object."
+            exit 1
+        fi
+        ts-node ../setup/src/utils/commandCall.ts $PACKAGE_ID $COMMAND $TREASURY_ADDRESS $ADMIN_MULTISIG_ADDRESS $2 $ADMIN_MULTISIG_FILE
+        ;;
     *) echo "unknown command {$COMMAND}"
         exit 1
     esac #end inner case

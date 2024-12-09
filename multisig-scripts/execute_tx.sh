@@ -66,8 +66,6 @@ case "$ENV" in
 "mainnet")
     NETWORK="mainnet"
     FULLNODE_URL="https://fullnode.mainnet.sui.io:443"
-    echo "Unknown environment $ENV"
-    exit 1
     ;;
 *)
 esac
@@ -116,6 +114,7 @@ if [ $DEPLOYMENT ]; then
     echo $upgradeCap > upgrade_cap
 
     echo "Return values saved!"
+    echo "Don't forget to regenerate the ABI types with `yarn generateTypes` in the setup folder"
 fi
 if [ $UPGRADE ]; then
     # Extract the env variables from the publish result
@@ -126,9 +125,7 @@ if [ $UPGRADE ]; then
     txDigest=$(echo "$publish_res" | jq -r '.effects.transactionDigest')
 
     echo $packageId > package_id
-    echo $sharedControlledTreasury > shared_controlled_treasury
-    echo $upgradeCap > upgrade_cap
 
     echo "Return values saved!"
-    echo "Don't forget to regenerate the ABI types with `yarn hardhat generateTypes`"
+    echo "Don't forget to regenerate the ABI types with `yarn generateTypes` in the setup folder"
 fi
