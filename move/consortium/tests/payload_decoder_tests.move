@@ -1,8 +1,8 @@
 #[test_only]
-module payload_decoder::payload_decoder_tests;
+module consortium::payload_decoder_tests;
 
-use payload_decoder::payload_decoder;
-use sui::bcs::{Self, BCS};
+use consortium::payload_decoder;
+use sui::bcs;
 
 #[test]
 fun test_payload_decoder() {

@@ -1,5 +1,5 @@
 /// Module: payload_decoder
-module payload_decoder::payload_decoder;
+module consortium::payload_decoder;
 
 use std::hash;
 use sui::bcs::{Self, BCS};
