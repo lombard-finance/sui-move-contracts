@@ -1,7 +1,7 @@
 module consortium::consortium;
 
 use std::hash;
-use sui::table::{Table};
+use sui::table::{Self, Table};
 use consortium::pk_utils;
 use consortium::payload_decoder;
 
@@ -24,11 +24,19 @@ public struct Consortium has key {
     admins: vector<address>,
 }
 
-// === Roles / Capabilities ===
+fun init(ctx: &mut TxContext) {
+    let consortium = Consortium {
+        id: object::new(ctx),
+        epoch: 0,
+        validator_set: table::new<u64, vector<vector<u8>>>(ctx),
+        used_payloads: table::new<vector<u8>, bool>(ctx),
+        admins: vector::singleton(ctx.sender()),
+    };
+    transfer::share_object(consortium);
+}
 
-// Allows management of ValidatorSet in `Consortium`.
-public struct AdminCap has store, drop {}
-
+/// Validates that the payload has not been used and that the signatures are valid.
+/// If the payload is valid, it is stored onchain and marked as used.
 public fun validate_payload(
     consortium: &mut Consortium,
     payload: vector<u8>,
