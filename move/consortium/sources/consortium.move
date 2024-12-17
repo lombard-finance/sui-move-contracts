@@ -16,6 +16,10 @@ const EUsedPayload: u64 = 3;
 /// Admin vector should contain at least one address.
 const ECannotRemoveLastAdmin: u64 = 4;
 
+public struct ValidateProof {
+    hash: Option<vector<u8>>,
+}
+
 /// Consortium struct which contains the current epoch, the public keys of the validator,
 /// the used payloads and the admin addresses 
 public struct Consortium has key {
@@ -38,12 +42,13 @@ fun init(ctx: &mut TxContext) {
 }
 
 /// Validates that the payload has not been used and that the signatures are valid.
-/// If the payload is valid, it is stored onchain and marked as used.
+/// It returns a boolean indicating if the payload is valid and a ValidateProof.
+/// ValidateProof contains the hash of the payload if the payload is valid.
 public fun validate_payload(
-    consortium: &mut Consortium,
+    consortium: &Consortium,
     payload: vector<u8>,
     proof: vector<u8>,
-): bool {
+): (bool, ValidateProof) {
     let hash = hash::sha2_256(payload);
     assert!(!consortium.is_payload_used(hash), EUsedPayload);
     // get the signature from the proof
@@ -51,10 +56,20 @@ public fun validate_payload(
     // get the validator set for the current epoch
     let signers = consortium.get_validator_set(consortium.epoch);
     if (payload_decoder::validate_signatures(signers, signatures, payload, hash)) {
-        consortium.used_payloads.add(hash, true);
-        true
+        (true, ValidateProof { hash: option::some(hash) })
     } else {
-        false
+        (false, ValidateProof { hash: option::none() })
+    }
+}
+
+/// Resolves the ValidateProof by adding the hash to the used_payloads table.
+public fun resolve_proof(
+    consortium: &mut Consortium,
+    proof: ValidateProof,
+) {
+    let ValidateProof { mut hash } = proof;
+    if (hash.is_some()) {
+        consortium.used_payloads.add(hash.extract(), true);
     }
 }
 

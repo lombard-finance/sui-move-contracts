@@ -39,7 +39,8 @@ fun test_consortium_validation() {
     {
         let mut consortium = ts::take_shared<Consortium>(scenario);
         assert!(!consortium.is_payload_used(HASH), EInvalidPayload);
-        consortium::validate_payload(&mut consortium, PAYLOAD, SIGNATURES);
+        let (_, proof) = consortium::validate_payload(&consortium, PAYLOAD, SIGNATURES);
+        consortium::resolve_proof(&mut consortium, proof);
         assert!(consortium.is_payload_used(HASH), EInvalidPayload);
         ts::return_shared<Consortium>(consortium); 
     };
@@ -194,14 +195,16 @@ fun test_used_payload() {
     scenario.next_tx(ADMIN_USER);
     {
         let mut consortium = ts::take_shared<Consortium>(scenario);
-        consortium::validate_payload(&mut consortium, PAYLOAD, SIGNATURES);
+        let (_, proof) = consortium::validate_payload(&consortium, PAYLOAD, SIGNATURES);
+        consortium::resolve_proof(&mut consortium, proof);
         ts::return_shared<Consortium>(consortium);
     };
 
     scenario.next_tx(USER);
     {
         let mut consortium = ts::take_shared<Consortium>(scenario);
-        consortium::validate_payload(&mut consortium, PAYLOAD, SIGNATURES);
+        let (_, proof) = consortium::validate_payload(&consortium, PAYLOAD, SIGNATURES);
+        consortium::resolve_proof(&mut consortium, proof);
         ts::return_shared<Consortium>(consortium);
     };
     ts::end(scenario_val);
