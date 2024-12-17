@@ -278,11 +278,21 @@ public fun mint_and_transfer<T>(
     transfer::public_transfer(new_coin, to);
 }
 
+/// Allow any internal function to burn coins.
+#[allow(unused_mut_parameter)]
+public(package) fun burn_internal<T>(
+    treasury: &mut ControlledTreasury<T>,
+    coin: Coin<T>,
+    _ctx: &mut TxContext,
+) {
+    coin::burn(&mut treasury.treasury_cap, coin);
+}
+
 /// Allow any external address to burn coins.
 ///
 /// Emits: BurnEvent
 #[allow(unused_mut_parameter)]
-public(package) fun burn<T>(
+public fun burn<T>(
     treasury: &mut ControlledTreasury<T>,
     coin: Coin<T>,
     ctx: &mut TxContext,
@@ -292,19 +302,7 @@ public(package) fun burn<T>(
         from: ctx.sender(),
     });
 
-    coin::burn(&mut treasury.treasury_cap, coin);
-}
-
-/// Allow any external address to burn coins.
-///
-/// Emits: BurnEvent
-#[allow(unused_mut_parameter)]
-public fun public_burn<T>(
-    treasury: &mut ControlledTreasury<T>,
-    coin: Coin<T>,
-    ctx: &mut TxContext,
-) {
-    coin::burn(&mut treasury.treasury_cap, coin);
+    burn_internal(treasury, coin, ctx);
 }
 
 /// Allow any external address to redeem (burn) coins to initiate BTC withdrawal.
@@ -354,7 +352,7 @@ public fun redeem<T>(
     // Transfer the fee to the treasury
 
     // Burn the amount after fee from the sender's account
-    coin::burn(&mut treasury.treasury_cap, coin);
+    burn_internal(treasury, coin, ctx);
 
     // Emit the UnstakeRequest event
     event::emit(UnstakeRequestEvent<T> {
