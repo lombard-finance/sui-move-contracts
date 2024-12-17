@@ -23,6 +23,7 @@
 module lbtc::treasury;
 
 use lbtc::multisig;
+use lbtc::bitcoin_utils::{get_output_type, get_dust_limit_for_output, get_unsupported_output_type};
 use lbtc::pk_util;
 use std::string::{Self, String};
 use std::type_name;
@@ -45,6 +46,8 @@ const EMintNotAllowed: u64 = 4;
 const ENoMultisigSender: u64 = 5;
 // Mint amount cannot be zero.
 const EMintAmountCannotBeZero: u64 = 6;
+
+const EScriptPubkeyUnsupported: u64 = 7;
 
 /// Represents a controlled treasury for managing a regulated coin.
 public struct ControlledTreasury<phantom T> has key {
@@ -82,6 +85,12 @@ public struct MintEvent<phantom T> has copy, drop {
 public struct BurnEvent<phantom T> has copy, drop {
     amount: u64,
     from: address,
+}
+
+public struct UnstakeRequestEvent<phantom T> has copy, drop {
+    from: address,
+    script_pubkey:  vector<u8>,
+    amount_after_fee: u64,
 }
 
 // === DF Keys ===
@@ -278,14 +287,81 @@ public(package) fun burn<T>(
     coin: Coin<T>,
     ctx: &mut TxContext,
 ) {
-    // We can a special authorization check here before letting the sender burn their tokens
-
     event::emit(BurnEvent<T> {
         amount: coin::value<T>(&coin),
         from: ctx.sender(),
     });
 
     coin::burn(&mut treasury.treasury_cap, coin);
+}
+
+/// Allow any external address to burn coins.
+///
+/// Emits: BurnEvent
+#[allow(unused_mut_parameter)]
+public fun public_burn<T>(
+    treasury: &mut ControlledTreasury<T>,
+    coin: Coin<T>,
+    ctx: &mut TxContext,
+) {
+    coin::burn(&mut treasury.treasury_cap, coin);
+}
+
+/// Allow any external address to redeem (burn) coins to initiate BTC withdrawal.
+///
+/// Emits: UnstakeRequest
+#[allow(unused_mut_parameter)]
+public fun redeem<T>(
+    treasury: &mut ControlledTreasury<T>,
+    denylist: &DenyList,
+    coin: Coin<T>,
+    script_pubkey: vector<u8>,
+    amount: u64,
+    ctx: &mut TxContext,
+) {
+    // Determine the Bitcoin Output Type
+    let out_type = get_output_type(&script_pubkey);
+
+    // Check if the output type is supported
+    assert!(out_type == get_unsupported_output_type(), EScriptPubkeyUnsupported);
+
+    assert!(!is_global_pause_enabled<T>(denylist), EMintNotAllowed);
+
+    //TODO
+    // Retrieve the burn commission fee
+    // let fee = treasury.burn_commission;
+    let fee = 0;
+    // assert! (amount <= fee) EAmountLessThanCommission
+
+    // Calculate the amount after deducting the fee.
+    let amount_after_fee = amount - fee;
+
+    //TODO dust_fee_rate
+    // Calculate the dust limit using BitcoinUtils
+    // let dust_limit = get_dust_limit_for_output(
+    //     out_type,
+    //     &script_pubkey,
+    //     treasury.dust_fee_rate,
+    // );
+
+    // Ensure the amount after fee meets the dust limit
+    // assert! (amount_after_fee < dust_limit) EAmountBelowDustLimit
+
+    // Get the sender's address
+    let from_address = ctx.sender();
+
+    //TODO
+    // Transfer the fee to the treasury
+
+    // Burn the amount after fee from the sender's account
+    coin::burn(&mut treasury.treasury_cap, coin);
+
+    // Emit the UnstakeRequest event
+    event::emit(UnstakeRequestEvent<T> {
+        from: from_address,
+        script_pubkey,
+        amount_after_fee: amount_after_fee,
+    });
 }
 
 // === Pause operations ===
