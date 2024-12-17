@@ -30,8 +30,8 @@ public(package) fun is_valid_key(pk: &vector<u8>): bool {
     let prefix = *pk.borrow(0);
 
     match (pk.length()) {
-        // Ed25519 (32 bytes plus prefix 0x00)
-        33 => prefix == 0,
+        // Ed25519 (32 bytes plus prefix 0x00) || Secp256k1 (32 bytes plus prefix 0x02 or 0x03)
+        33 => prefix == 0 || prefix == 2 || prefix == 3,
         // Secp256k1 or Secp256r1 (33 bytes plus prefix 0x01 or 0x02)
         34 => prefix == 1 || prefix == 2,
         // Invalid length

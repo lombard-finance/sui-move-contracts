@@ -13,6 +13,8 @@ const EAdminAlreadyExists: u64 = 1;
 const EAdminDoesNotExist: u64 = 2;
 /// Payload has already been used.
 const EUsedPayload: u64 = 3;
+/// Admin vector should contain at least one address.
+const ECannotRemoveLastAdmin: u64 = 4;
 
 /// Consortium struct which contains the current epoch, the public keys of the validator,
 /// the used payloads and the admin addresses 
@@ -44,8 +46,10 @@ public fun validate_payload(
 ): bool {
     let hash = hash::sha2_256(payload);
     assert!(!consortium.is_payload_used(hash), EUsedPayload);
+    // get the signature from the proof
     let signatures = payload_decoder::decode_signatures(proof);
-    let signers = consortium.get_validator_set();
+    // get the validator set for the current epoch
+    let signers = consortium.get_validator_set(consortium.epoch);
     if (payload_decoder::validate_signatures(signers, signatures, payload, hash)) {
         consortium.used_payloads.add(hash, true);
         true
@@ -54,7 +58,8 @@ public fun validate_payload(
     }
 }
 
-// === Admin ===
+// === Admin Functions ===
+
 // Increments the epoch and updates the validator set.
 public fun set_next_validator_set(
     consortium: &mut Consortium,
@@ -63,7 +68,10 @@ public fun set_next_validator_set(
 ) {
     assert!(consortium.admins.contains(&ctx.sender()), EUnauthorized);
     pk_utils::validate_pks(&new_validator_set);
-    consortium.epoch = consortium.epoch + 1;
+    // On initial validator set, the epoch is not incremented
+    if (!(consortium.epoch == 0 && !consortium.validator_set.contains(0))) {
+        consortium.epoch = consortium.epoch + 1;
+    };
     consortium.validator_set.add(consortium.epoch, new_validator_set);
 }
 
@@ -85,6 +93,7 @@ public fun remove_admin(
     ctx: &mut TxContext,
 ) {
     assert!(consortium.admins.contains(&ctx.sender()), EUnauthorized);
+    assert!(consortium.admins.length() > 1, ECannotRemoveLastAdmin);
     let (exists, index) = consortium.admins.index_of(&admin);
     assert!(exists, EAdminDoesNotExist);
     consortium.admins.remove(index);
@@ -92,14 +101,25 @@ public fun remove_admin(
 
 // === Utilities ===
 
-/// Get the latest validator set.
-public fun get_validator_set(consortium: &Consortium): vector<vector<u8>> {
-    *consortium.validator_set.borrow(consortium.epoch)
+/// Get the validator set for a given epoch.
+public fun get_validator_set(consortium: &Consortium, epoch: u64): vector<vector<u8>> {
+    *consortium.validator_set.borrow(epoch)
 }
 
-/// Check if the hash of the payload has been used.
-public fun is_payload_used(consortium: &Consortium, payload: vector<u8>): bool {
-    consortium.used_payloads.contains(hash::sha2_256(payload))
+/// Check if the payload has been used.
+public fun is_payload_used(consortium: &Consortium, hash: vector<u8>): bool {
+    consortium.used_payloads.contains(hash)
+}
+
+/// Get the current epoch
+public fun get_epoch(consortium: &Consortium): u64 {
+    consortium.epoch
+}
+
+// === Test Functions ===
+#[test_only]
+public fun init_for_testing(ctx: &mut TxContext) {
+    init(ctx);
 }
 
 
