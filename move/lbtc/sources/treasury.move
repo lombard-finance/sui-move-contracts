@@ -341,7 +341,6 @@ public fun burn<T>(
 #[allow(unused_mut_parameter)]
 public fun redeem<T>(
     treasury: &mut ControlledTreasury<T>,
-    denylist: &DenyList,
     coin: &mut Coin<T>,
     script_pubkey: vector<u8>,
     amount: u256,
@@ -372,12 +371,14 @@ public fun redeem<T>(
 
     // Ensure the amount after fee meets the dust limit
     assert!(amount_after_fee < dust_limit, EAmountBelowDustLimit);
+    //see to the treasury
 
-    // Transfer the fee to the treasury
     coin.split_and_transfer(*burn_commission as u64, ctx.sender(), ctx);
-
+    
+    let coin_to_burn = coin::split<T>(coin, (amount as u64) - (*burn_commission as u64), ctx);
+    
     // Burn the amount after fee from the sender's account
-    // burn_internal(treasury, coin, ctx);
+    burn_internal(treasury, coin_to_burn, ctx);
 
     // Emit the UnstakeRequest event
     event::emit(UnstakeRequestEvent<T> {
@@ -456,8 +457,12 @@ public fun set_burn_commission<T>(
     ctx: &mut TxContext
 ) {
     assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
-    let burn_commission: &mut u64 = df::borrow_mut(&mut treasury.id, b"burn_commission");
-    *burn_commission = new_burn_commission;
+    if (df::exists_(&treasury.id, b"burn_commission")) {
+        let burn_commission = df::borrow_mut(&mut treasury.id, b"burn_commission");
+        *burn_commission = new_burn_commission;
+    } else {
+        df::add(&mut treasury.id, b"burn_commission", new_burn_commission);
+    };
 }
 
 /// Get the value of `burn_commission`.
@@ -475,8 +480,12 @@ public fun set_dust_fee_rate<T>(
     ctx: &mut TxContext
 ) {
     assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
-    let dust_fee_rate: &mut u64 = df::borrow_mut(&mut treasury.id, b"dust_fee_rate");
-    *dust_fee_rate = new_dust_fee_rate;
+    if (df::exists_(&treasury.id, b"dust_fee_rate")) {
+        let dust_fee_rate = df::borrow_mut(&mut treasury.id, b"dust_fee_rate");
+        *dust_fee_rate = new_dust_fee_rate;
+    } else {
+        df::add(&mut treasury.id, b"dust_fee_rate", new_dust_fee_rate);
+    };
 }
 
 /// Get the value of `dust_fee_rate`.
@@ -494,8 +503,12 @@ public fun set_treasury_address<T>(
     ctx: &mut TxContext
 ) {
     assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
-    let treasury_address: &mut address = df::borrow_mut(&mut treasury.id, b"treasury_address");
-    *treasury_address = new_treasury_address;
+    if (df::exists_(&treasury.id, b"treasury_address")) {
+        let treasury_address = df::borrow_mut(&mut treasury.id, b"treasury_address");
+        *treasury_address = new_treasury_address;
+    } else {
+        df::add(&mut treasury.id, b"treasury_address", new_treasury_address);
+    }; 
 }
 
 /// Check if `withdrawal_enabled` is enalbled.
@@ -512,8 +525,12 @@ public fun toggle_withdrawal<T>(
     ctx: &mut TxContext,
 ) {
     assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
-    let withdrawal_enabled: &mut bool = df::borrow_mut(&mut treasury.id, b"withdrawal_enabled");
-    *withdrawal_enabled = !*withdrawal_enabled;
+    if (df::exists_(&treasury.id, b"withdrawal_enabled")) {
+        let check = df::borrow_mut(&mut treasury.id, b"withdrawal_enabled");
+        *check = !*check;
+    } else {
+        df::add(&mut treasury.id, b"withdrawal_enabled", true);
+    };    
 }
 
 

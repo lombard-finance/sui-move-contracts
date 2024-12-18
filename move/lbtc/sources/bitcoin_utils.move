@@ -91,5 +91,17 @@ public fun get_dust_limit_for_output(
 }
 
 public fun get_unsupported_output_type(): OutputType {
-    return OutputType::Unsupported
+    OutputType::Unsupported
+}
+
+public fun get_P2TR_output_type(): OutputType {
+    OutputType::P2TR
+}
+
+public fun get_P2WPKH_output_type(): OutputType {
+    OutputType::P2WPKH
+}
+
+public fun get_P2WSH_output_type(): OutputType {
+    OutputType::P2WSH
 }
