@@ -1,9 +1,14 @@
 # Matrix of Roles
 
-| Role                 | Managing Roles | Set Validators Set | Mint Coins | Pause/Unpause Transactions | Set Maximum Fee | Set Burn Commission | Set Treasury Address | Set Dust Fee Rate | Enable/Disable Withdrawal |
-|-----------------------|:-------------:|:------------------:|:----------:|:--------------------------:|:---------------:|:--------------------:|:--------------------:|:----------------:|:-------------------------:|
-| **Admin**            | X             |                    |            |                            |                 | X                    | X                    | X                | X                         |
-| **Minter**           |               |                    | X          |                            |                 |                      |                      |                  |                           |
-| **Pauser**           |               |                    |            | X                          |                 |                      |                      |                  |                           |
-| **Operator**         |               |                    |            |                            | X               |                      |                      |                  |                           |
-| **Consortium Admin** |               | X                  |            |                            |                 |                      |                      |                  |                           |
+| Capability                         | Admin | Consortium Admin | Minter | Pauser | Operator |
+|------------------------------------|:-----:|:----------------:|:------:|:------:|:--------:|
+| Managing Roles                    |   X   |                  |        |        |          |
+| Set Validators Set                |       |         X        |        |        |          |
+| Mint Coins                        |       |                  |   X    |        |          |
+| Pause/Unpause Transactions        |       |                  |        |   X    |          |
+| Set Maximum Fee                   |       |                  |        |        |    X     |
+| Set Burn Commission               |   X   |                  |        |        |          |
+| Set Dust Fee Rate                 |   X   |                  |        |        |          |
+| Enable/Disable Withdrawal         |   X   |                  |        |        |          |
+| Enable/Disable Bascule Validation |   X   |                  |        |        |          |
+| Set Treasury Address              |   X   |                  |        |        |          |
