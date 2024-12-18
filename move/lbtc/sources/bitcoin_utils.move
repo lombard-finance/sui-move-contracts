@@ -14,11 +14,11 @@ const OP_DATA_32: u8 = 0x20;
 const OP_DATA_20: u8 = 0x14;
 
 /// Base spend cost in satoshis.
-const BASE_SPEND_COST: u64 = 49;
+const BASE_SPEND_COST: u256 = 49;
 
 /// Size of inputs spending different output types.
-const NON_WITNESS_INPUT_SIZE: u64 = 107;
-const WITNESS_INPUT_SIZE: u64 = 26;
+const NON_WITNESS_INPUT_SIZE: u256 = 107;
+const WITNESS_INPUT_SIZE: u256 = 26;
 
 /// Determines the OutputType based on the provided scriptPubkey.
 ///
@@ -65,15 +65,14 @@ public fun get_output_type(script_pubkey: &vector<u8>): OutputType {
 ///
 /// # Returns
 ///
-/// * `u64` - The calculated dust limit in satoshis.
+/// * `u256` - The calculated dust limit in satoshis.
 public fun get_dust_limit_for_output(
     out_type: OutputType,
     script_pubkey: &vector<u8>,
-    dust_fee_rate: u64
-): u64 {
-    let spend_cost: u64 = BASE_SPEND_COST;
+    dust_fee_rate: u256
+): u256 {
 
-    let additional_cost: u64;
+    let additional_cost: u256;
     if (
         out_type == OutputType::P2TR ||
         out_type == OutputType::P2WPKH ||
@@ -85,12 +84,10 @@ public fun get_dust_limit_for_output(
         additional_cost = NON_WITNESS_INPUT_SIZE;
     };
 
-    let total_spend_cost: u64 = spend_cost + additional_cost + script_pubkey.length();
+    let total_spend_cost: u256 = BASE_SPEND_COST + additional_cost + (script_pubkey.length() as u256);
 
     // Calculate dust limit: (spend_cost * dust_fee_rate) / 1000
-    let dust_limit: u64 = (total_spend_cost * dust_fee_rate) / 1000;
-
-    return dust_limit
+    (total_spend_cost * dust_fee_rate) / 1000
 }
 
 public fun get_unsupported_output_type(): OutputType {

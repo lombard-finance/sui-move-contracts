@@ -31,6 +31,7 @@ use sui::bag::{Self, Bag};
 use sui::coin::{Self, Coin, DenyCapV2, TreasuryCap};
 use sui::deny_list::DenyList;
 use sui::event;
+use sui::dynamic_field as df;
 
 /// No authorization record exists for the action.
 const ENoAuthRecord: u64 = 0;
@@ -48,6 +49,12 @@ const ENoMultisigSender: u64 = 5;
 const EMintAmountCannotBeZero: u64 = 6;
 
 const EScriptPubkeyUnsupported: u64 = 7;
+
+const EWithdrawalDisabled: u64 = 8;
+
+const EAmountBelowDustLimit: u64 = 9;
+
+const EAmountLessThanCommission: u64 = 10;
 
 /// Represents a controlled treasury for managing a regulated coin.
 public struct ControlledTreasury<phantom T> has key {
@@ -90,7 +97,7 @@ public struct BurnEvent<phantom T> has copy, drop {
 public struct UnstakeRequestEvent<phantom T> has copy, drop {
     from: address,
     script_pubkey:  vector<u8>,
-    amount_after_fee: u64,
+    amount_after_fee: u256,
 }
 
 // === DF Keys ===
@@ -133,6 +140,29 @@ public fun new<T>(
         admin_count: 1,
         roles: bag::new(ctx),
     };
+    /////new fields
+    let treasury_address: address = @0x7;
+
+    df::add(
+        &mut treasury.id,
+        b"treasury_address",
+        treasury_address
+    );    
+    df::add(
+        &mut treasury.id,
+        b"withdrawal_enabled",
+        true
+    );  
+    df::add(
+        &mut treasury.id,
+        b"burn_commission",
+        1000
+    );  
+    df::add(
+        &mut treasury.id,
+        b"dust_fee_rate",
+        3000
+    );
 
     treasury.add_cap(owner, AdminCap {});
     treasury
@@ -312,9 +342,9 @@ public fun burn<T>(
 public fun redeem<T>(
     treasury: &mut ControlledTreasury<T>,
     denylist: &DenyList,
-    coin: Coin<T>,
+    coin: &mut Coin<T>,
     script_pubkey: vector<u8>,
-    amount: u64,
+    amount: u256,
     ctx: &mut TxContext,
 ) {
     // Determine the Bitcoin Output Type
@@ -323,40 +353,35 @@ public fun redeem<T>(
     // Check if the output type is supported
     assert!(out_type == get_unsupported_output_type(), EScriptPubkeyUnsupported);
 
-    assert!(!is_global_pause_enabled<T>(denylist), EMintNotAllowed);
+    assert!(is_withdrawal_enabled<T>(treasury), EWithdrawalDisabled);
 
-    //TODO
-    // Retrieve the burn commission fee
-    // let fee = treasury.burn_commission;
-    let fee = 0;
-    // assert! (amount <= fee) EAmountLessThanCommission
+    let burn_commission: &u256 = df::borrow(&treasury.id, b"burn_commission");
+    assert!(amount <= *burn_commission, EAmountLessThanCommission);
 
     // Calculate the amount after deducting the fee.
-    let amount_after_fee = amount - fee;
+    let amount_after_fee: u256 = amount - *burn_commission;
 
-    //TODO dust_fee_rate
+    let dust_fee_rate: &u256 = df::borrow(&treasury.id, b"dust_fee_rate");
+
     // Calculate the dust limit using BitcoinUtils
-    // let dust_limit = get_dust_limit_for_output(
-    //     out_type,
-    //     &script_pubkey,
-    //     treasury.dust_fee_rate,
-    // );
+    let dust_limit = get_dust_limit_for_output(
+        out_type,
+        &script_pubkey,
+        *dust_fee_rate,
+    );
 
     // Ensure the amount after fee meets the dust limit
-    // assert! (amount_after_fee < dust_limit) EAmountBelowDustLimit
+    assert!(amount_after_fee < dust_limit, EAmountBelowDustLimit);
 
-    // Get the sender's address
-    let from_address = ctx.sender();
-
-    //TODO
     // Transfer the fee to the treasury
+    coin.split_and_transfer(*burn_commission as u64, ctx.sender(), ctx);
 
     // Burn the amount after fee from the sender's account
-    burn_internal(treasury, coin, ctx);
+    // burn_internal(treasury, coin, ctx);
 
     // Emit the UnstakeRequest event
     event::emit(UnstakeRequestEvent<T> {
-        from: from_address,
+        from: ctx.sender(),
         script_pubkey,
         amount_after_fee: amount_after_fee,
     });
@@ -423,6 +448,74 @@ public fun disable_global_pause<T>(
 }
 
 // === Utilities ===
+
+/// Set the value of `burn_commission`.
+public fun set_burn_commission<T>(
+    treasury: &mut ControlledTreasury<T>,
+    new_burn_commission: u64,
+    ctx: &mut TxContext
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    let burn_commission: &mut u64 = df::borrow_mut(&mut treasury.id, b"burn_commission");
+    *burn_commission = new_burn_commission;
+}
+
+/// Get the value of `burn_commission`.
+public fun get_burn_commission<T>(
+    treasury: &ControlledTreasury<T>,
+): u64 {
+    let burn_commission: &u64 = df::borrow(&treasury.id, b"burn_commission");
+    *burn_commission
+}
+
+/// Set the value of `dust_fee_rate`.
+public fun set_dust_fee_rate<T>(
+    treasury: &mut ControlledTreasury<T>,
+    new_dust_fee_rate: u64,
+    ctx: &mut TxContext
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    let dust_fee_rate: &mut u64 = df::borrow_mut(&mut treasury.id, b"dust_fee_rate");
+    *dust_fee_rate = new_dust_fee_rate;
+}
+
+/// Get the value of `dust_fee_rate`.
+public fun get_dust_fee_rate<T>(
+    treasury: &ControlledTreasury<T>,
+): u64 {
+    let dust_fee_rate: &u64 = df::borrow(&treasury.id, b"dust_fee_rate");
+    *dust_fee_rate
+}
+
+/// Set the value of `dust_fee_rate`.
+public fun set_treasury_address<T>(
+    treasury: &mut ControlledTreasury<T>,
+    new_treasury_address: address,
+    ctx: &mut TxContext
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    let treasury_address: &mut address = df::borrow_mut(&mut treasury.id, b"treasury_address");
+    *treasury_address = new_treasury_address;
+}
+
+/// Check if `withdrawal_enabled` is enalbled.
+public fun is_withdrawal_enabled<T>(
+    treasury: &ControlledTreasury<T>,
+): bool {
+    let withdrawal_enabled: &bool = df::borrow(&treasury.id, b"withdrawal_enabled");
+    *withdrawal_enabled
+}
+
+/// Enable or Disable `withdrawal_enabled`.
+public fun toggle_withdrawal<T>(
+    treasury: &mut ControlledTreasury<T>,
+    ctx: &mut TxContext,
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    let withdrawal_enabled: &mut bool = df::borrow_mut(&mut treasury.id, b"withdrawal_enabled");
+    *withdrawal_enabled = !*withdrawal_enabled;
+}
+
 
 /// Check if a capability `Cap` is assigned to the `owner`.
 public fun has_cap<T, Cap: store>(
