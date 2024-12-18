@@ -39,7 +39,7 @@ fun test_consortium_validation() {
     {
         let mut consortium = ts::take_shared<Consortium>(scenario);
         assert!(!consortium.is_payload_used(HASH), EInvalidPayload);
-        let (_, proof) = consortium::validate_payload(&consortium, PAYLOAD, SIGNATURES);
+        let proof = consortium::validate_payload(&consortium, PAYLOAD, SIGNATURES);
         consortium::resolve_proof(&mut consortium, proof);
         assert!(consortium.is_payload_used(HASH), EInvalidPayload);
         ts::return_shared<Consortium>(consortium); 
@@ -195,7 +195,7 @@ fun test_used_payload() {
     scenario.next_tx(ADMIN_USER);
     {
         let mut consortium = ts::take_shared<Consortium>(scenario);
-        let (_, proof) = consortium::validate_payload(&consortium, PAYLOAD, SIGNATURES);
+        let proof = consortium::validate_payload(&consortium, PAYLOAD, SIGNATURES);
         consortium::resolve_proof(&mut consortium, proof);
         ts::return_shared<Consortium>(consortium);
     };
@@ -203,9 +203,38 @@ fun test_used_payload() {
     scenario.next_tx(USER);
     {
         let mut consortium = ts::take_shared<Consortium>(scenario);
-        let (_, proof) = consortium::validate_payload(&consortium, PAYLOAD, SIGNATURES);
+        let proof = consortium::validate_payload(&consortium, PAYLOAD, SIGNATURES);
         consortium::resolve_proof(&mut consortium, proof);
         ts::return_shared<Consortium>(consortium);
     };
+    ts::end(scenario_val);
+}
+
+#[test, expected_failure(abort_code = consortium::EInvalidPayload)]
+fun test_invalid_payload() {
+    // Begin a new test scenario with ADMIN_USER
+    let mut scenario_val = ts::begin(ADMIN_USER);
+    let scenario = &mut scenario_val;
+    let invalid_payload = x"f1f2f3f4";
+
+    {
+        init_for_testing(scenario.ctx());
+    };
+
+    scenario.next_tx(ADMIN_USER);
+    {
+        let mut consortium = ts::take_shared<Consortium>(scenario);
+        consortium::set_next_validator_set(&mut consortium, SIGNERS, scenario.ctx());
+        ts::return_shared<Consortium>(consortium);
+    };
+
+    scenario.next_tx(ADMIN_USER);
+    {
+        let mut consortium = ts::take_shared<Consortium>(scenario);
+        let proof = consortium::validate_payload(&consortium, invalid_payload, SIGNATURES);
+        consortium::resolve_proof(&mut consortium, proof);
+        ts::return_shared<Consortium>(consortium);
+    };
+
     ts::end(scenario_val);
 }

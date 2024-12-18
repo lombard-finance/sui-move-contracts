@@ -13,11 +13,13 @@ const EAdminAlreadyExists: u64 = 1;
 const EAdminDoesNotExist: u64 = 2;
 /// Payload has already been used.
 const EUsedPayload: u64 = 3;
+/// Invalid payload.
+const EInvalidPayload: u64 = 4;
 /// Admin vector should contain at least one address.
-const ECannotRemoveLastAdmin: u64 = 4;
+const ECannotRemoveLastAdmin: u64 = 5;
 
-public struct ValidateProof {
-    hash: Option<vector<u8>>,
+public struct ValidateProof has drop {
+    hash: vector<u8>,
 }
 
 /// Consortium struct which contains the current epoch, the public keys of the validator,
@@ -42,24 +44,20 @@ fun init(ctx: &mut TxContext) {
 }
 
 /// Validates that the payload has not been used and that the signatures are valid.
-/// It returns a boolean indicating if the payload is valid and a ValidateProof.
 /// ValidateProof contains the hash of the payload if the payload is valid.
 public fun validate_payload(
     consortium: &Consortium,
     payload: vector<u8>,
     proof: vector<u8>,
-): (bool, ValidateProof) {
+): ValidateProof {
     let hash = hash::sha2_256(payload);
     assert!(!consortium.is_payload_used(hash), EUsedPayload);
     // get the signature from the proof
     let signatures = payload_decoder::decode_signatures(proof);
     // get the validator set for the current epoch
     let signers = consortium.get_validator_set(consortium.epoch);
-    if (payload_decoder::validate_signatures(signers, signatures, payload, hash)) {
-        (true, ValidateProof { hash: option::some(hash) })
-    } else {
-        (false, ValidateProof { hash: option::none() })
-    }
+    assert!(payload_decoder::validate_signatures(signers, signatures, payload, hash), EInvalidPayload);
+    ValidateProof { hash }
 }
 
 /// Resolves the ValidateProof by adding the hash to the used_payloads table.
@@ -67,10 +65,8 @@ public fun resolve_proof(
     consortium: &mut Consortium,
     proof: ValidateProof,
 ) {
-    let ValidateProof { mut hash } = proof;
-    if (hash.is_some()) {
-        consortium.used_payloads.add(hash.extract(), true);
-    }
+    let ValidateProof { hash } = proof;
+    consortium.used_payloads.add(hash, true);
 }
 
 // === Admin Functions ===
