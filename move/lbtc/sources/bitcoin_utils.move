@@ -34,7 +34,7 @@ public fun get_output_type(script_pubkey: &vector<u8>): OutputType {
     let length = script_pubkey.length();
     
     // Check for P2WPKH
-    if (length == 22 && *(script_pubkey.borrow(0)) == OP_1 && *(script_pubkey.borrow(1)) == OP_DATA_20) {
+    if (length == 22 && *(script_pubkey.borrow(0)) == OP_0 && *(script_pubkey.borrow(1)) == OP_DATA_20) {
         return OutputType::P2WPKH
         
     };
