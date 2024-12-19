@@ -47,19 +47,19 @@ const EMintNotAllowed: u64 = 4;
 const ENoMultisigSender: u64 = 5;
 // Mint amount cannot be zero.
 const EMintAmountCannotBeZero: u64 = 6;
-
+// BTC public key unsupported.
 const EScriptPubkeyUnsupported: u64 = 7;
-
+// BTC withdrawal is disabled.
 const EWithdrawalDisabled: u64 = 8;
-
+// Amount is below the dust limit.
 const EAmountBelowDustLimit: u64 = 9;
-
-const EAmountLessThanCommission: u64 = 10;
-
+// Amount is less than the burn commission.
+const EAmountLessThanBurnCommission: u64 = 10;
+// Treasury address is not set.
 const ENoTreasuryAddress: u64 = 11;
-
+// Dust fee rate is not set.
 const ENoDustFeeRate: u64 = 12;
-
+// Burn commission is not set.
 const ENoBurnCommission: u64 = 13;
 
 /// Represents a controlled treasury for managing a regulated coin.
@@ -328,43 +328,50 @@ public fun redeem<T>(
     amount: u64,
     ctx: &mut TxContext,
 ){
-    // Determine the Bitcoin Output Type
+    // Determine the Bitcoin Address Output Type.
     let out_type = get_output_type(&script_pubkey);
 
-    // Check if the output type is supported
-    assert!(out_type == get_unsupported_output_type(), EScriptPubkeyUnsupported);
+    // Ensure the output type is supported.
+    assert!(out_type != get_unsupported_output_type(), EScriptPubkeyUnsupported);
 
+    // Verify that BTC withdrawal is enabled.
     assert!(is_withdrawal_enabled<T>(treasury), EWithdrawalDisabled);
 
+    // Check if the burn commission is defined.
     assert!(df::exists_(&treasury.id, b"burn_commission"), ENoBurnCommission );
     let burn_commission: &u64 = df::borrow(&treasury.id, b"burn_commission");
-    assert!(amount <= *burn_commission, EAmountLessThanCommission);
 
-    // Calculate the amount after deducting the fee.
+    // Ensure the amount is not less than the burn commission.
+    assert!(amount > *burn_commission, EAmountLessThanBurnCommission);
+
+    // Calculate the amount remaining after deducting the burn commission.
     let amount_after_fee: u64 = amount - *burn_commission;
 
+    // Check if the dust fee rate is defined.
     assert!(df::exists_(&treasury.id, b"dust_fee_rate"), ENoDustFeeRate );
     let dust_fee_rate: &u64 = df::borrow(&treasury.id, b"dust_fee_rate");
 
-    // Calculate the dust limit using BitcoinUtils
+    // Calculate the dust limit using Bitcoin utilities.
     let dust_limit = get_dust_limit_for_output(
         out_type,
         &script_pubkey,
         *dust_fee_rate,
     );
 
-    // Ensure the amount after fee meets the dust limit
-    assert!(amount_after_fee < dust_limit, EAmountBelowDustLimit);
+    // Ensure the amount after the fee meets the dust limit.
+    assert!(amount_after_fee >= dust_limit, EAmountBelowDustLimit);
 
-    //Send 
+    // Check if the treasury address is defined. 
     assert!(df::exists_(&treasury.id, b"treasury_address"), ENoTreasuryAddress );
     let treasury_address: &address = df::borrow( &treasury.id, b"treasury_address");
+    
+    // Transfer the burn commission to the treasury address.
     coin.split_and_transfer(*burn_commission, *treasury_address, ctx);
         
-    // Burn the amount after fee from the sender's account
+    // Burn the remaining amount after the fee from the sender's account.
     burn_internal(treasury, coin, ctx);
 
-    // Emit the UnstakeRequest event
+    // Emit the `UnstakeRequest` event.
     event::emit(UnstakeRequestEvent<T> {
         from: ctx.sender(),
         script_pubkey,
