@@ -1,7 +1,8 @@
 #[test_only]
 module lbtc::treasury_tests;
 
-use lbtc::treasury::{Self, ControlledTreasury, AdminCap, MinterCap, PauserCap};
+use lbtc::treasury::{Self, ControlledTreasury, AdminCap, MinterCap, PauserCap, redeem, 
+set_dust_fee_rate, set_burn_commission, set_treasury_address, toggle_withdrawal};
 use std::string;
 use sui::coin::{Self, Coin};
 use sui::deny_list::{Self, DenyList};
@@ -15,6 +16,11 @@ const USER: address = @0x6;
 const MINT_LIMIT: u64 = 1_000_000;
 const TXID: vector<u8> = b"abcd";
 const IDX: u32 = 0;
+
+const ETreasuryAddressDoesNotHaveOnlyFee: u64 = 1;
+
+const OP_1: u8 = 0x51;
+const OP_DATA_32: u8 = 0x20;
 
 public struct TREASURY_TESTS has drop {}
 
@@ -487,3 +493,134 @@ public(package) fun create_test_currency(
         ts.ctx(),
     )
 }
+
+#[test]
+public fun test_redeem_success() {
+    // Begin a new test scenario with TREASURY_ADMIN
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+    
+    ts.next_tx(TREASURY_ADMIN);
+    // Set required dynamic fields:
+    set_burn_commission<TREASURY_TESTS>(&mut treasury, 100, ts.ctx());
+    set_dust_fee_rate<TREASURY_TESTS>(&mut treasury, 3000, ts.ctx());
+    set_treasury_address<TREASURY_TESTS>(&mut treasury, TREASURY_ADMIN, ts.ctx());
+    toggle_withdrawal<TREASURY_TESTS>(&mut treasury, ts.ctx());
+
+    // Get the default multisig setup
+    let (pks, weights, threshold) = multisig_tests::default_multisig_setup();
+
+    // Derive the multisig address
+    let multisig_address = lbtc::multisig::derive_multisig_address(pks, weights, threshold);
+
+    // Assign MinterCap to the multisig address
+    ts.next_tx(TREASURY_ADMIN);
+    let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
+    treasury.add_capability<TREASURY_TESTS, MinterCap>(multisig_address, minter_cap, ts.ctx());
+
+    // Mint and transfer tokens to the USER using the multisig address
+    ts.next_tx(multisig_address);
+    let denylist: DenyList = ts.take_shared();
+    treasury::mint_and_transfer(
+        &mut treasury,
+        1000,
+        USER,
+        &denylist,
+        pks,
+        weights,
+        threshold,
+        TXID,
+        IDX,
+        ts.ctx(),
+    );
+    ts::return_shared(denylist);
+
+    // USER redeem coin
+    ts.next_tx(USER);
+
+    let coin: Coin<TREASURY_TESTS> = ts.take_from_sender();
+
+    let opcodes: vector<u8> = vector[OP_1, OP_DATA_32];
+    let pubkey: vector<u8> = vector[2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8,
+                                    2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8,
+                                    2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8,
+                                    2u8, 2u8];
+    let mut combined: vector<u8> = opcodes;
+    vector::append(&mut combined, pubkey);
+    let script_pubkey: vector<u8> = combined;
+
+    // Now, attempt to redeem from USER
+    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, 1000, ts.ctx());
+    
+    ts.next_tx(TREASURY_ADMIN);
+
+    let fee: Coin<TREASURY_TESTS> = ts.take_from_sender();
+
+    assert!(fee.balance().value() == 100, ETreasuryAddressDoesNotHaveOnlyFee);
+
+    ts.return_to_sender(fee);
+
+    test_utils::destroy(treasury);
+    ts.end();
+}
+
+#[test, expected_failure(abort_code = lbtc::treasury::EScriptPubkeyUnsupported)]
+public fun test_redeem_unsupported_script_pubkey() {
+    // Begin a new test scenario with TREASURY_ADMIN
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    ts.next_tx(TREASURY_ADMIN);
+    // Set required dynamic fields:
+    set_burn_commission<TREASURY_TESTS>(&mut treasury, 100, ts.ctx());
+    set_dust_fee_rate<TREASURY_TESTS>(&mut treasury, 3000, ts.ctx());
+    set_treasury_address<TREASURY_TESTS>(&mut treasury, TREASURY_ADMIN, ts.ctx());
+    toggle_withdrawal<TREASURY_TESTS>(&mut treasury, ts.ctx());
+
+    // Get the default multisig setup
+    let (pks, weights, threshold) = multisig_tests::default_multisig_setup();
+
+    // Derive the multisig address
+    let multisig_address = lbtc::multisig::derive_multisig_address(pks, weights, threshold);
+
+    // Assign MinterCap to the multisig address
+    ts.next_tx(TREASURY_ADMIN);
+    let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
+    treasury.add_capability<TREASURY_TESTS, MinterCap>(multisig_address, minter_cap, ts.ctx());
+
+    // Mint and transfer tokens to the USER using the multisig address
+    ts.next_tx(multisig_address);
+    let denylist: DenyList = ts.take_shared();
+    treasury::mint_and_transfer(
+        &mut treasury,
+        1000,
+        USER,
+        &denylist,
+        pks,
+        weights,
+        threshold,
+        TXID,
+        IDX,
+        ts.ctx(),
+    );
+    ts::return_shared(denylist);
+
+    // Now, attempt to redeem from USER with an unsupported scriptPubKey
+    ts.next_tx(USER);
+    let coin: Coin<TREASURY_TESTS> = ts.take_from_sender();
+
+    // Create an unsupported scriptPubKey.
+    let opcodes: vector<u8> = vector[OP_1]; // Missing OP_DATA_32 and full pubkey data
+    let pubkey: vector<u8> = vector[2u8, 2u8]; // Too short to be a valid pubkey
+    let mut combined: vector<u8> = opcodes;
+    vector::append(&mut combined, pubkey);
+    let script_pubkey: vector<u8> = combined;
+
+    // Attempt redeem with unsupported scriptPubKey, expecting failure
+    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, 1000, ts.ctx());
+    
+    test_utils::destroy(treasury);
+    ts.end();
+}
+
+

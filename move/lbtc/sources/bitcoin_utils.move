@@ -1,3 +1,6 @@
+// Copyright (c) Mysten Labs, Inc.
+// SPDX-License-Identifier: Apache-2.0
+
 module lbtc::bitcoin_utils;
 /// Enum representing different Bitcoin output types.
 public enum OutputType has store, copy, drop {
@@ -90,18 +93,22 @@ public fun get_dust_limit_for_output(
     (total_spend_cost * dust_fee_rate) / 1000
 }
 
+/// Returns the Unsupported output type.
 public fun get_unsupported_output_type(): OutputType {
     OutputType::Unsupported
 }
 
+/// Returns the P2TR output type.
 public fun get_P2TR_output_type(): OutputType {
     OutputType::P2TR
 }
 
+/// Returns the P2WPKH output type.
 public fun get_P2WPKH_output_type(): OutputType {
     OutputType::P2WPKH
 }
 
+/// Returns the P2WSH output type.
 public fun get_P2WSH_output_type(): OutputType {
     OutputType::P2WSH
 }

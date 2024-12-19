@@ -524,7 +524,6 @@ public fun toggle_withdrawal<T>(
     };    
 }
 
-
 /// Check if a capability `Cap` is assigned to the `owner`.
 public fun has_cap<T, Cap: store>(
     treasury: &ControlledTreasury<T>,
