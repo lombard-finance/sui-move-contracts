@@ -56,6 +56,12 @@ const EAmountBelowDustLimit: u64 = 9;
 
 const EAmountLessThanCommission: u64 = 10;
 
+const ENoTreasuryAddress: u64 = 11;
+
+const ENoDustFeeRate: u64 = 12;
+
+const ENoBurnCommission: u64 = 13;
+
 /// Represents a controlled treasury for managing a regulated coin.
 public struct ControlledTreasury<phantom T> has key {
     id: UID, // Unique identifier for the treasury.
@@ -97,7 +103,7 @@ public struct BurnEvent<phantom T> has copy, drop {
 public struct UnstakeRequestEvent<phantom T> has copy, drop {
     from: address,
     script_pubkey:  vector<u8>,
-    amount_after_fee: u256,
+    amount_after_fee: u64,
 }
 
 // === DF Keys ===
@@ -140,30 +146,6 @@ public fun new<T>(
         admin_count: 1,
         roles: bag::new(ctx),
     };
-    /////new fields
-    let treasury_address: address = @0x7;
-
-    df::add(
-        &mut treasury.id,
-        b"treasury_address",
-        treasury_address
-    );    
-    df::add(
-        &mut treasury.id,
-        b"withdrawal_enabled",
-        true
-    );  
-    df::add(
-        &mut treasury.id,
-        b"burn_commission",
-        1000
-    );  
-    df::add(
-        &mut treasury.id,
-        b"dust_fee_rate",
-        3000
-    );
-
     treasury.add_cap(owner, AdminCap {});
     treasury
 }
@@ -341,11 +323,11 @@ public fun burn<T>(
 #[allow(unused_mut_parameter)]
 public fun redeem<T>(
     treasury: &mut ControlledTreasury<T>,
-    coin: &mut Coin<T>,
+    mut coin: Coin<T>,
     script_pubkey: vector<u8>,
-    amount: u256,
+    amount: u64,
     ctx: &mut TxContext,
-) {
+){
     // Determine the Bitcoin Output Type
     let out_type = get_output_type(&script_pubkey);
 
@@ -354,13 +336,15 @@ public fun redeem<T>(
 
     assert!(is_withdrawal_enabled<T>(treasury), EWithdrawalDisabled);
 
-    let burn_commission: &u256 = df::borrow(&treasury.id, b"burn_commission");
+    assert!(df::exists_(&treasury.id, b"burn_commission"), ENoBurnCommission );
+    let burn_commission: &u64 = df::borrow(&treasury.id, b"burn_commission");
     assert!(amount <= *burn_commission, EAmountLessThanCommission);
 
     // Calculate the amount after deducting the fee.
-    let amount_after_fee: u256 = amount - *burn_commission;
+    let amount_after_fee: u64 = amount - *burn_commission;
 
-    let dust_fee_rate: &u256 = df::borrow(&treasury.id, b"dust_fee_rate");
+    assert!(df::exists_(&treasury.id, b"dust_fee_rate"), ENoDustFeeRate );
+    let dust_fee_rate: &u64 = df::borrow(&treasury.id, b"dust_fee_rate");
 
     // Calculate the dust limit using BitcoinUtils
     let dust_limit = get_dust_limit_for_output(
@@ -371,14 +355,14 @@ public fun redeem<T>(
 
     // Ensure the amount after fee meets the dust limit
     assert!(amount_after_fee < dust_limit, EAmountBelowDustLimit);
-    //see to the treasury
 
-    coin.split_and_transfer(*burn_commission as u64, ctx.sender(), ctx);
-    
-    let coin_to_burn = coin::split<T>(coin, (amount as u64) - (*burn_commission as u64), ctx);
-    
+    //Send 
+    assert!(df::exists_(&treasury.id, b"treasury_address"), ENoTreasuryAddress );
+    let treasury_address: &address = df::borrow( &treasury.id, b"treasury_address");
+    coin.split_and_transfer(*burn_commission, *treasury_address, ctx);
+        
     // Burn the amount after fee from the sender's account
-    burn_internal(treasury, coin_to_burn, ctx);
+    burn_internal(treasury, coin, ctx);
 
     // Emit the UnstakeRequest event
     event::emit(UnstakeRequestEvent<T> {
