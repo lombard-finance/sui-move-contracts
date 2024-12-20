@@ -27,6 +27,7 @@ export const MULTISIG = {
 export const PACKAGE_ID = process.env.PACKAGE_ID!;
 export const SHARED_CONTROLLED_TREASURY =
   process.env.SHARED_CONTROLLED_TREASURY!;
+export const SHARED_CONSORTIUM = process.env.SHARED_CONSORTIUM!;
 export const LBTC_COIN_TYPE = `${PACKAGE_ID}::lbtc::LBTC`;
 export const ONE_LBTC = 1 * 10 ** 8;
 export const DENYLIST = "0x403";
