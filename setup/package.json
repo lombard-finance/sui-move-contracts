@@ -22,13 +22,18 @@
     "testCapabilities": "env-cmd -f .env ts-node src/tests/testCapabilities.ts",
     "testE2E": "env-cmd -f .env ts-node src/e2e/main.ts",
     "testE2EConsortium": "env-cmd -f .env ts-node src/e2e/consortium-main.ts",
-    "testListCapabilities": "env-cmd -f .env ts-node src/tests/testListCapabilities.ts"
+    "testListCapabilities": "env-cmd -f .env ts-node src/tests/testListCapabilities.ts",
+    "testLedgerSigning": "env-cmd -f .env ts-node src/tests/testLedgerSigning.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ledgerhq/hw-transport": "^6.31.4",
+    "@ledgerhq/hw-transport-node-hid": "^6.29.5",
+    "@mysten/ledgerjs-hw-app-sui": "^0.4.1",
     "@mysten/sui": "^1.15.1",
+    "@noble/hashes": "^1.6.1",
     "@typemove/move": "^1.7.1",
     "@typemove/sui": "^1.7.1",
     "@types/node": "^22.10.0",
