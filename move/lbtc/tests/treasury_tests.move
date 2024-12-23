@@ -623,4 +623,356 @@ public fun test_redeem_unsupported_script_pubkey() {
     ts.end();
 }
 
+#[test, expected_failure(abort_code = lbtc::treasury::EWithdrawalDisabled)]
+public fun test_redeem_withdrawal_disabled() {
+    // Setup
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
 
+    // Initially disabled by default. Temporarily enable, then disable again, to ensure it ends disabled.
+
+    // Setup minimal fields for redeem:
+    ts.next_tx(TREASURY_ADMIN);
+    set_burn_commission<TREASURY_TESTS>(&mut treasury, 100, ts.ctx());
+    set_dust_fee_rate<TREASURY_TESTS>(&mut treasury, 3000, ts.ctx());
+    set_treasury_address<TREASURY_TESTS>(&mut treasury, TREASURY_ADMIN, ts.ctx());
+    toggle_withdrawal<TREASURY_TESTS>(&mut treasury, ts.ctx()); // Enable
+
+    // Get the default multisig setup
+    let (pks, weights, threshold) = multisig_tests::default_multisig_setup();
+
+    // Derive the multisig address
+    let multisig_address = lbtc::multisig::derive_multisig_address(pks, weights, threshold);
+
+    // Assign MinterCap to the multisig address
+    ts.next_tx(TREASURY_ADMIN);
+    let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
+    treasury.add_capability<TREASURY_TESTS, MinterCap>(multisig_address, minter_cap, ts.ctx());
+
+    ts.next_tx(TREASURY_ADMIN);
+    toggle_withdrawal<TREASURY_TESTS>(&mut treasury, ts.ctx()); // Disable
+
+    // Mint and transfer tokens to the USER using the multisig address
+    ts.next_tx(multisig_address);
+    let denylist: DenyList = ts.take_shared();
+    treasury::mint_and_transfer(
+        &mut treasury,
+        1000,
+        USER,
+        &denylist,
+        pks,
+        weights,
+        threshold,
+        TXID,
+        IDX,
+        ts.ctx(),
+    );
+    ts::return_shared(denylist);
+
+    // Attempt to redeem
+    ts.next_tx(USER);
+    let coin: Coin<TREASURY_TESTS> = ts.take_from_sender();
+
+    let opcodes: vector<u8> = vector[OP_1, OP_DATA_32];
+    let pubkey: vector<u8> = vector[2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8,
+                                    2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8,
+                                    2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8,
+                                    2u8, 2u8];
+    let mut combined: vector<u8> = opcodes;
+    vector::append(&mut combined, pubkey);
+    let script_pubkey: vector<u8> = combined;
+
+    // This call fails with EWithdrawalDisabled
+    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, 500, ts.ctx());
+
+    test_utils::destroy(treasury);
+    ts.end();
+}
+
+#[test, expected_failure(abort_code = lbtc::treasury::EAmountLessThanBurnCommission)]
+public fun test_redeem_insufficient_burn_commission() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    // Enable everything except we'll attempt to redeem an amount <= burn commission
+    ts.next_tx(TREASURY_ADMIN);
+    set_burn_commission<TREASURY_TESTS>(&mut treasury, 100, ts.ctx());
+    set_dust_fee_rate<TREASURY_TESTS>(&mut treasury, 3000, ts.ctx());
+    set_treasury_address<TREASURY_TESTS>(&mut treasury, TREASURY_ADMIN, ts.ctx());
+    toggle_withdrawal<TREASURY_TESTS>(&mut treasury, ts.ctx()); // Enable
+
+    // Get the default multisig setup
+    let (pks, weights, threshold) = multisig_tests::default_multisig_setup();
+
+    // Derive the multisig address
+    let multisig_address = lbtc::multisig::derive_multisig_address(pks, weights, threshold);
+
+    // Assign MinterCap to the multisig address
+    ts.next_tx(TREASURY_ADMIN);
+    let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
+    treasury.add_capability<TREASURY_TESTS, MinterCap>(multisig_address, minter_cap, ts.ctx());
+
+    // Mint and transfer tokens to the USER using the multisig address
+    ts.next_tx(multisig_address);
+    let denylist: DenyList = ts.take_shared();
+    treasury::mint_and_transfer(
+        &mut treasury,
+        1000,
+        USER,
+        &denylist,
+        pks,
+        weights,
+        threshold,
+        TXID,
+        IDX,
+        ts.ctx(),
+    );
+    ts::return_shared(denylist);
+
+    // Attempt to redeem 50, which is below burn_commission=100
+    ts.next_tx(USER);
+    let coin: Coin<TREASURY_TESTS> = ts.take_from_sender();
+
+    let opcodes: vector<u8> = vector[OP_1, OP_DATA_32];
+    let pubkey: vector<u8> = vector[2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8,
+                                    2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8,
+                                    2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8,
+                                    2u8, 2u8];
+    let mut combined: vector<u8> = opcodes;
+    vector::append(&mut combined, pubkey);
+    let script_pubkey: vector<u8> = combined;
+    // Fails with EAmountLessThanBurnCommission
+    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, 50, ts.ctx());
+
+    test_utils::destroy(treasury);
+    ts.end();
+}
+
+#[test, expected_failure(abort_code = lbtc::treasury::ENoBurnCommission)]
+public fun test_redeem_no_burn_commission() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    ts.next_tx(TREASURY_ADMIN);
+    // Notice we do NOT call set_burn_commission here
+    set_dust_fee_rate<TREASURY_TESTS>(&mut treasury, 3000, ts.ctx());
+    set_treasury_address<TREASURY_TESTS>(&mut treasury, TREASURY_ADMIN, ts.ctx());
+    toggle_withdrawal<TREASURY_TESTS>(&mut treasury, ts.ctx());
+
+    let (pks, weights, threshold) = multisig_tests::default_multisig_setup();
+
+    // Derive the multisig address
+    let multisig_address = lbtc::multisig::derive_multisig_address(pks, weights, threshold);
+
+    // Assign MinterCap to the multisig address
+    ts.next_tx(TREASURY_ADMIN);
+    let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
+    treasury.add_capability<TREASURY_TESTS, MinterCap>(multisig_address, minter_cap, ts.ctx());
+
+    // Mint and transfer tokens to the USER using the multisig address
+    ts.next_tx(multisig_address);
+    let denylist: DenyList = ts.take_shared();
+    treasury::mint_and_transfer(
+        &mut treasury,
+        1000,
+        USER,
+        &denylist,
+        pks,
+        weights,
+        threshold,
+        TXID,
+        IDX,
+        ts.ctx(),
+    );
+    ts::return_shared(denylist);
+    // Attempt to redeem
+    ts.next_tx(USER);
+    let coin: Coin<TREASURY_TESTS> = ts.take_from_sender();
+
+    let opcodes: vector<u8> = vector[OP_1, OP_DATA_32];
+    let pubkey: vector<u8> = vector[2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8,
+                                    2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8,
+                                    2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8,
+                                    2u8, 2u8];
+    let mut combined: vector<u8> = opcodes;
+    vector::append(&mut combined, pubkey);
+    let script_pubkey: vector<u8> = combined;
+    // Fails with ENoBurnCommission since we never set it
+    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, 500, ts.ctx());
+
+    test_utils::destroy(treasury);
+    ts.end();
+}
+
+#[test, expected_failure(abort_code = lbtc::treasury::ENoDustFeeRate)]
+public fun test_redeem_no_dust_fee_rate() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    ts.next_tx(TREASURY_ADMIN);
+    set_burn_commission<TREASURY_TESTS>(&mut treasury, 100, ts.ctx());
+    // NOT call set_dust_fee_rate here
+    set_treasury_address<TREASURY_TESTS>(&mut treasury, TREASURY_ADMIN, ts.ctx());
+    toggle_withdrawal<TREASURY_TESTS>(&mut treasury, ts.ctx());
+
+    let (pks, weights, threshold) = multisig_tests::default_multisig_setup();
+
+    // Derive the multisig address
+    let multisig_address = lbtc::multisig::derive_multisig_address(pks, weights, threshold);
+
+    // Assign MinterCap to the multisig address
+    ts.next_tx(TREASURY_ADMIN);
+    let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
+    treasury.add_capability<TREASURY_TESTS, MinterCap>(multisig_address, minter_cap, ts.ctx());
+
+    // Mint and transfer tokens to the USER using the multisig address
+    ts.next_tx(multisig_address);
+    let denylist: DenyList = ts.take_shared();
+    treasury::mint_and_transfer(
+        &mut treasury,
+        1000,
+        USER,
+        &denylist,
+        pks,
+        weights,
+        threshold,
+        TXID,
+        IDX,
+        ts.ctx(),
+    );
+    ts::return_shared(denylist);
+    // Attempt to redeem
+    ts.next_tx(USER);
+    let coin: Coin<TREASURY_TESTS> = ts.take_from_sender();
+
+    let opcodes: vector<u8> = vector[OP_1, OP_DATA_32];
+    let pubkey: vector<u8> = vector[2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8,
+                                    2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8,
+                                    2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8,
+                                    2u8, 2u8];
+    let mut combined: vector<u8> = opcodes;
+    vector::append(&mut combined, pubkey);
+    let script_pubkey: vector<u8> = combined;
+    // Fails with ENoDustFeeRate because the dust fee rate is never defined
+    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, 500, ts.ctx());
+
+    test_utils::destroy(treasury);
+    ts.end();
+}
+
+#[test, expected_failure(abort_code = lbtc::treasury::ENoTreasuryAddress)]
+public fun test_redeem_no_treasury_address() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    ts.next_tx(TREASURY_ADMIN);
+    set_burn_commission<TREASURY_TESTS>(&mut treasury, 100, ts.ctx());
+    set_dust_fee_rate<TREASURY_TESTS>(&mut treasury, 3000, ts.ctx());
+    toggle_withdrawal<TREASURY_TESTS>(&mut treasury, ts.ctx());
+    // NOT call set_treasury_address
+
+    // Get the default multisig setup
+    let (pks, weights, threshold) = multisig_tests::default_multisig_setup();
+
+    // Derive the multisig address
+    let multisig_address = lbtc::multisig::derive_multisig_address(pks, weights, threshold);
+
+    // Assign MinterCap to the multisig address
+    ts.next_tx(TREASURY_ADMIN);
+    let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
+    treasury.add_capability<TREASURY_TESTS, MinterCap>(multisig_address, minter_cap, ts.ctx());
+
+    // Mint and transfer tokens to the USER using the multisig address
+    ts.next_tx(multisig_address);
+    let denylist: DenyList = ts.take_shared();
+    treasury::mint_and_transfer(
+        &mut treasury,
+        1000,
+        USER,
+        &denylist,
+        pks,
+        weights,
+        threshold,
+        TXID,
+        IDX,
+        ts.ctx(),
+    );
+    ts::return_shared(denylist);
+    // Attempt to redeem
+    ts.next_tx(USER);
+    let coin: Coin<TREASURY_TESTS> = ts.take_from_sender();
+
+    let opcodes: vector<u8> = vector[OP_1, OP_DATA_32];
+    let pubkey: vector<u8> = vector[2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8,
+                                    2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8,
+                                    2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8,
+                                    2u8, 2u8];
+    let mut combined: vector<u8> = opcodes;
+    vector::append(&mut combined, pubkey);
+    let script_pubkey: vector<u8> = combined;
+    // Fails with ENoTreasuryAddress because we never set it
+    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, 500, ts.ctx());
+
+    test_utils::destroy(treasury);
+    ts.end();
+}
+
+#[test, expected_failure(abort_code = lbtc::treasury::EAmountBelowDustLimit)]
+public fun test_redeem_amount_below_dust_limit() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    ts.next_tx(TREASURY_ADMIN);
+    set_burn_commission<TREASURY_TESTS>(&mut treasury, 100, ts.ctx());
+    // Use a high dust fee rate or a scriptPubKey that calculates a high dust limit
+    set_dust_fee_rate<TREASURY_TESTS>(&mut treasury, 50_000, ts.ctx());
+    set_treasury_address<TREASURY_TESTS>(&mut treasury, TREASURY_ADMIN, ts.ctx());
+    toggle_withdrawal<TREASURY_TESTS>(&mut treasury, ts.ctx());
+
+    // Get the default multisig setup
+    let (pks, weights, threshold) = multisig_tests::default_multisig_setup();
+
+    // Derive the multisig address
+    let multisig_address = lbtc::multisig::derive_multisig_address(pks, weights, threshold);
+
+    // Assign MinterCap to the multisig address
+    ts.next_tx(TREASURY_ADMIN);
+    let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
+    treasury.add_capability<TREASURY_TESTS, MinterCap>(multisig_address, minter_cap, ts.ctx());
+
+    // Mint and transfer tokens to the USER using the multisig address
+    ts.next_tx(multisig_address);
+    let denylist: DenyList = ts.take_shared();
+    treasury::mint_and_transfer(
+        &mut treasury,
+        1000,
+        USER,
+        &denylist,
+        pks,
+        weights,
+        threshold,
+        TXID,
+        IDX,
+        ts.ctx(),
+    );
+    ts::return_shared(denylist);
+
+    // Attempt to redeem an amount so small that `amount_after_fee < dust_limit`
+    ts.next_tx(USER);
+    let coin: Coin<TREASURY_TESTS> = ts.take_from_sender();
+
+    let opcodes: vector<u8> = vector[OP_1, OP_DATA_32];
+    let pubkey: vector<u8> = vector[2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8,
+                                    2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8,
+                                    2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8, 2u8,
+                                    2u8, 2u8];
+    let mut combined: vector<u8> = opcodes;
+    vector::append(&mut combined, pubkey);
+    let script_pubkey: vector<u8> = combined;
+    // amount = 120, burn_commission=100 => amount_after_fee=20 
+    // dust_limit could easily exceed 20 with a high dust_fee_rate
+    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, 120, ts.ctx());
+
+    test_utils::destroy(treasury);
+    ts.end();
+}
