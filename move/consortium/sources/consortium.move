@@ -17,6 +17,8 @@ const EUsedPayload: u64 = 3;
 const EInvalidPayload: u64 = 4;
 /// Admin vector should contain at least one address.
 const ECannotRemoveLastAdmin: u64 = 5;
+/// Validator set does not exist for the given epoch.
+const EValidatorSetDoesNotExist: u64 = 6;
 
 public struct ValidateProof has drop {
     hash: vector<u8>,
@@ -114,6 +116,7 @@ public fun remove_admin(
 
 /// Get the validator set for a given epoch.
 public fun get_validator_set(consortium: &Consortium, epoch: u64): vector<vector<u8>> {
+    assert!(consortium.validator_set.contains(epoch), EValidatorSetDoesNotExist);
     *consortium.validator_set.borrow(epoch)
 }
 

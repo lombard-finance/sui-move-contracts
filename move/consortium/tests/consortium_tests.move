@@ -238,3 +238,23 @@ fun test_invalid_payload() {
 
     ts::end(scenario_val);
 }
+
+#[test, expected_failure(abort_code = consortium::EValidatorSetDoesNotExist)]
+fun test_nonexistent_validator_set() {
+    // Begin a new test scenario with ADMIN_USER
+    let mut scenario_val = ts::begin(ADMIN_USER);
+    let scenario = &mut scenario_val;
+
+    {
+        init_for_testing(scenario.ctx());
+    };
+
+    scenario.next_tx(ADMIN_USER);
+    {
+        let consortium = ts::take_shared<Consortium>(scenario);
+        consortium::get_validator_set(&consortium, 0);
+        ts::return_shared<Consortium>(consortium);
+    };
+
+    ts::end(scenario_val);
+}
