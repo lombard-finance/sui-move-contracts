@@ -337,36 +337,31 @@ public fun redeem<T>(
     // Verify that BTC withdrawal is enabled.
     assert!(is_withdrawal_enabled<T>(treasury), EWithdrawalDisabled);
 
-    // Check if the burn commission is defined.
-    assert!(df::exists_(&treasury.id, b"burn_commission"), ENoBurnCommission );
-    let burn_commission: &u64 = df::borrow(&treasury.id, b"burn_commission");
+    let burn_commission: u64 = get_burn_commission(treasury);
 
     // Ensure the amount is not less than the burn commission.
-    assert!(amount > *burn_commission, EAmountLessThanBurnCommission);
+    assert!(amount > burn_commission, EAmountLessThanBurnCommission);
 
     // Calculate the amount remaining after deducting the burn commission.
-    let amount_after_fee: u64 = amount - *burn_commission;
+    let amount_after_fee: u64 = amount - burn_commission;
 
-    // Check if the dust fee rate is defined.
-    assert!(df::exists_(&treasury.id, b"dust_fee_rate"), ENoDustFeeRate );
-    let dust_fee_rate: &u64 = df::borrow(&treasury.id, b"dust_fee_rate");
+    let dust_fee_rate: u64 = get_dust_fee_rate(treasury);
 
     // Calculate the dust limit using Bitcoin utilities.
     let dust_limit = get_dust_limit_for_output(
         out_type,
         &script_pubkey,
-        *dust_fee_rate,
+        dust_fee_rate,
     );
 
     // Ensure the amount after the fee meets the dust limit.
     assert!(amount_after_fee >= dust_limit, EAmountBelowDustLimit);
 
     // Check if the treasury address is defined. 
-    assert!(df::exists_(&treasury.id, b"treasury_address"), ENoTreasuryAddress );
-    let treasury_address: &address = df::borrow( &treasury.id, b"treasury_address");
+    let treasury_address: &address = get_treasury_address(treasury);
     
     // Transfer the burn commission to the treasury address.
-    coin.split_and_transfer(*burn_commission, *treasury_address, ctx);
+    coin.split_and_transfer(burn_commission, *treasury_address, ctx);
         
     // Burn the remaining amount after the fee from the sender's account.
     burn_internal(treasury, coin, ctx);
@@ -460,6 +455,7 @@ public fun set_burn_commission<T>(
 public fun get_burn_commission<T>(
     treasury: &ControlledTreasury<T>,
 ): u64 {
+    assert!(df::exists_(&treasury.id, b"burn_commission"), ENoBurnCommission );
     let burn_commission: &u64 = df::borrow(&treasury.id, b"burn_commission");
     *burn_commission
 }
@@ -483,6 +479,7 @@ public fun set_dust_fee_rate<T>(
 public fun get_dust_fee_rate<T>(
     treasury: &ControlledTreasury<T>,
 ): u64 {
+    assert!(df::exists_(&treasury.id, b"dust_fee_rate"), ENoDustFeeRate );
     let dust_fee_rate: &u64 = df::borrow(&treasury.id, b"dust_fee_rate");
     *dust_fee_rate
 }
@@ -500,6 +497,15 @@ public fun set_treasury_address<T>(
     } else {
         df::add(&mut treasury.id, b"treasury_address", new_treasury_address);
     }; 
+}
+
+/// Set the value of `dust_fee_rate`.
+public fun get_treasury_address<T>(
+    treasury: &mut ControlledTreasury<T>
+): &address {
+    assert!(df::exists_(&treasury.id, b"treasury_address"), ENoTreasuryAddress );
+    let treasury_address = df::borrow(&mut treasury.id, b"treasury_address");
+    treasury_address
 }
 
 /// Check if `withdrawal_enabled` is enalbled.
