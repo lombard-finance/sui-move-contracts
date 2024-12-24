@@ -30,6 +30,10 @@ use sui::bag::{Self, Bag};
 use sui::coin::{Self, Coin, DenyCapV2, TreasuryCap};
 use sui::deny_list::DenyList;
 use sui::event;
+use sui::bcs;
+use sui::dynamic_field as df;
+use consortium::consortium::{Self, Consortium};
+use consortium::payload_decoder;
 
 /// No authorization record exists for the action.
 const ENoAuthRecord: u64 = 0;
@@ -45,6 +49,10 @@ const EMintNotAllowed: u64 = 4;
 const ENoMultisigSender: u64 = 5;
 // Mint amount cannot be zero.
 const EMintAmountCannotBeZero: u64 = 6;
+// The sender of claim is not the same as the recipient.abort
+const EInvalidSender: u64 = 7;
+// Bascule check flag is not set.
+const ENoBasculeCheck: u64 = 8;
 
 /// Represents a controlled treasury for managing a regulated coin.
 public struct ControlledTreasury<phantom T> has key {
@@ -209,6 +217,20 @@ public fun remove_capability<T, C: store + drop>(
     let _: C = treasury.remove_cap(owner);
 }
 
+// === Dynamic Field Operations ===
+public fun toggle_bascule_check<T>(
+   treasury: &mut ControlledTreasury<T>,
+   ctx: &mut TxContext,
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    if (df::exists_(&treasury.id, b"bascule_check")) {
+        let check = df::borrow_mut(&mut treasury.id, b"bascule_check");
+        *check = !*check;
+    } else {
+        df::add(&mut treasury.id, b"bascule_check", true);
+    };
+}
+
 // === Mint operations ===
 
 /// Mints and transfers coins to a specified address.
@@ -263,6 +285,40 @@ public fun mint_and_transfer<T>(
     assert!(amount <= *left, EMintLimitExceeded);
     *left = *left - amount;
 
+    // Emit the event and mint + transfer the coins
+    event::emit(MintEvent<T> { amount, to, tx_id, index });
+    let new_coin = coin::mint(&mut treasury.treasury_cap, amount, ctx);
+    transfer::public_transfer(new_coin, to);
+}
+
+public fun claim<T>(
+    treasury: &mut ControlledTreasury<T>,
+    consortium: &mut Consortium,
+    denylist: &DenyList,
+    //bascule: &mut Bascule,
+    payload: vector<u8>,
+    proof: vector<u8>,
+    ctx: &mut TxContext,
+) {
+    // Ensure global pause is not enabled before continuing
+    assert!(!is_global_pause_enabled<T>(denylist), EMintNotAllowed);
+    // Validate the payload with consortium, if invalid, consortium will throw an error
+    let validate_proof = consortium::validate_payload(consortium, payload, proof);
+    // Resolve the proof to store the hash
+    consortium::resolve_proof(consortium, validate_proof);
+
+    let (action, to_chain, to, amount_u256, txid_u256, vout) = payload_decoder::decode(payload);
+    assert!(to == ctx.sender(), EInvalidSender);
+
+    let tx_id = bcs::to_bytes(&txid_u256);
+    // Convert the u256 to u64, if it's too large, the `Option` will be empty and extract will throw an error `EOPTION_NOT_SET`
+    let amount = amount_u256.try_as_u64().extract();
+    let index = vout.try_as_u32().extract();
+    
+    // Validate with the bascule
+    // if (treasury.is_bascule_check_enabled()) {
+    //     bascule::validate_withdrawal(&mut bascule, tx_id, index: u32, to: address, amount: u64, ctx: &TxContext);
+    // };
     // Emit the event and mint + transfer the coins
     event::emit(MintEvent<T> { amount, to, tx_id, index });
     let new_coin = coin::mint(&mut treasury.treasury_cap, amount, ctx);
@@ -361,6 +417,15 @@ public fun has_cap<T, Cap: store>(
 /// Checks if global pause is enabled for the next epoch.
 public fun is_global_pause_enabled<T>(deny_list: &DenyList): bool {
     coin::deny_list_v2_is_global_pause_enabled_next_epoch<T>(deny_list)
+}
+
+/// Checks if bascule check is enabled.
+public fun is_bascule_check_enabled<T>(
+    treasury: &ControlledTreasury<T>,
+): bool {
+    assert!(df::exists_(&treasury.id, b"bascule_check"), ENoBasculeCheck);
+    let check = df::borrow(&treasury.id, b"bascule_check");
+    *check
 }
 
 /// Returns a vector of role types assigned to the `owner`.

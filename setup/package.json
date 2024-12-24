@@ -20,6 +20,8 @@
     "testEnableGlobalPause": "env-cmd -f .env ts-node src/tests/testEnableGlobalPause.ts",
     "testDisableGlobalPause": "env-cmd -f .env ts-node src/tests/testDisableGlobalPause.ts",
     "testCapabilities": "env-cmd -f .env ts-node src/tests/testCapabilities.ts",
+    "testManualClaim": "env-cmd -f .env ts-node src/tests/testManualClaim.ts",
+    "testBasculeCheck": "env-cmd -f .env ts-node src/tests/testBasculeCheck.ts",
     "testE2E": "env-cmd -f .env ts-node src/e2e/main.ts",
     "testE2EConsortium": "env-cmd -f .env ts-node src/e2e/consortium-main.ts",
     "testListCapabilities": "env-cmd -f .env ts-node src/tests/testListCapabilities.ts",
