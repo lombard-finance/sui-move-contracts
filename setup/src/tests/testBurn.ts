@@ -3,13 +3,13 @@ import { suiClient, SHARED_CONTROLLED_TREASURY, ONE_LBTC, DENYLIST } from "../co
 import { burn } from "../utils/burn";
 import { mintAndTransfer } from "../utils/mintAndTransfer";
 import { getTestMultisigConfig } from "../helpers/getMultisigConfig";
+import { getFaucetHost, requestSuiFromFaucetV1 } from "@mysten/sui/faucet";
 
 const DUMMY_TXID = new TextEncoder().encode("abcd");
 const DUMMY_IDX: number = 0;
 
 async function testBurn() {
   try {
-
     const signerKeypair = Ed25519Keypair.generate();
         // Retrieve our default multisig configuration
         const multisigConfig = getTestMultisigConfig();
@@ -26,6 +26,13 @@ async function testBurn() {
           multisigConfig // Multisig configuration
         );
     const coinId = result.effects.created[0].reference.objectId;
+
+    // get tokens from the Devnet faucet server
+    await requestSuiFromFaucetV1({
+      // connect to Devnet
+      host: getFaucetHost("testnet"),
+      recipient: signerKeypair.toSuiAddress(),
+    });
 
     const burnResponse = await burn(
       suiClient,

@@ -7,13 +7,13 @@ import { setBurnCommission } from "../utils/setBurnCommission";
 import { setDustFeeRate } from "../utils/setDustFeeRate";
 import { toggleWithdrawal } from "../utils/toggleWithdrawal";
 import { setTreasuryAddress } from "../utils/setTreasuryAddress";
+import { getFaucetHost, requestSuiFromFaucetV1 } from '@mysten/sui/faucet';
 
 const DUMMY_TXID = new TextEncoder().encode("abcd");
 const DUMMY_IDX: number = 0;
 
 async function testRedeem() {
   try {
-
     const signerKeypair = Ed25519Keypair.generate();
     // Retrieve our default multisig configuration
     const multisigConfig = getTestMultisigConfig();
@@ -29,15 +29,20 @@ async function testRedeem() {
       DUMMY_IDX, // Placeholder BTC deposit index
       multisigConfig // Multisig configuration
     );
-
     //set dynamic fields
-    
     await toggleWithdrawal(suiClient, SHARED_CONTROLLED_TREASURY, { multisig: multisigConfig });
     await setTreasuryAddress(suiClient, SHARED_CONTROLLED_TREASURY, MULTISIG.ADDRESS , { multisig: multisigConfig })
     await setDustFeeRate(suiClient, SHARED_CONTROLLED_TREASURY, 10, { multisig: multisigConfig })
     await setBurnCommission(suiClient, SHARED_CONTROLLED_TREASURY, 100, { multisig: multisigConfig })
 
     const coinId = result.effects.created[0].reference.objectId;
+
+    // get tokens from the Devnet faucet server
+    await requestSuiFromFaucetV1({
+      // connect to Devnet
+      host: getFaucetHost("testnet"),
+      recipient: signerKeypair.toSuiAddress(),
+    });
 
     const claimResponse = await redeem(
       suiClient,
