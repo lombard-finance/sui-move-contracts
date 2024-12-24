@@ -61,6 +61,8 @@ const ENoTreasuryAddress: u64 = 11;
 const ENoDustFeeRate: u64 = 12;
 // Burn commission is not set.
 const ENoBurnCommission: u64 = 13;
+// Withdrawal Flag is not set.
+const ENoWithdrawalFlag: u64 = 14;
 
 /// Represents a controlled treasury for managing a regulated coin.
 public struct ControlledTreasury<phantom T> has key {
@@ -513,6 +515,7 @@ public fun get_treasury_address<T>(
 public fun is_withdrawal_enabled<T>(
     treasury: &ControlledTreasury<T>,
 ): bool {
+    assert!(df::exists_(&treasury.id, b"withdrawal_enabled"), ENoWithdrawalFlag );
     let withdrawal_enabled: &bool = df::borrow(&treasury.id, b"withdrawal_enabled");
     *withdrawal_enabled
 }

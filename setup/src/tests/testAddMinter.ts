@@ -1,11 +1,11 @@
 import { SHARED_CONTROLLED_TREASURY, suiClient, MULTISIG } from "../config";
 import { addCapability } from "../utils/addCapability";
-import { getMultisigConfig } from "../helpers/getMultisigConfig";
+import { getMultisigConfig, getTestMultisigConfig } from "../helpers/getMultisigConfig";
 
 async function testAddMinter() {
   try {
     // Retrieve our default multisig configuration
-    const multisigConfig = getMultisigConfig();
+    const multisigConfig = getTestMultisigConfig();
 
     // Define the mint limit
     const mintLimit = BigInt(1_000_000_000_000); // Adjust the mint limit as needed

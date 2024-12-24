@@ -5,7 +5,7 @@ import { LBTC_COIN_TYPE } from "../config";
 
 import {
   treasury,
-} from "../types/0x2af9ec333d1e5cd46936afcf39562b98e5e70b80fc1c317d2b7118ac7718ea36";
+} from "../types/0x70fdf49de5fbc402f1ddb71208abd3c414348638f5b3f3cafb72ca2875efa33f";
 
 /**
  * Redeem tokens from the ControlledTreasury<T>.
