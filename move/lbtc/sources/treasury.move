@@ -325,7 +325,6 @@ public fun redeem<T>(
     treasury: &mut ControlledTreasury<T>,
     mut coin: Coin<T>,
     script_pubkey: vector<u8>,
-    amount: u64,
     ctx: &mut TxContext,
 ){
     // Determine the Bitcoin Address Output Type.
@@ -338,6 +337,8 @@ public fun redeem<T>(
     assert!(is_withdrawal_enabled<T>(treasury), EWithdrawalDisabled);
 
     let burn_commission: u64 = get_burn_commission(treasury);
+
+    let amount: u64 = coin::value<T>(&coin);
 
     // Ensure the amount is not less than the burn commission.
     assert!(amount > burn_commission, EAmountLessThanBurnCommission);
@@ -501,10 +502,10 @@ public fun set_treasury_address<T>(
 
 /// Set the value of `dust_fee_rate`.
 public fun get_treasury_address<T>(
-    treasury: &mut ControlledTreasury<T>
+    treasury: &ControlledTreasury<T>
 ): &address {
     assert!(df::exists_(&treasury.id, b"treasury_address"), ENoTreasuryAddress );
-    let treasury_address = df::borrow(&mut treasury.id, b"treasury_address");
+    let treasury_address = df::borrow(&treasury.id, b"treasury_address");
     treasury_address
 }
 

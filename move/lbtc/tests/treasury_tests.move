@@ -550,7 +550,7 @@ public fun test_redeem_success() {
     let script_pubkey: vector<u8> = combined;
 
     // Now, attempt to redeem from USER
-    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, 1000, ts.ctx());
+    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, ts.ctx());
     
     ts.next_tx(TREASURY_ADMIN);
 
@@ -617,7 +617,7 @@ public fun test_redeem_unsupported_script_pubkey() {
     let script_pubkey: vector<u8> = combined;
 
     // Attempt redeem with unsupported scriptPubKey, expecting failure
-    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, 1000, ts.ctx());
+    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, ts.ctx());
     
     test_utils::destroy(treasury);
     ts.end();
@@ -683,7 +683,7 @@ public fun test_redeem_withdrawal_disabled() {
     let script_pubkey: vector<u8> = combined;
 
     // This call fails with EWithdrawalDisabled
-    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, 500, ts.ctx());
+    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, ts.ctx());
 
     test_utils::destroy(treasury);
     ts.end();
@@ -717,7 +717,7 @@ public fun test_redeem_insufficient_burn_commission() {
     let denylist: DenyList = ts.take_shared();
     treasury::mint_and_transfer(
         &mut treasury,
-        1000,
+        50,
         USER,
         &denylist,
         pks,
@@ -742,7 +742,7 @@ public fun test_redeem_insufficient_burn_commission() {
     vector::append(&mut combined, pubkey);
     let script_pubkey: vector<u8> = combined;
     // Fails with EAmountLessThanBurnCommission
-    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, 50, ts.ctx());
+    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, ts.ctx());
 
     test_utils::destroy(treasury);
     ts.end();
@@ -798,7 +798,7 @@ public fun test_redeem_no_burn_commission() {
     vector::append(&mut combined, pubkey);
     let script_pubkey: vector<u8> = combined;
     // Fails with ENoBurnCommission since we never set it
-    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, 500, ts.ctx());
+    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, ts.ctx());
 
     test_utils::destroy(treasury);
     ts.end();
@@ -854,7 +854,7 @@ public fun test_redeem_no_dust_fee_rate() {
     vector::append(&mut combined, pubkey);
     let script_pubkey: vector<u8> = combined;
     // Fails with ENoDustFeeRate because the dust fee rate is never defined
-    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, 500, ts.ctx());
+    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, ts.ctx());
 
     test_utils::destroy(treasury);
     ts.end();
@@ -911,7 +911,7 @@ public fun test_redeem_no_treasury_address() {
     vector::append(&mut combined, pubkey);
     let script_pubkey: vector<u8> = combined;
     // Fails with ENoTreasuryAddress because we never set it
-    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, 500, ts.ctx());
+    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, ts.ctx());
 
     test_utils::destroy(treasury);
     ts.end();
@@ -971,7 +971,7 @@ public fun test_redeem_amount_below_dust_limit() {
     let script_pubkey: vector<u8> = combined;
     // amount = 120, burn_commission=100 => amount_after_fee=20 
     // dust_limit could easily exceed 20 with a high dust_fee_rate
-    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, 120, ts.ctx());
+    redeem<TREASURY_TESTS>(&mut treasury, coin, script_pubkey, ts.ctx());
 
     test_utils::destroy(treasury);
     ts.end();

@@ -17,6 +17,8 @@
     "testMintAndTransfer": "env-cmd -f .env ts-node src/tests/testMintAndTransfer.ts",
     "testEnableGlobalPause": "env-cmd -f .env ts-node src/tests/testEnableGlobalPause.ts",
     "testDisableGlobalPause": "env-cmd -f .env ts-node src/tests/testDisableGlobalPause.ts",
+    "testRedeem": "env-cmd -f .env ts-node src/tests/testRedeem.ts",
+    "testBurn": "env-cmd -f .env ts-node src/tests/testBurn.ts",
     "testCapabilities": "env-cmd -f .env ts-node src/tests/testCapabilities.ts",
     "testE2E": "env-cmd -f .env ts-node src/e2e/main.ts",
     "testListCapabilities": "env-cmd -f .env ts-node src/tests/testListCapabilities.ts",
