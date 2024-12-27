@@ -3,7 +3,7 @@ import { Transaction } from "@mysten/sui/transactions";
 import {
   lbtc,
   treasury,
-} from "../types/0x4d7b29503d6089a77be130aa79db32ce77fd0160fd9982be9827725496970825";
+} from "../types/0xd920ccead3087ee15d049fd618062c7fabc12cb65fe7f7b5acd942c7835b2ee4";
 import { DENYLIST } from "../config";
 import { SuiClient } from "@mysten/sui/client";
 

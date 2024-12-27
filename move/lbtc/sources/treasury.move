@@ -49,10 +49,20 @@ const EMintNotAllowed: u64 = 4;
 const ENoMultisigSender: u64 = 5;
 // Mint amount cannot be zero.
 const EMintAmountCannotBeZero: u64 = 6;
-// The sender of claim is not the same as the recipient.abort
-const EInvalidSender: u64 = 7;
 // Bascule check flag is not set.
-const ENoBasculeCheck: u64 = 8;
+const ENoBasculeCheck: u64 = 7;
+// Invalid chain id in the payload.
+const EInvalidChainId: u64 = 8;
+// Recipient address cannot be zero.
+const ERecipientZeroAddress: u64 = 9;
+// Invalid action bytes in the payload.
+const EInvalidActionBytes: u64 = 10;
+// No action bytes set for the treasury.
+const ENoActionBytesCheck: u64 = 11;
+
+
+// Chain Id defined in the payload
+const CHAIN_ID: u64 = 11155111; 
 
 /// Represents a controlled treasury for managing a regulated coin.
 public struct ControlledTreasury<phantom T> has key {
@@ -231,6 +241,20 @@ public fun toggle_bascule_check<T>(
     };
 }
 
+public fun set_action_bytes<T>(
+    treasury: &mut ControlledTreasury<T>,
+    action_bytes: u32,
+    ctx: &mut TxContext,
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    if (df::exists_(&treasury.id, b"action_bytes")) {
+        let action = df::borrow_mut(&mut treasury.id, b"action_bytes");
+        *action = action_bytes;
+    } else {
+        df::add(&mut treasury.id, b"action_bytes", action_bytes);
+    };
+}
+
 // === Mint operations ===
 
 /// Mints and transfers coins to a specified address.
@@ -291,7 +315,15 @@ public fun mint_and_transfer<T>(
     transfer::public_transfer(new_coin, to);
 }
 
-public fun claim<T>(
+/// Mints and transfers coins to the address defined in the decoded payload.
+/// The payload with the given proof is validated by the consortium before minting.
+///
+/// Aborts if:
+/// - payload is not validated by the consortium
+/// - global pause is enabled
+///
+/// Emits: MintEvent
+public fun mint<T>(
     treasury: &mut ControlledTreasury<T>,
     consortium: &mut Consortium,
     denylist: &DenyList,
@@ -308,17 +340,23 @@ public fun claim<T>(
     consortium::resolve_proof(consortium, validate_proof);
 
     let (action, to_chain, to, amount_u256, txid_u256, vout) = payload_decoder::decode(payload);
-    assert!(to == ctx.sender(), EInvalidSender);
 
-    let tx_id = bcs::to_bytes(&txid_u256);
     // Convert the u256 to u64, if it's too large, the `Option` will be empty and extract will throw an error `EOPTION_NOT_SET`
     let amount = amount_u256.try_as_u64().extract();
+
+    assert!(amount > 0, EMintAmountCannotBeZero);
+    assert!(to != @0x0, ERecipientZeroAddress);
+    assert!(to_chain.try_as_u64().extract() == CHAIN_ID, EInvalidChainId);
+    assert!(action == treasury.get_action_bytes(), EInvalidActionBytes);
+    
+    let tx_id = bcs::to_bytes(&txid_u256);
     let index = vout.try_as_u32().extract();
     
     // Validate with the bascule
     // if (treasury.is_bascule_check_enabled()) {
     //     bascule::validate_withdrawal(&mut bascule, tx_id, index: u32, to: address, amount: u64, ctx: &TxContext);
     // };
+
     // Emit the event and mint + transfer the coins
     event::emit(MintEvent<T> { amount, to, tx_id, index });
     let new_coin = coin::mint(&mut treasury.treasury_cap, amount, ctx);
@@ -426,6 +464,13 @@ public fun is_bascule_check_enabled<T>(
     assert!(df::exists_(&treasury.id, b"bascule_check"), ENoBasculeCheck);
     let check = df::borrow(&treasury.id, b"bascule_check");
     *check
+}
+
+/// Returns the action bytes for the treasury in u32.
+public fun get_action_bytes<T>(treasury: &ControlledTreasury<T>): u32 {
+    assert!(df::exists_(&treasury.id, b"action_bytes"), ENoActionBytesCheck);
+    let action = df::borrow(&treasury.id, b"action_bytes");
+    *action
 }
 
 /// Returns a vector of role types assigned to the `owner`.
