@@ -2,7 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-/* Generated types for 0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac, original address 0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac */
+/* Generated types for 0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a, original address 0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a */
 
 import { TypeDescriptor, ANY_TYPE } from "@typemove/move";
 import { MoveCoder, TypedEventInstance } from "@typemove/sui";
@@ -48,7 +48,7 @@ export namespace consortium {
 
   export namespace Consortium {
     export const TYPE_QNAME =
-      "0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac::consortium::Consortium";
+      "0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a::consortium::Consortium";
 
     const TYPE = new TypeDescriptor<Consortium>(Consortium.TYPE_QNAME);
 
@@ -63,7 +63,7 @@ export namespace consortium {
 
   export namespace ValidateProof {
     export const TYPE_QNAME =
-      "0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac::consortium::ValidateProof";
+      "0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a::consortium::ValidateProof";
 
     const TYPE = new TypeDescriptor<ValidateProof>(ValidateProof.TYPE_QNAME);
 
@@ -87,7 +87,7 @@ export namespace consortium {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac::consortium::add_admin",
+          "0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a::consortium::add_admin",
         arguments: _args,
       });
     }
@@ -101,7 +101,7 @@ export namespace consortium {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac::consortium::get_epoch",
+          "0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a::consortium::get_epoch",
         arguments: _args,
       });
     }
@@ -119,7 +119,7 @@ export namespace consortium {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac::consortium::get_validator_set",
+          "0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a::consortium::get_validator_set",
         arguments: _args,
       });
     }
@@ -137,7 +137,7 @@ export namespace consortium {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac::consortium::is_payload_used",
+          "0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a::consortium::is_payload_used",
         arguments: _args,
       });
     }
@@ -155,7 +155,7 @@ export namespace consortium {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac::consortium::remove_admin",
+          "0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a::consortium::remove_admin",
         arguments: _args,
       });
     }
@@ -173,7 +173,7 @@ export namespace consortium {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac::consortium::resolve_proof",
+          "0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a::consortium::resolve_proof",
         arguments: _args,
       });
     }
@@ -191,7 +191,7 @@ export namespace consortium {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac::consortium::set_next_validator_set",
+          "0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a::consortium::set_next_validator_set",
         arguments: _args,
       });
     }
@@ -212,7 +212,7 @@ export namespace consortium {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac::consortium::validate_payload",
+          "0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a::consortium::validate_payload",
         arguments: _args,
       });
     }
@@ -353,7 +353,7 @@ export namespace payload_decoder {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac::payload_decoder::decode",
+          "0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a::payload_decoder::decode",
         arguments: _args,
       });
     }
@@ -367,7 +367,7 @@ export namespace payload_decoder {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac::payload_decoder::decode_signatures",
+          "0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a::payload_decoder::decode_signatures",
         arguments: _args,
       });
     }
@@ -395,7 +395,7 @@ export namespace payload_decoder {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac::payload_decoder::validate_signatures",
+          "0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a::payload_decoder::validate_signatures",
         arguments: _args,
       });
     }
@@ -463,7 +463,7 @@ export namespace pk_utils {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac::pk_utils::is_valid_key",
+          "0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a::pk_utils::is_valid_key",
         arguments: _args,
       });
     }
@@ -477,7 +477,7 @@ export namespace pk_utils {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac::pk_utils::validate_pks",
+          "0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a::pk_utils::validate_pks",
         arguments: _args,
       });
     }
@@ -517,7 +517,7 @@ export namespace pk_utils {
 }
 
 const MODULES = JSON.parse(
-  '{"consortium":{"fileFormatVersion":6,"address":"0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac","name":"consortium","friends":[],"structs":{"Consortium":{"abilities":{"abilities":["Key"]},"typeParameters":[],"fields":[{"name":"id","type":{"Struct":{"address":"0x2","module":"object","name":"UID","typeArguments":[]}}},{"name":"epoch","type":"U64"},{"name":"validator_set","type":{"Struct":{"address":"0x2","module":"table","name":"Table","typeArguments":["U64",{"Vector":{"Vector":"U8"}}]}}},{"name":"used_payloads","type":{"Struct":{"address":"0x2","module":"table","name":"Table","typeArguments":[{"Vector":"U8"},"Bool"]}}},{"name":"admins","type":{"Vector":"Address"}}]},"ValidateProof":{"abilities":{"abilities":["Drop"]},"typeParameters":[],"fields":[{"name":"hash","type":{"Vector":"U8"}}]}},"exposedFunctions":{"add_admin":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"MutableReference":{"Struct":{"address":"0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac","module":"consortium","name":"Consortium","typeArguments":[]}}},"Address",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"get_epoch":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac","module":"consortium","name":"Consortium","typeArguments":[]}}}],"return":["U64"]},"get_validator_set":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac","module":"consortium","name":"Consortium","typeArguments":[]}}},"U64"],"return":[{"Vector":{"Vector":"U8"}}]},"is_payload_used":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac","module":"consortium","name":"Consortium","typeArguments":[]}}},{"Vector":"U8"}],"return":["Bool"]},"remove_admin":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"MutableReference":{"Struct":{"address":"0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac","module":"consortium","name":"Consortium","typeArguments":[]}}},"Address",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"resolve_proof":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"MutableReference":{"Struct":{"address":"0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac","module":"consortium","name":"Consortium","typeArguments":[]}}},{"Struct":{"address":"0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac","module":"consortium","name":"ValidateProof","typeArguments":[]}}],"return":[]},"set_next_validator_set":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"MutableReference":{"Struct":{"address":"0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac","module":"consortium","name":"Consortium","typeArguments":[]}}},{"Vector":{"Vector":"U8"}},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"validate_payload":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac","module":"consortium","name":"Consortium","typeArguments":[]}}},{"Vector":"U8"},{"Vector":"U8"}],"return":[{"Struct":{"address":"0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac","module":"consortium","name":"ValidateProof","typeArguments":[]}}]}}},"payload_decoder":{"fileFormatVersion":6,"address":"0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac","name":"payload_decoder","friends":[],"structs":{},"exposedFunctions":{"decode":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":"U8"}],"return":["U32","U256","Address","U256","U256","U256"]},"decode_signatures":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":"U8"}],"return":[{"Vector":{"Vector":"U8"}}]},"validate_signatures":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":{"Vector":"U8"}},{"Vector":{"Vector":"U8"}},{"Vector":"U8"},{"Vector":"U8"}],"return":["Bool"]}}},"pk_utils":{"fileFormatVersion":6,"address":"0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac","name":"pk_utils","friends":[],"structs":{},"exposedFunctions":{"is_valid_key":{"visibility":"Friend","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Vector":"U8"}}],"return":["Bool"]},"validate_pks":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Vector":{"Vector":"U8"}}}],"return":[]}}}}',
+  '{"consortium":{"fileFormatVersion":6,"address":"0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a","name":"consortium","friends":[],"structs":{"Consortium":{"abilities":{"abilities":["Key"]},"typeParameters":[],"fields":[{"name":"id","type":{"Struct":{"address":"0x2","module":"object","name":"UID","typeArguments":[]}}},{"name":"epoch","type":"U64"},{"name":"validator_set","type":{"Struct":{"address":"0x2","module":"table","name":"Table","typeArguments":["U64",{"Vector":{"Vector":"U8"}}]}}},{"name":"used_payloads","type":{"Struct":{"address":"0x2","module":"table","name":"Table","typeArguments":[{"Vector":"U8"},"Bool"]}}},{"name":"admins","type":{"Vector":"Address"}}]},"ValidateProof":{"abilities":{"abilities":["Drop"]},"typeParameters":[],"fields":[{"name":"hash","type":{"Vector":"U8"}}]}},"exposedFunctions":{"add_admin":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"MutableReference":{"Struct":{"address":"0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a","module":"consortium","name":"Consortium","typeArguments":[]}}},"Address",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"get_epoch":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a","module":"consortium","name":"Consortium","typeArguments":[]}}}],"return":["U64"]},"get_validator_set":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a","module":"consortium","name":"Consortium","typeArguments":[]}}},"U64"],"return":[{"Vector":{"Vector":"U8"}}]},"is_payload_used":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a","module":"consortium","name":"Consortium","typeArguments":[]}}},{"Vector":"U8"}],"return":["Bool"]},"remove_admin":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"MutableReference":{"Struct":{"address":"0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a","module":"consortium","name":"Consortium","typeArguments":[]}}},"Address",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"resolve_proof":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"MutableReference":{"Struct":{"address":"0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a","module":"consortium","name":"Consortium","typeArguments":[]}}},{"Struct":{"address":"0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a","module":"consortium","name":"ValidateProof","typeArguments":[]}}],"return":[]},"set_next_validator_set":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"MutableReference":{"Struct":{"address":"0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a","module":"consortium","name":"Consortium","typeArguments":[]}}},{"Vector":{"Vector":"U8"}},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"validate_payload":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a","module":"consortium","name":"Consortium","typeArguments":[]}}},{"Vector":"U8"},{"Vector":"U8"}],"return":[{"Struct":{"address":"0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a","module":"consortium","name":"ValidateProof","typeArguments":[]}}]}}},"payload_decoder":{"fileFormatVersion":6,"address":"0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a","name":"payload_decoder","friends":[],"structs":{},"exposedFunctions":{"decode":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":"U8"}],"return":["U32","U256","Address","U256","U256","U256"]},"decode_signatures":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":"U8"}],"return":[{"Vector":{"Vector":"U8"}}]},"validate_signatures":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":{"Vector":"U8"}},{"Vector":{"Vector":"U8"}},{"Vector":"U8"},{"Vector":"U8"}],"return":["Bool"]}}},"pk_utils":{"fileFormatVersion":6,"address":"0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a","name":"pk_utils","friends":[],"structs":{},"exposedFunctions":{"is_valid_key":{"visibility":"Friend","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Vector":"U8"}}],"return":["Bool"]},"validate_pks":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Vector":{"Vector":"U8"}}}],"return":[]}}}}',
 );
 
 export function loadAllTypes(coder: MoveCoder) {
@@ -525,7 +525,7 @@ export function loadAllTypes(coder: MoveCoder) {
   for (const m of Object.values(MODULES)) {
     coder.load(
       m as any,
-      "0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac",
+      "0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a",
     );
   }
 }

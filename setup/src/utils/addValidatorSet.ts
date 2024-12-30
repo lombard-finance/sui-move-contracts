@@ -6,7 +6,7 @@ import {
   createMultisigSigner,
   executeMultisigTransaction,
 } from "../helpers/multisigHelper";
-import { consortium } from "../types/0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac";
+import { consortium } from "../types/0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a";
 
 // Define the participant structure for multisig
 interface MultisigParticipant {
