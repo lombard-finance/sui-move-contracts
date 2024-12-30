@@ -6,11 +6,8 @@ import {
   createMultisigSigner,
   executeMultisigTransaction,
 } from "../helpers/multisigHelper";
-import { treasury } from "../types/0x93556210467b0c290c342d4e43d8777019cbf78346a1758ae4858e55c9413e41";
+import { treasury } from "../types/0xbe30647d2dbec99adc943e26f52e1a9ece3e507fc45913aa7b53c7bf80c4ed09";
 import { LBTC_COIN_TYPE, PACKAGE_ID } from "../config";
-
-// Define supported capabilities with their corresponding types
-type CapabilityType = "AdminCap" | "MinterCap" | "PauserCap";
 
 // Define the participant structure for multisig
 interface MultisigParticipant {

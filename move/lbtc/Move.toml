@@ -21,6 +21,7 @@ consortium = { local = "../consortium" }
 
 [addresses]
 lbtc = "0x0"
+consortium = "0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a"
 
 # Named addresses will be accessible in Move as `@name`. They're also exported:
 # for example, `std = "0x1"` is exported by the Standard Library.

@@ -63,7 +63,7 @@ async function testManualClaim(
       SHARED_CONSORTIUM,
       payload,
       proof,
-      multisigConfig.users[0].keypair,
+      { multisig: multisigConfig },
     );
 
     console.log("Transaction executed successfully:", claimResponse);
