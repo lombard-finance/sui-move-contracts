@@ -339,7 +339,7 @@ public fun mint<T>(
     // Resolve the proof to store the hash
     consortium::resolve_proof(consortium, validate_proof);
 
-    let (action, to_chain, to, amount_u256, txid_u256, vout) = payload_decoder::decode(payload);
+    let (action, to_chain, to, amount_u256, txid_u256, vout) = payload_decoder::decode_mint_payload(payload);
 
     // Convert the u256 to u64, if it's too large, the `Option` will be empty and extract will throw an error `EOPTION_NOT_SET`
     let amount = amount_u256.try_as_u64().extract();
