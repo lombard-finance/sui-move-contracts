@@ -6,6 +6,19 @@ import { LBTC_COIN_TYPE } from "../config";
 import {
   treasury,
 } from "../types/0x70fdf49de5fbc402f1ddb71208abd3c414348638f5b3f3cafb72ca2875efa33f";
+import { createMultisigSigner, executeMultisigTransaction, generateMultiSigPublicKey } from "../helpers/multisigHelper";
+
+// Define the participant structure for multisig
+interface MultisigParticipant {
+  keypair: Ed25519Keypair;
+  weight: number;
+}
+
+// Define the multisig configuration type
+interface MultisigConfig {
+  users: MultisigParticipant[];
+  threshold: number;
+}
 
 /**
  * Redeem tokens from the ControlledTreasury<T>.
@@ -22,12 +35,23 @@ export async function redeem(
   treasuryAddress: string,
   coinObjectId: string,
   scriptPubkeyHex: string,
-  signer: Ed25519Keypair
+  multisigConfig: MultisigConfig
 ): Promise<any> {
 
     const tx = new Transaction();
     const scriptPubkeyBytes = Array.from(Buffer.from(scriptPubkeyHex, "hex"));
 
+      const { users, threshold } = multisigConfig;
+    
+      // Generate MultiSigPublicKey
+      const multiSigPublicKey = generateMultiSigPublicKey(
+        users.map(({ keypair, weight }) => ({
+          publicKey: keypair.getPublicKey(),
+          weight,
+        })),
+        threshold
+      );
+      
     treasury.builder.redeem(
         tx,
         [
@@ -38,12 +62,13 @@ export async function redeem(
         [LBTC_COIN_TYPE] // <T>
     );
 
-    return await client.signAndExecuteTransaction({
-        transaction: tx,
-        signer,
-        options: {
-        showEffects: true,
-        showObjectChanges: true,
-        },
-    });
+    
+      // Create a MultiSigSigner
+      const signer = createMultisigSigner(
+        multiSigPublicKey,
+        users.map(({ keypair }) => keypair)
+      );
+    
+      // Execute the transaction
+      return await executeMultisigTransaction(client, tx, signer);
 }
