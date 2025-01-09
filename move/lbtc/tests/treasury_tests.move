@@ -976,3 +976,112 @@ public fun test_redeem_amount_below_dust_limit() {
     test_utils::destroy(treasury);
     ts.end();
 }
+
+// === V2 tests ===
+use consortium::consortium::{Self, Consortium};
+
+const EInvalidAmount: u64 = 1;
+const EInvalidBasculeCheck: u64 = 2;
+
+const USER2: address = @0x0000000000000000000000000f90793a54e809bf708bd0fbcc63d311e3bb1be1;
+
+fun init_consortium(ts: &mut Scenario): Consortium {
+    let signers = vector[x"027378e006183e9a5de1537b788aa9d107c67189cd358efc1d53a5642dc0a37311", x"03ac2fec1927f210f2056d13c9ba0706666f333ed821d2032672d71acf47677eae", x"02b56056d0cb993765f963aeb530f7687c44d875bd34e38edc719bb117227901c5"];
+    ts.next_tx(TREASURY_ADMIN);
+    consortium::init_for_testing(ts.ctx());
+    ts.next_tx(TREASURY_ADMIN);
+    let mut consortium: Consortium = ts.take_shared();
+    consortium::set_next_validator_set(&mut consortium, signers, ts.ctx());
+    consortium
+}
+
+#[test]
+fun test_manual_claim() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+    let denylist: DenyList = ts.take_shared();
+
+    let mut consortium = init_consortium(&mut ts);
+    
+    let payload: vector<u8> = x"f2e73f7c0000000000000000000000000000000000000000000000000000000000aa36a70000000000000000000000000f90793a54e809bf708bd0fbcc63d311e3bb1be100000000000000000000000000000000000000000000000000000000000059d85a7c1a028fe68c29a449a6d8c329b9bdd39d8b925ba0f8abbde9fe398430fac40000000000000000000000000000000000000000000000000000000000000000";
+    let proof: vector<u8> = x"00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000003000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000c000000000000000000000000000000000000000000000000000000000000001200000000000000000000000000000000000000000000000000000000000000040486dbc2308c3722c280a96a421e48d8c984bca9f48868e280ce1c8b1b08238cd671de8b18dd200053aef1727a80e83171805da0013c1b6d1ff28c5abfd73d7950000000000000000000000000000000000000000000000000000000000000040ae04a516c2a64625d865cf5cc9134aad909f20bed93ddf7ea8a440b6ea4bf9ae5b40bce9a00cfd157985ac61bbb56833e61b8e81018c5e1b52172f110e23e3fa0000000000000000000000000000000000000000000000000000000000000040e474e99a95f80a6f84fd659bcf5d158e027f06eed692f90a92c5b0154aec14c91a9555d2b3162125118e8b264c2b43e041f8cc9091ce45cc35d2fd8acf3fc295";
+
+    ts.next_tx(TREASURY_ADMIN);
+    treasury::set_action_bytes<TREASURY_TESTS>(&mut treasury, 4075241340, ts.ctx());
+
+    // Mint and transfer tokens using the multisig address
+    ts.next_tx(USER2);
+    treasury::mint<TREASURY_TESTS>(
+        &mut treasury,
+        &mut consortium,
+        &denylist,
+        payload,
+        proof,
+        ts.ctx(),
+    );
+
+    ts.next_tx(USER2);
+    let coin: Coin<TREASURY_TESTS>  = ts.take_from_sender();
+    assert!(coin.value() == 23000, EInvalidAmount);
+
+    test_utils::destroy(treasury);
+    ts::return_shared(denylist);
+    ts::return_shared<Consortium>(consortium);
+    ts.return_to_sender(coin);
+
+    ts.end();
+}
+
+#[test]
+fun test_bascule_check() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    // Initialize bascule check
+    ts.next_tx(TREASURY_ADMIN);
+    treasury::toggle_bascule_check<TREASURY_TESTS>(
+        &mut treasury,
+        ts.ctx(),
+    );
+    assert!(treasury::is_bascule_check_enabled<TREASURY_TESTS>(&treasury) == true, EInvalidBasculeCheck);
+
+    // Disable bascule check
+    ts.next_tx(TREASURY_ADMIN);
+    treasury::toggle_bascule_check<TREASURY_TESTS>(
+        &mut treasury,
+        ts.ctx(),
+    );
+    assert!(treasury::is_bascule_check_enabled<TREASURY_TESTS>(&treasury) == false, EInvalidBasculeCheck);
+   
+    test_utils::destroy(treasury);
+
+    ts.end();
+}
+
+#[test, expected_failure(abort_code = lbtc::treasury::ENoBasculeCheck)]
+fun test_no_bascule_check() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let treasury = create_test_currency(&mut ts);
+
+    // Get the bascule status
+    ts.next_tx(TREASURY_ADMIN);
+    assert!(treasury::is_bascule_check_enabled<TREASURY_TESTS>(&treasury) == true, EInvalidBasculeCheck);
+   
+    test_utils::destroy(treasury);
+
+    ts.end();
+}
+
+#[test, expected_failure(abort_code = lbtc::treasury::ENoActionBytesCheck)]
+fun test_no_action_bytes() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let treasury = create_test_currency(&mut ts);
+
+    // Get the bascule status
+    ts.next_tx(TREASURY_ADMIN);
+    assert!(treasury::get_action_bytes<TREASURY_TESTS>(&treasury) == 4075241340, EInvalidBasculeCheck);
+   
+    test_utils::destroy(treasury);
+
+    ts.end();
+}

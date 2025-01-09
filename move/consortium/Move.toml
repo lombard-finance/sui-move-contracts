@@ -1,12 +1,12 @@
 [package]
-name = "lbtc"
+name = "consortium"
+published-at = "0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a"
 edition = "2024.beta" # edition = "legacy" to use legacy (pre-2024) Move
 # license = ""           # e.g., "MIT", "GPL", "Apache 2.0"
 # authors = ["..."]      # e.g., ["Joe Smith (joesmith@noemail.com)", "John Snow (johnsnow@noemail.com)"]
 
 [dependencies]
 Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "testnet" }
-consortium = { local = "../consortium" }
 
 # For remote import, use the `{ git = "...", subdir = "...", rev = "..." }`.
 # Revision can be a branch, a tag, and a commit hash.
@@ -20,7 +20,6 @@ consortium = { local = "../consortium" }
 # Override = { local = "../conflicting/version", override = true }
 
 [addresses]
-lbtc = "0x0"
 consortium = "0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a"
 
 # Named addresses will be accessible in Move as `@name`. They're also exported:

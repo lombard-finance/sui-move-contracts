@@ -4,10 +4,12 @@
   "description": "",
   "main": "index.js",
   "config": {
-    "package_id": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22"
+    "package_id": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22",
+    "consortium_package_id": "0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac"
   },
   "scripts": {
     "generateTypes": "env-cmd -f .env pnpm typemove-sui --target-dir=./src/types --abi-dir=./src/abis $npm_package_config_package_id --network=testnet",
+    "generateConsortiumTypes": "env-cmd -f .env pnpm typemove-sui --target-dir=./src/types --abi-dir=./src/abis $npm_package_config_consortium_package_id --network=testnet",
     "testMultisig": "env-cmd -f .env ts-node src/tests/testMultisig.ts",
     "testAddAdmin": "env-cmd -f .env ts-node src/tests/testAddAdmin.ts",
     "testAddMinter": "env-cmd -f .env ts-node src/tests/testAddMinter.ts",
@@ -20,7 +22,10 @@
     "testRedeem": "env-cmd -f .env ts-node src/tests/testRedeem.ts",
     "testBurn": "env-cmd -f .env ts-node src/tests/testBurn.ts",
     "testCapabilities": "env-cmd -f .env ts-node src/tests/testCapabilities.ts",
+    "testManualClaim": "env-cmd -f .env ts-node src/tests/testManualClaim.ts",
+    "testBasculeCheck": "env-cmd -f .env ts-node src/tests/testBasculeCheck.ts",
     "testE2E": "env-cmd -f .env ts-node src/e2e/main.ts",
+    "testE2EConsortium": "env-cmd -f .env ts-node src/e2e/consortium-main.ts",
     "testListCapabilities": "env-cmd -f .env ts-node src/tests/testListCapabilities.ts",
     "testLedgerSigning": "env-cmd -f .env ts-node src/tests/testLedgerSigning.ts"
   },
