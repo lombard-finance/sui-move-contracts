@@ -157,7 +157,7 @@ USER_2_ADDRESS=$user2_address
 USER_1_PK=$user1_pk
 USER_2_PK=$user2_pk
 USER_1_SK=$user1_sk
-USER_1_SK=$user2_sk
+USER_2_SK=$user2_sk
 ENV
 
 echo "Environment variables have been set in .env file."

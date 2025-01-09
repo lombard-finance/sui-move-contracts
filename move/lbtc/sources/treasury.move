@@ -23,6 +23,7 @@
 module lbtc::treasury;
 
 use lbtc::multisig;
+use lbtc::bitcoin_utils::{get_output_type, get_dust_limit_for_output, get_unsupported_output_type};
 use lbtc::pk_util;
 use std::string::{Self, String};
 use std::type_name;
@@ -59,7 +60,22 @@ const ERecipientZeroAddress: u64 = 9;
 const EInvalidActionBytes: u64 = 10;
 // No action bytes set for the treasury.
 const ENoActionBytesCheck: u64 = 11;
-
+// BTC public key unsupported.
+const EScriptPubkeyUnsupported: u64 = 12;
+// BTC withdrawal is disabled.
+const EWithdrawalDisabled: u64 = 13;
+// Amount is below the dust limit.
+const EAmountBelowDustLimit: u64 = 14;
+// Amount is less than the burn commission.
+const EAmountLessThanBurnCommission: u64 = 15;
+// Treasury address is not set.
+const ENoTreasuryAddress: u64 = 16;
+// Dust fee rate is not set.
+const ENoDustFeeRate: u64 = 17;
+// Burn commission is not set.
+const ENoBurnCommission: u64 = 18;
+// Withdrawal Flag is not set.
+const ENoWithdrawalFlag: u64 = 19;
 
 // Chain Id defined in the payload
 const CHAIN_ID: u64 = 11155111; 
@@ -102,6 +118,12 @@ public struct BurnEvent<phantom T> has copy, drop {
     from: address,
 }
 
+public struct UnstakeRequestEvent<phantom T> has copy, drop {
+    from: address,
+    script_pubkey:  vector<u8>,
+    amount_after_fee: u64,
+}
+
 // === DF Keys ===
 
 /// Namespace for dynamic fields: one for each of the capabilities.
@@ -142,7 +164,6 @@ public fun new<T>(
         admin_count: 1,
         roles: bag::new(ctx),
     };
-
     treasury.add_cap(owner, AdminCap {});
     treasury
 }
@@ -363,23 +384,89 @@ public fun mint<T>(
     transfer::public_transfer(new_coin, to);
 }
 
+/// Allow any internal function to burn coins.
+#[allow(unused_mut_parameter)]
+public(package) fun burn_internal<T>(
+    treasury: &mut ControlledTreasury<T>,
+    coin: Coin<T>,
+    _ctx: &mut TxContext,
+) {
+    coin::burn(&mut treasury.treasury_cap, coin);
+}
+
 /// Allow any external address to burn coins.
 ///
 /// Emits: BurnEvent
 #[allow(unused_mut_parameter)]
-public(package) fun burn<T>(
+public fun burn<T>(
     treasury: &mut ControlledTreasury<T>,
     coin: Coin<T>,
     ctx: &mut TxContext,
 ) {
-    // We can a special authorization check here before letting the sender burn their tokens
-
     event::emit(BurnEvent<T> {
         amount: coin::value<T>(&coin),
         from: ctx.sender(),
     });
 
-    coin::burn(&mut treasury.treasury_cap, coin);
+    burn_internal(treasury, coin, ctx);
+}
+
+/// Allow any external address to redeem (burn) coins to initiate BTC withdrawal.
+///
+/// Emits: UnstakeRequest
+#[allow(unused_mut_parameter)]
+public fun redeem<T>(
+    treasury: &mut ControlledTreasury<T>,
+    mut coin: Coin<T>,
+    script_pubkey: vector<u8>,
+    ctx: &mut TxContext,
+){
+    // Determine the Bitcoin Address Output Type.
+    let out_type = get_output_type(&script_pubkey);
+
+    // Ensure the output type is supported.
+    assert!(out_type != get_unsupported_output_type(), EScriptPubkeyUnsupported);
+
+    // Verify that BTC withdrawal is enabled.
+    assert!(is_withdrawal_enabled<T>(treasury), EWithdrawalDisabled);
+
+    let burn_commission: u64 = get_burn_commission(treasury);
+
+    let amount: u64 = coin::value<T>(&coin);
+
+    // Ensure the amount is not less than the burn commission.
+    assert!(amount > burn_commission, EAmountLessThanBurnCommission);
+
+    // Calculate the amount remaining after deducting the burn commission.
+    let amount_after_fee: u64 = amount - burn_commission;
+
+    let dust_fee_rate: u64 = get_dust_fee_rate(treasury);
+
+    // Calculate the dust limit using Bitcoin utilities.
+    let dust_limit = get_dust_limit_for_output(
+        out_type,
+        &script_pubkey,
+        dust_fee_rate,
+    );
+
+    // Ensure the amount after the fee meets the dust limit.
+    assert!(amount_after_fee >= dust_limit, EAmountBelowDustLimit);
+
+    // Check if the treasury address is defined. 
+    let treasury_address: &address = get_treasury_address(treasury);
+    
+    // Transfer the burn commission to the treasury address.
+    coin.split_and_transfer(burn_commission, *treasury_address, ctx);
+        
+    // Burn the remaining amount after the fee from the sender's account.
+    burn_internal(treasury, coin, ctx);
+
+    // Emit the `UnstakeRequest` event.
+    event::emit(UnstakeRequestEvent<T> {
+        from: ctx.sender(),
+        script_pubkey,
+        amount_after_fee: amount_after_fee,
+    });
 }
 
 // === Pause operations ===
@@ -443,6 +530,101 @@ public fun disable_global_pause<T>(
 }
 
 // === Utilities ===
+
+/// Set the value of `burn_commission`.
+public fun set_burn_commission<T>(
+    treasury: &mut ControlledTreasury<T>,
+    new_burn_commission: u64,
+    ctx: &mut TxContext
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    if (df::exists_(&treasury.id, b"burn_commission")) {
+        let burn_commission = df::borrow_mut(&mut treasury.id, b"burn_commission");
+        *burn_commission = new_burn_commission;
+    } else {
+        df::add(&mut treasury.id, b"burn_commission", new_burn_commission);
+    };
+}
+
+/// Get the value of `burn_commission`.
+public fun get_burn_commission<T>(
+    treasury: &ControlledTreasury<T>,
+): u64 {
+    assert!(df::exists_(&treasury.id, b"burn_commission"), ENoBurnCommission );
+    let burn_commission: &u64 = df::borrow(&treasury.id, b"burn_commission");
+    *burn_commission
+}
+
+/// Set the value of `dust_fee_rate`.
+public fun set_dust_fee_rate<T>(
+    treasury: &mut ControlledTreasury<T>,
+    new_dust_fee_rate: u64,
+    ctx: &mut TxContext
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    if (df::exists_(&treasury.id, b"dust_fee_rate")) {
+        let dust_fee_rate = df::borrow_mut(&mut treasury.id, b"dust_fee_rate");
+        *dust_fee_rate = new_dust_fee_rate;
+    } else {
+        df::add(&mut treasury.id, b"dust_fee_rate", new_dust_fee_rate);
+    };
+}
+
+/// Get the value of `dust_fee_rate`.
+public fun get_dust_fee_rate<T>(
+    treasury: &ControlledTreasury<T>,
+): u64 {
+    assert!(df::exists_(&treasury.id, b"dust_fee_rate"), ENoDustFeeRate );
+    let dust_fee_rate: &u64 = df::borrow(&treasury.id, b"dust_fee_rate");
+    *dust_fee_rate
+}
+
+/// Set the value of `dust_fee_rate`.
+public fun set_treasury_address<T>(
+    treasury: &mut ControlledTreasury<T>,
+    new_treasury_address: address,
+    ctx: &mut TxContext
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    if (df::exists_(&treasury.id, b"treasury_address")) {
+        let treasury_address = df::borrow_mut(&mut treasury.id, b"treasury_address");
+        *treasury_address = new_treasury_address;
+    } else {
+        df::add(&mut treasury.id, b"treasury_address", new_treasury_address);
+    }; 
+}
+
+/// Set the value of `dust_fee_rate`.
+public fun get_treasury_address<T>(
+    treasury: &ControlledTreasury<T>
+): &address {
+    assert!(df::exists_(&treasury.id, b"treasury_address"), ENoTreasuryAddress );
+    let treasury_address = df::borrow(&treasury.id, b"treasury_address");
+    treasury_address
+}
+
+/// Check if `withdrawal_enabled` is enalbled.
+public fun is_withdrawal_enabled<T>(
+    treasury: &ControlledTreasury<T>,
+): bool {
+    assert!(df::exists_(&treasury.id, b"withdrawal_enabled"), ENoWithdrawalFlag );
+    let withdrawal_enabled: &bool = df::borrow(&treasury.id, b"withdrawal_enabled");
+    *withdrawal_enabled
+}
+
+/// Enable or Disable `withdrawal_enabled`.
+public fun toggle_withdrawal<T>(
+    treasury: &mut ControlledTreasury<T>,
+    ctx: &mut TxContext,
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    if (df::exists_(&treasury.id, b"withdrawal_enabled")) {
+        let check = df::borrow_mut(&mut treasury.id, b"withdrawal_enabled");
+        *check = !*check;
+    } else {
+        df::add(&mut treasury.id, b"withdrawal_enabled", true);
+    };    
+}
 
 /// Check if a capability `Cap` is assigned to the `owner`.
 public fun has_cap<T, Cap: store>(

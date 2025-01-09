@@ -1,16 +1,9 @@
 import { Transaction } from "@mysten/sui/transactions";
 import { SuiClient } from "@mysten/sui/client";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
-import {
-  generateMultiSigPublicKey,
-  createMultisigSigner,
-  executeMultisigTransaction,
-} from "../helpers/multisigHelper";
 import { treasury } from "../types/0x70fdf49de5fbc402f1ddb71208abd3c414348638f5b3f3cafb72ca2875efa33f";
-import { LBTC_COIN_TYPE, PACKAGE_ID } from "../config";
-
-// Define supported capabilities with their corresponding types
-type CapabilityType = "AdminCap" | "MinterCap" | "PauserCap";
+import { LBTC_COIN_TYPE } from "../config";
+import { createMultisigSigner, executeMultisigTransaction, generateMultiSigPublicKey } from "../helpers/multisigHelper";
 
 // Define the participant structure for multisig
 interface MultisigParticipant {
@@ -28,30 +21,27 @@ type SignerConfig =
       };
     };
 
+    
 /**
- * Removes a capability (AdminCap, MinterCap, PauserCap) from a given address.
- *
- * @template T - The type of capability (e.g., "AdminCap", "MinterCap", "PauserCap").
- * @param client SuiClient instance for executing transactions.
- * @param treasuryAddress The shared Controlled Treasury object.
- * @param targetAddress The address from which the capability is being removed.
- * @param capType The capability type name ("AdminCap", "MinterCap", "PauserCap").
- * @param signerConfig Signer configuration object, either a simple signer or multisig participants and threshold.
+ * Toggles (enable/disable) the `withdrawal_enabled` bool.
  */
-export async function removeCapability<T>(
+export async function setBurnCommission(
   client: SuiClient,
-  treasuryAddress: string,
-  targetAddress: string,
-  capabilityType: CapabilityType,
+  treasuryObjectId: string,
+  newBurnCommission: number,
   signerConfig: SignerConfig
+ 
 ): Promise<any> {
   const tx = new Transaction();
 
-  // Remove the capability from the target address
-  treasury.builder.removeCapability(
+  // treasury::toggle_withdrawal<T>
+  treasury.builder.setBurnCommission(
     tx,
-    [tx.object(treasuryAddress), tx.pure.address(targetAddress)],
-    [LBTC_COIN_TYPE, `${PACKAGE_ID}::treasury::${capabilityType}`]
+    [
+      tx.object(treasuryObjectId),    // &mut ControlledTreasury<T>
+      tx.pure.u64(newBurnCommission), // new_burn_commission: u64
+    ],
+    [LBTC_COIN_TYPE]
   );
 
   // Determine the signer and execute the transaction
