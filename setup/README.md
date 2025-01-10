@@ -28,7 +28,7 @@ This folder contains TypeScript code designed for smart contract integration. Fo
    - Copy the `PACKAGE_ID` from the .env and replace the `package_id` in `package.json`.
    - Copy the `SHARED_CONSORTIUM` from the .env and replace the `consortium_package_id` in `package.json`.
 
-6. ****Navigate to the** `scripts` **folder and prepare the script:****
+6. ****Navigate to the** `setup` **folder and generate the types:****
    ```bash
    cd ../setup
    pnpm generateTypes
