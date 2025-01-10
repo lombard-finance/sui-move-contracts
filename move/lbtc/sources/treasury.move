@@ -78,7 +78,7 @@ const ENoBurnCommission: u64 = 18;
 const ENoWithdrawalFlag: u64 = 19;
 
 // Chain Id defined in the payload
-const CHAIN_ID: u64 = 11155111; 
+const CHAIN_ID: u64 = 9; 
 
 /// Represents a controlled treasury for managing a regulated coin.
 public struct ControlledTreasury<phantom T> has key {

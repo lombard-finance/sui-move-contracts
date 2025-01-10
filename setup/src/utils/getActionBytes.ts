@@ -1,5 +1,5 @@
 import { SuiClient } from "@mysten/sui/client";
-import { treasury, lbtc } from "../types/0xbe30647d2dbec99adc943e26f52e1a9ece3e507fc45913aa7b53c7bf80c4ed09";
+import { treasury, lbtc } from "../types/0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2";
 
 /**
  * Get the action bytes in the Controlled Treasury.
