@@ -138,6 +138,7 @@ echo $publish_res > .publish.res.json
 packageId=$(echo "$publish_res" | jq -r '.effects.created[] | select(.owner == "Immutable" and .reference.version == 1) | .reference.objectId')
 createdObjects=$(echo "$publish_res" | jq -r '.objectChanges[] | select(.type == "created")')
 sharedControlledTreasury=$(echo "$createdObjects" |  jq -r 'select (.objectType | contains("treasury::ControlledTreasury")).objectId')
+sharedConsortium=$(echo "$createdObjects" |  jq -r 'select (.objectType | contains("consortium::Consortium")).objectId')
 upgradeCap=$(echo "$createdObjects" | jq -r 'select (.objectType | contains("package::UpgradeCap")).objectId')
 txDigest=$(echo "$publish_res" | jq -r '.effects.transactionDigest')
 
@@ -150,6 +151,7 @@ SUI_ENV=$NETWORK
 TX_DIGEST=$txDigest
 UPGRADE_CAP=$upgradeCap
 PACKAGE_ID=$packageId
+SHARED_CONSORTIUM=$sharedConsortium
 SHARED_CONTROLLED_TREASURY=$sharedControlledTreasury
 MULTISIG_ADDRESS=$admin_multisig_address
 USER_1_ADDRESS=$user1_address
