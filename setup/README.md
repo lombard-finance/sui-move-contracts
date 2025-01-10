@@ -28,7 +28,12 @@ This folder contains TypeScript code designed for smart contract integration. Fo
    - Copy the `PACKAGE_ID` from the .env and replace the `package_id` in `package.json`.
    - Copy the `SHARED_CONSORTIUM` from the .env and replace the `consortium_package_id` in `package.json`.
 
-6. ****Handle TypeMove bug:****
+6. ****Navigate to the** `scripts` **folder and prepare the script:****
+   ```bash
+   cd ../setup
+   pnpm generateTypes
+   ```
+7. ****Handle TypeMove bug:****
    - Comment out the following block of code:
      ```typescript
      _// export namespace bitcoin_utils {_
@@ -37,7 +42,7 @@ This folder contains TypeScript code designed for smart contract integration. Fo
      ```
      __Reason: TypeMove currently does not support the export of enums.__
 
-7. ****Update imports:****
+8. ****Update imports:****
    - Modify all imports in `tests` and `utils` to reflect the new `types` file structure.
 
 ### Recommended Starting Point
