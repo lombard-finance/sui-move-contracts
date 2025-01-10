@@ -47,4 +47,4 @@ This folder contains TypeScript code designed for smart contract integration. Fo
 
 ### Recommended Starting Point
 
-- Begin with the `testMinter` script to grant your address minter capabilities.
+- Begin with the `testAddMinter` script to grant your address minter capabilities.
