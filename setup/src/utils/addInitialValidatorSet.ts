@@ -6,7 +6,7 @@ import {
   createMultisigSigner,
   executeMultisigTransaction,
 } from "../helpers/multisigHelper";
-import { consortium } from "../types/0x7113404e4b1a8abad39c10a3385d0ee3c6d4ccee2910d1a07dfb4ff066062d8a";
+import { consortium } from "../types/0x5e54957685afb18cd462339844cc9804bd4d4f0a00f23a0ce2ec04366c38a55a";
 
 // Define the participant structure for multisig
 interface MultisigParticipant {
@@ -24,19 +24,19 @@ type SignerConfig =
       };
     };
 
-export async function addValidatorSet(
+export async function addInitialValidatorSet(
   client: SuiClient,
   consortiumAddresss: string,
-  validatorPks: number[][],
+  valsetPayload: number[],
   signerConfig: SignerConfig
 ): Promise<any> {
     const tx = new Transaction();
 
-    consortium.builder.setNextValidatorSet(
+    consortium.builder.setInitialValidatorSet(
         tx,
         [
             tx.object(consortiumAddresss),
-            tx.pure.vector('vector<u8>', validatorPks),
+            tx.pure.vector('u8', valsetPayload),
         ]
     )
 
