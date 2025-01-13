@@ -11,12 +11,12 @@ import {
 } from "../helpers/multisigHelper";
 import { Transaction } from "@mysten/sui/transactions";
 import { treasury } from "../types/0x70fdf49de5fbc402f1ddb71208abd3c414348638f5b3f3cafb72ca2875efa33f";
-import { getMultisigConfig } from "../helpers/getMultisigConfig";
+import { getMultisigConfig, getTestMultisigConfig } from "../helpers/getMultisigConfig";
 
 async function testDisableGlobalPause() {
   try {
     // Retrieve the multisig configuration
-    const multisigConfig = getMultisigConfig();
+    const multisigConfig = getTestMultisigConfig();
 
     // Generate MultiSigPublicKey
     const multiSigPublicKey = generateMultiSigPublicKey(
