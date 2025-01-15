@@ -8,6 +8,15 @@ use sui::ecdsa_k1;
 const EHashMismatch: u64 = 0;
 const EInvalidSignatureLength: u64 = 1;
 
+public fun decode_fee_payload(payload: vector<u8>): (u32, u256, u256) {
+    let mut b = bcs::new(payload);
+    let action = decode_be_u32(&mut b);
+    let fee = decode_left_padded_u256(&mut b);
+    let expiry = decode_left_padded_u256(&mut b);
+    
+    (action, fee, expiry)
+}
+
 public fun decode_valset(payload: vector<u8>): (
     u32, 
     u256, 

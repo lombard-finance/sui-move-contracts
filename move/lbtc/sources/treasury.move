@@ -33,6 +33,7 @@ use sui::deny_list::DenyList;
 use sui::event;
 use sui::bcs;
 use sui::dynamic_field as df;
+use sui::clock::Clock;
 use consortium::consortium::{Self, Consortium};
 use consortium::payload_decoder;
 
@@ -78,6 +79,10 @@ const ENoBurnCommission: u64 = 18;
 const ENoWithdrawalFlag: u64 = 19;
 // Maximum fee is not set.
 const ENoMaximumFee: u64 = 20;
+// Fee approval has expired.
+const EFeeApprovalExpired: u64 = 21;
+// Fee is greater than amount.
+const EFeeGreaterThanAmount: u64 = 22;
 
 // Chain Id defined in the payload
 const CHAIN_ID: u64 = 9; 
@@ -270,17 +275,31 @@ public fun toggle_bascule_check<T>(
     };
 }
 
-public fun set_action_bytes<T>(
+public fun set_mint_action_bytes<T>(
     treasury: &mut ControlledTreasury<T>,
-    action_bytes: u32,
+    mint_action_bytes: u32,
     ctx: &mut TxContext,
 ) {
     assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
-    if (df::exists_(&treasury.id, b"action_bytes")) {
-        let action = df::borrow_mut(&mut treasury.id, b"action_bytes");
-        *action = action_bytes;
+    if (df::exists_(&treasury.id, b"mint_action_bytes")) {
+        let action = df::borrow_mut(&mut treasury.id, b"mint_action_bytes");
+        *action = mint_action_bytes;
     } else {
-        df::add(&mut treasury.id, b"action_bytes", action_bytes);
+        df::add(&mut treasury.id, b"mint_action_bytes", mint_action_bytes);
+    };
+}
+
+public fun set_fee_action_bytes<T>(
+    treasury: &mut ControlledTreasury<T>,
+    fee_action_bytes: u32,
+    ctx: &mut TxContext,
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    if (df::exists_(&treasury.id, b"fee_action_bytes")) {
+        let action = df::borrow_mut(&mut treasury.id, b"fee_action_bytes");
+        *action = fee_action_bytes;
+    } else {
+        df::add(&mut treasury.id, b"fee_action_bytes", fee_action_bytes);
     };
 }
 
@@ -388,7 +407,7 @@ public fun mint<T>(
     assert!(amount > 0, EMintAmountCannotBeZero);
     assert!(to != @0x0, ERecipientZeroAddress);
     assert!(to_chain.try_as_u64().extract() == CHAIN_ID, EInvalidChainId);
-    assert!(action == treasury.get_action_bytes(), EInvalidActionBytes);
+    assert!(action == treasury.get_mint_action_bytes(), EInvalidActionBytes);
     
     let tx_id = bcs::to_bytes(&txid_u256);
     let index = vout.try_as_u32().extract();
@@ -419,15 +438,14 @@ public fun mint_with_fee<T>(
     proof: vector<u8>,
     fee_payload: vector<u8>,
     user_signature: vector<u8>,
+    user_public_key: vector<u8>,
+    clock: &Clock,
     ctx: &mut TxContext,
 ) {
     // Ensure global pause is not enabled before continuing
     assert!(!is_global_pause_enabled<T>(denylist), EMintNotAllowed);
     // Validate the payload with consortium, if invalid, consortium will throw an error
     let validate_proof = consortium::validate_payload(consortium, mint_payload, proof);
-    
-    // Validate the fee payload with the user signature
-    // verify::validate_signature(user_signature, fee_payload);
 
     let (action, to_chain, to, amount_u256, txid_u256, vout) = payload_decoder::decode_mint_payload(mint_payload);
 
@@ -436,18 +454,27 @@ public fun mint_with_fee<T>(
     assert!(amount > 0, EMintAmountCannotBeZero);
     assert!(to != @0x0, ERecipientZeroAddress);
     assert!(to_chain.try_as_u64().extract() == CHAIN_ID, EInvalidChainId);
-    assert!(action == treasury.get_action_bytes(), EInvalidActionBytes);
+    assert!(action == treasury.get_mint_action_bytes(), EInvalidActionBytes);
 
     let tx_id = bcs::to_bytes(&txid_u256);
     let index = vout.try_as_u32().extract();
+    
+    // Validate the fee payload with the user signature
+    pk_util::validate_signature(user_signature, user_public_key, &fee_payload);
 
-    // let (fee_action, fee) = payload_decoder::decode_fee_payload(fee_payload);
-    // assert!(fee < amount, EFeeGreaterThanAmount);
-    // let mint_fee = treasury.get_mint_fee();
-    // if (mint_fee > fee) {
-    //  mint_fee = fee;
-    // }
-    // let final_amount = amount - mint_fee;
+    let (fee_action, fee_u256, expiry_u256) = payload_decoder::decode_fee_payload(fee_payload);
+    let fee = fee_u256.try_as_u64().extract();
+    let expiry = expiry_u256.try_as_u64().extract();
+    assert!(fee_action == treasury.get_fee_action_bytes(), EInvalidActionBytes);
+    assert!(fee < amount, EFeeGreaterThanAmount);
+    // Expiry timestamp is in unix seconds, so we need to truncate the bottom 4 numbers from the clock timestamp.
+    assert!(expiry > clock.timestamp_ms() / 1000, EFeeApprovalExpired);
+
+    let mut mint_fee = treasury.get_mint_fee();
+    if (mint_fee > fee) {
+        mint_fee = fee;
+    };
+    let final_amount = amount - mint_fee;
 
     // Validate with the bascule
     // if (treasury.is_bascule_check_enabled()) {
@@ -458,8 +485,8 @@ public fun mint_with_fee<T>(
     consortium::resolve_proof(consortium, validate_proof);
 
     // Emit the event and mint + transfer the coins
-    event::emit(MintEvent<T> { amount, to, tx_id, index });
-    let new_coin = coin::mint(&mut treasury.treasury_cap, amount, ctx);
+    event::emit(MintEvent<T> { amount: final_amount, to, tx_id, index });
+    let new_coin = coin::mint(&mut treasury.treasury_cap, final_amount, ctx);
     transfer::public_transfer(new_coin, to);
 }
 
@@ -727,10 +754,17 @@ public fun is_bascule_check_enabled<T>(
     *check
 }
 
-/// Returns the action bytes for the treasury in u32.
-public fun get_action_bytes<T>(treasury: &ControlledTreasury<T>): u32 {
-    assert!(df::exists_(&treasury.id, b"action_bytes"), ENoActionBytes);
-    let action = df::borrow(&treasury.id, b"action_bytes");
+/// Returns the mint action bytes for the treasury in u32.
+public fun get_mint_action_bytes<T>(treasury: &ControlledTreasury<T>): u32 {
+    assert!(df::exists_(&treasury.id, b"mint_action_bytes"), ENoActionBytes);
+    let action = df::borrow(&treasury.id, b"mint_action_bytes");
+    *action
+}
+
+/// Returns the fee action bytes for the treasury in u32.
+public fun get_fee_action_bytes<T>(treasury: &ControlledTreasury<T>): u32 {
+    assert!(df::exists_(&treasury.id, b"fee_action_bytes"), ENoActionBytes);
+    let action = df::borrow(&treasury.id, b"fee_action_bytes");
     *action
 }
 

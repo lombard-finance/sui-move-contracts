@@ -76,3 +76,13 @@ fun test_initial_valset_decoder() {
         i = i + 1;
     }
 }
+
+#[test]
+fun test_fee_payload_decoder() {
+    let fee_payload = x"8175ca940000000000000000000000000000000000000000000000000000000005f5e0ff00000000000000000000000000000000000000000000000000000000678621c7";
+
+    let (action, fee, expiry) = payload_decoder::decode_fee_payload(fee_payload);
+    assert!(action == 2171980436);
+    assert!(fee == 99999999);
+    assert!(expiry == 1736843719);
+}
