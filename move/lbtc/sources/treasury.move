@@ -401,21 +401,7 @@ public fun mint<T>(
 
     let (action, to_chain, to, amount_u256, txid_u256, vout) = payload_decoder::decode_mint_payload(payload);
 
-    // Convert the u256 to u64, if it's too large, the `Option` will be empty and extract will throw an error `EOPTION_NOT_SET`
-    let amount = amount_u256.try_as_u64().extract();
-
-    assert!(amount > 0, EMintAmountCannotBeZero);
-    assert!(to != @0x0, ERecipientZeroAddress);
-    assert!(to_chain.try_as_u64().extract() == CHAIN_ID, EInvalidChainId);
-    assert!(action == treasury.get_mint_action_bytes(), EInvalidActionBytes);
-    
-    let tx_id = bcs::to_bytes(&txid_u256);
-    let index = vout.try_as_u32().extract();
-    
-    // Validate with the bascule
-    // if (treasury.is_bascule_check_enabled()) {
-    //     bascule::validate_withdrawal(&mut bascule, tx_id, index: u32, to: address, amount: u64, ctx: &TxContext);
-    // };
+    let (amount, tx_id, index) = assert_decoded_payload<T>(action, to_chain, to, amount_u256, txid_u256, vout, treasury);
 
     // Resolve the proof to store the hash
     consortium::resolve_proof(consortium, validate_proof);
@@ -449,15 +435,7 @@ public fun mint_with_fee<T>(
 
     let (action, to_chain, to, amount_u256, txid_u256, vout) = payload_decoder::decode_mint_payload(mint_payload);
 
-    // Convert the u256 to u64, if it's too large, the `Option` will be empty and extract will throw an error `EOPTION_NOT_SET`
-    let amount = amount_u256.try_as_u64().extract();
-    assert!(amount > 0, EMintAmountCannotBeZero);
-    assert!(to != @0x0, ERecipientZeroAddress);
-    assert!(to_chain.try_as_u64().extract() == CHAIN_ID, EInvalidChainId);
-    assert!(action == treasury.get_mint_action_bytes(), EInvalidActionBytes);
-
-    let tx_id = bcs::to_bytes(&txid_u256);
-    let index = vout.try_as_u32().extract();
+    let (amount, tx_id, index) = assert_decoded_payload<T>(action, to_chain, to, amount_u256, txid_u256, vout, treasury);
     
     // Validate the fee payload with the user signature
     pk_util::validate_signature(user_signature, user_public_key, &fee_payload);
@@ -475,11 +453,6 @@ public fun mint_with_fee<T>(
         mint_fee = fee;
     };
     let final_amount = amount - mint_fee;
-
-    // Validate with the bascule
-    // if (treasury.is_bascule_check_enabled()) {
-    //     bascule::validate_withdrawal(&mut bascule, tx_id, index: u32, to: address, amount: u64, ctx: &TxContext);
-    // };
 
     // Resolve the proof to store the hash
     consortium::resolve_proof(consortium, validate_proof);
@@ -830,4 +803,33 @@ fun remove_cap<T, Cap: store + drop>(
     owner: address,
 ): Cap {
     treasury.roles.remove(RoleKey<Cap> { owner })
+}
+
+/// Do all the checks to the decoded payload.
+fun assert_decoded_payload<T>(
+    action: u32,
+    to_chain: u256,
+    to: address,
+    amount_u256: u256,
+    txid_u256: u256,
+    vout: u256,
+    treasury: &ControlledTreasury<T>,
+    //bascule: &Bascule,
+): (u64, vector<u8>, u32) {
+    // Convert the u256 to u64, if it's too large, the `Option` will be empty and extract will throw an error `EOPTION_NOT_SET`
+    let amount = amount_u256.try_as_u64().extract();
+    let tx_id = bcs::to_bytes(&txid_u256);
+    let index = vout.try_as_u32().extract();
+
+    assert!(amount > 0, EMintAmountCannotBeZero);
+    assert!(to != @0x0, ERecipientZeroAddress);
+    assert!(to_chain.try_as_u64().extract() == CHAIN_ID, EInvalidChainId);
+    assert!(action == treasury.get_mint_action_bytes(), EInvalidActionBytes);
+    
+    // Validate with the bascule
+    // if (treasury.is_bascule_check_enabled()) {
+    //     bascule::validate_withdrawal(&mut bascule, tx_id, index: u32, to: address, amount: u64, ctx: &TxContext);
+    // };
+
+    (amount, tx_id, index)
 }
