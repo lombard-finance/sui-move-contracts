@@ -1,6 +1,7 @@
 module consortium::consortium;
 
 use std::hash;
+use sui::ecdsa_k1;
 use sui::table::{Self, Table};
 use consortium::payload_decoder;
 
@@ -36,9 +37,12 @@ const EWeightsLowerThanThreshold: u64 = 13;
 const EInvalidEpoch: u64 = 14;
 /// Payload length is invalid.
 const EInvalidPayloadLength: u64 = 15;
+/// Payload hash mismatch.
+const EHashMismatch: u64 = 16;
+/// Invalid signature length.
+const EInvalidSignatureLength: u64 = 17;
 
 // === Constants ===
-const NEW_VALSET: u32 = 1252728175;
 const MIN_VALIDATOR_SET_SIZE: u64 = 1;
 const MAX_VALIDATOR_SET_SIZE: u64 = 102;
 
@@ -53,6 +57,7 @@ public struct Consortium has key {
     epoch: u256,
     validator_set: Table<u256, ValidatorSet>,
     used_payloads: Table<vector<u8>, bool>,
+    valset_action: u32,
     admins: vector<address>,
 }
 
@@ -69,6 +74,7 @@ fun init(ctx: &mut TxContext) {
         epoch: 0,
         validator_set: table::new<u256, ValidatorSet>(ctx),
         used_payloads: table::new<vector<u8>, bool>(ctx),
+        valset_action: 1252728175,
         admins: vector::singleton(ctx.sender()),
     };
     transfer::share_object(consortium);
@@ -89,7 +95,7 @@ public fun validate_payload(
     let signatures = payload_decoder::decode_signatures(proof);
     // get the validator set for the current epoch
     let signers = consortium.get_validator_set(consortium.epoch);
-    assert!(payload_decoder::validate_signatures(signers.pub_keys, signatures, signers.weights, signers.weight_threshold, payload, hash), EInvalidPayload);
+    assert!(validate_signatures(signers.pub_keys, signatures, signers.weights, signers.weight_threshold, payload, hash), EInvalidPayload);
     ValidateProof { hash }
 }
 
@@ -108,17 +114,19 @@ public fun set_next_validator_set(
     payload: vector<u8>,
     proof: vector<u8>,
 ) {
+    // Payload should consist of 804 bytes (800 for message and 4 for the action)
+    assert!(payload.length() == 804, EInvalidPayloadLength);
     let hash = hash::sha2_256(payload);
     // get the signature from the proof
     let signatures = payload_decoder::decode_signatures(proof);
     // get the validator set for the current epoch
     let signers = consortium.get_validator_set(consortium.epoch);
-    assert!(payload_decoder::validate_signatures(signers.pub_keys, signatures, signers.weights, signers.weight_threshold, payload, hash), EInvalidPayload);
+    assert!(validate_signatures(signers.pub_keys, signatures, signers.weights, signers.weight_threshold, payload, hash), EInvalidPayload);
 
     // get the new validator set from the payload and do all the checks
     let (action, epoch, validators, weights, weight_threshold, _height) = payload_decoder::decode_valset(payload);
     assert!(epoch == consortium.epoch + 1, EInvalidEpoch);
-    assert_validator_set(action, validators, weights, weight_threshold);
+    assert_validator_set(action, consortium.valset_action, validators, weights, weight_threshold);
     consortium.epoch = epoch;
     consortium.validator_set.add(
         epoch, 
@@ -139,6 +147,8 @@ public fun set_initial_validator_set(
     payload: vector<u8>,
     ctx: &mut TxContext,
 ) {
+    // Payload should consist of 804 bytes (800 for message and 4 for the action)
+    assert!(payload.length() == 804, EInvalidPayloadLength);
     assert!(consortium.admins.contains(&ctx.sender()), EUnauthorized);
     // To set the initial validator set, the epoch should be 0.
     // Since we assume that the initial validator set will have epoch > 0 to match the other chains,
@@ -146,7 +156,7 @@ public fun set_initial_validator_set(
     assert!(consortium.epoch == 0, EAlreadyInitialized);
     let (action, epoch, validators, weights, weight_threshold, _height) = payload_decoder::decode_valset(payload);
     assert!(!consortium.validator_set.contains(epoch), EInvalidEpoch);
-    assert_validator_set(action, validators, weights, weight_threshold);
+    assert_validator_set(action, consortium.valset_action, validators, weights, weight_threshold);
     consortium.epoch = epoch;
     consortium.validator_set.add(
         epoch, 
@@ -156,6 +166,16 @@ public fun set_initial_validator_set(
             weight_threshold,
         }
     );
+}
+
+// Set the validator set action.
+public fun set_valset_action(
+    consortium: &mut Consortium,
+    valset_action: u32,
+    ctx: &mut TxContext,
+) {
+    assert!(consortium.admins.contains(&ctx.sender()), EUnauthorized);
+    consortium.valset_action = valset_action;
 }
 
 // Adds a new admin.
@@ -200,14 +220,77 @@ public fun get_epoch(consortium: &Consortium): u256 {
     consortium.epoch
 }
 
+public fun validate_signatures(
+    signers: vector<vector<u8>>,
+    signatures: vector<vector<u8>>,
+    weights: vector<u256>,
+    weight_threshold: u256, 
+    message: vector<u8>, 
+    hash: vector<u8>
+): bool {
+    // First, ensure hash is correct wrt message
+    let message_hash = hash::sha2_256(message);
+    assert!(message_hash == hash, EHashMismatch);
+    assert!(signers.length() == signatures.length(), EInvalidSignatureLength);
+
+    let zeroSig = x"0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+
+    // Now, for each signature, check correctness and add weight.
+    let mut weight: u256 = 0;
+    let mut i = 0;
+    while (i < signatures.length()) {
+        // We need to append the v, which is either 27 or 28.
+        let mut sig = signatures[i];
+        sig.push_back(0u8);
+
+        // If the signature equals to 0 it means that the validator did not sign the message.
+        if (sig != zeroSig) {
+            // Hash function is set to 1 (sha256), since:
+            // ecdsa_k1::SHA256: u8 = 1;
+            // We can't reference this however so we need to use the magic value.
+            let recovered = ecdsa_k1::secp256k1_ecrecover(
+                &sig, 
+                &message, 
+                1
+            );
+
+            // We only receive the x coordinate, so we need to decompress the recovered point.
+            let decompressed = ecdsa_k1::decompress_pubkey(&recovered);
+
+            // If that didn't work, we try v = 28.
+            if (decompressed != signers[i]) {
+                let _ = sig.pop_back();
+                sig.push_back(1u8);
+                let recovered = ecdsa_k1::secp256k1_ecrecover(
+                    &sig, 
+                    &message, 
+                    1
+                );
+
+                let decompressed = ecdsa_k1::decompress_pubkey(&recovered);
+                if (decompressed != signers[i]) {
+                    i = i + 1;
+                    continue
+                };
+            };
+            weight = weight + weights[i];
+        };
+
+        i = i + 1;
+    };
+
+    weight >= weight_threshold
+}
+
 // === Private Functions ===
 fun assert_validator_set(
-    actions: u32,
+    action: u32,
+    expected_action: u32,
     validators: vector<vector<u8>>,
     weights: vector<u256>,
     weight_threshold: u256,
 ) {
-    assert!(actions == NEW_VALSET, EInvalidAction);
+    assert!(action == expected_action, EInvalidAction);
     assert!(validators.length() >= MIN_VALIDATOR_SET_SIZE, EInvalidValidatorSetSize);
     assert!(validators.length() <= MAX_VALIDATOR_SET_SIZE, EInvalidValidatorSetSize);
     assert!(weight_threshold > 0, EInvalidThreshold);

@@ -120,7 +120,7 @@ public struct BurnEvent<phantom T> has copy, drop {
 
 public struct UnstakeRequestEvent<phantom T> has copy, drop {
     from: address,
-    script_pubkey:  vector<u8>,
+    script_pubkey: vector<u8>,
     amount_after_fee: u64,
 }
 

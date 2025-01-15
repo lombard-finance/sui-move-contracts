@@ -1,12 +1,9 @@
 /// Module: payload_decoder
 module consortium::payload_decoder;
 
-use std::hash;
 use sui::bcs::{Self, BCS};
-use sui::ecdsa_k1;
 
-const EHashMismatch: u64 = 0;
-const EInvalidSignatureLength: u64 = 1;
+const EInvalidPayloadLength: u64 = 1;
 
 public fun decode_valset(payload: vector<u8>): (
     u32, 
@@ -29,74 +26,14 @@ public fun decode_valset(payload: vector<u8>): (
     let validators = decode_valset_array(&mut b);
     let weights = decode_u256_array(&mut b);
 
+    assert!(b.into_remainder_bytes().length() == 0, EInvalidPayloadLength);
+
     (action, epoch, validators, weights, weight_threshold, height)
 }
 
 public fun decode_signatures(payload: vector<u8>): vector<vector<u8>> {
     let mut b = bcs::new(payload);
     decode_bytes_array(&mut b)
-}
-
-public fun validate_signatures(
-    signers: vector<vector<u8>>,
-    signatures: vector<vector<u8>>,
-    weights: vector<u256>,
-    weight_threshold: u256, 
-    message: vector<u8>, 
-    hash: vector<u8>
-): bool {
-    // First, ensure hash is correct wrt message
-    let message_hash = hash::sha2_256(message);
-    assert!(message_hash == hash, EHashMismatch);
-    assert!(signers.length() == signatures.length(), EInvalidSignatureLength);
-
-    let zeroSig = x"0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
-
-    // Now, for each signature, check correctness and add weight.
-    let mut weight: u256 = 0;
-    let mut i = 0;
-    while (i < signatures.length()) {
-        // We need to append the v, which is either 27 or 28.
-        let mut sig = signatures[i];
-        sig.push_back(0u8);
-
-        // If the signature equals to 0 it means that the validator did not sign the message.
-        if (sig != zeroSig) {
-            // Hash function is set to 1 (sha256), since:
-            // ecdsa_k1::SHA256: u8 = 1;
-            // We can't reference this however so we need to use the magic value.
-            let recovered = ecdsa_k1::secp256k1_ecrecover(
-                &sig, 
-                &message, 
-                1
-            );
-
-            // We only receive the x coordinate, so we need to decompress the recovered point.
-            let decompressed = ecdsa_k1::decompress_pubkey(&recovered);
-
-            // If that didn't work, we try v = 28.
-            if (decompressed != signers[i]) {
-                let _ = sig.pop_back();
-                sig.push_back(1u8);
-                let recovered = ecdsa_k1::secp256k1_ecrecover(
-                    &sig, 
-                    &message, 
-                    1
-                );
-
-                let decompressed = ecdsa_k1::decompress_pubkey(&recovered);
-                if (decompressed != signers[i]) {
-                    i = i + 1;
-                    continue
-                };
-            };
-            weight = weight + weights[i];
-        };
-
-        i = i + 1;
-    };
-
-    weight >= weight_threshold
 }
 
 public fun decode_mint_payload(payload: vector<u8>): (u32, u256, address, u256, u256, u256) {
