@@ -33,6 +33,7 @@ use sui::deny_list::DenyList;
 use sui::event;
 use sui::bcs;
 use sui::dynamic_field as df;
+use sui::clock::Clock;
 use consortium::consortium::{Self, Consortium};
 use consortium::payload_decoder;
 
@@ -59,7 +60,7 @@ const ERecipientZeroAddress: u64 = 9;
 // Invalid action bytes in the payload.
 const EInvalidActionBytes: u64 = 10;
 // No action bytes set for the treasury.
-const ENoActionBytesCheck: u64 = 11;
+const ENoActionBytes: u64 = 11;
 // BTC public key unsupported.
 const EScriptPubkeyUnsupported: u64 = 12;
 // BTC withdrawal is disabled.
@@ -76,8 +77,14 @@ const ENoDustFeeRate: u64 = 17;
 const ENoBurnCommission: u64 = 18;
 // Withdrawal Flag is not set.
 const ENoWithdrawalFlag: u64 = 19;
+// Maximum fee is not set.
+const ENoMaximumFee: u64 = 20;
+// Fee approval has expired.
+const EFeeApprovalExpired: u64 = 21;
+// Fee is greater than amount.
+const EFeeGreaterThanAmount: u64 = 22;
 // Chain ID is not set
-const ENoChainIdCheck: u64 = 20;
+const ENoChainIdCheck: u64 = 23;
 
 /// Represents a controlled treasury for managing a regulated coin.
 public struct ControlledTreasury<phantom T> has key {
@@ -102,6 +109,12 @@ public struct MinterCap has store, drop {
 
 /// Allows global pause and unpause of coin transactions.
 public struct PauserCap has store, drop {}
+
+/// Allows to set the mint fee for the autoclaim.
+public struct OperatorCap has store, drop {}
+
+/// Allows to call the mint_with_fee (autoclaim) function.
+public struct ClaimerCap has store, drop {}
 
 // === Events ===
 
@@ -147,6 +160,12 @@ public fun new_minter_cap(limit: u64, ctx: &TxContext): MinterCap {
 
 /// Create a new `PauserCap` to assign.
 public fun new_pauser_cap(): PauserCap { PauserCap {} }
+
+/// Create a new `OperatorCap` to assign.
+public fun new_operator_cap(): OperatorCap { OperatorCap {} }
+
+/// Create a new `ClaimerCap` to assign.
+public fun new_claimer_cap(): ClaimerCap { ClaimerCap {} }
 
 /// Creates a new controlled treasury by wrapping a `TreasuryCap` and `DenyCapV2`.
 /// The treasury must be shared to allow usage across multiple transactions.
@@ -261,17 +280,45 @@ public fun toggle_bascule_check<T>(
     };
 }
 
-public fun set_action_bytes<T>(
+public fun set_mint_action_bytes<T>(
     treasury: &mut ControlledTreasury<T>,
-    action_bytes: u32,
+    mint_action_bytes: u32,
     ctx: &mut TxContext,
 ) {
     assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
-    if (df::exists_(&treasury.id, b"action_bytes")) {
-        let action = df::borrow_mut(&mut treasury.id, b"action_bytes");
-        *action = action_bytes;
+    if (df::exists_(&treasury.id, b"mint_action_bytes")) {
+        let action = df::borrow_mut(&mut treasury.id, b"mint_action_bytes");
+        *action = mint_action_bytes;
     } else {
-        df::add(&mut treasury.id, b"action_bytes", action_bytes);
+        df::add(&mut treasury.id, b"mint_action_bytes", mint_action_bytes);
+    };
+}
+
+public fun set_fee_action_bytes<T>(
+    treasury: &mut ControlledTreasury<T>,
+    fee_action_bytes: u32,
+    ctx: &mut TxContext,
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    if (df::exists_(&treasury.id, b"fee_action_bytes")) {
+        let action = df::borrow_mut(&mut treasury.id, b"fee_action_bytes");
+        *action = fee_action_bytes;
+    } else {
+        df::add(&mut treasury.id, b"fee_action_bytes", fee_action_bytes);
+    };
+}
+
+public fun set_mint_fee<T>(
+    treasury: &mut ControlledTreasury<T>,
+    new_fee: u64,
+    ctx: &mut TxContext,
+) {
+    assert!(treasury.has_cap<T, OperatorCap>(ctx.sender()), ENoAuthRecord);
+    if (df::exists_(&treasury.id, b"maximum_fee")) {
+        let fee = df::borrow_mut(&mut treasury.id, b"maximum_fee");
+        *fee = new_fee;
+    } else {
+        df::add(&mut treasury.id, b"maximum_fee", new_fee);
     };
 }
 
@@ -370,30 +417,70 @@ public fun mint<T>(
     assert!(!is_global_pause_enabled<T>(denylist), EMintNotAllowed);
     // Validate the payload with consortium, if invalid, consortium will throw an error
     let validate_proof = consortium::validate_payload(consortium, payload, proof);
-    // Resolve the proof to store the hash
-    consortium::resolve_proof(consortium, validate_proof);
 
     let (action, to_chain, to, amount_u256, txid_u256, vout) = payload_decoder::decode_mint_payload(payload);
 
-    // Convert the u256 to u64, if it's too large, the `Option` will be empty and extract will throw an error `EOPTION_NOT_SET`
-    let amount = amount_u256.try_as_u64().extract();
+    let (amount, tx_id, index) = assert_decoded_payload<T>(action, to_chain, to, amount_u256, txid_u256, vout, treasury);
 
-    assert!(amount > 0, EMintAmountCannotBeZero);
-    assert!(to != @0x0, ERecipientZeroAddress);
-    assert!(to_chain == treasury.get_chain_id(), EInvalidChainId);
-    assert!(action == treasury.get_action_bytes(), EInvalidActionBytes);
-    
-    let tx_id = bcs::to_bytes(&txid_u256);
-    let index = vout.try_as_u32().extract();
-    
-    // Validate with the bascule
-    // if (treasury.is_bascule_check_enabled()) {
-    //     bascule::validate_withdrawal(&mut bascule, tx_id, index: u32, to: address, amount: u64, ctx: &TxContext);
-    // };
+    // Resolve the proof to store the hash
+    consortium::resolve_proof(consortium, validate_proof);
 
     // Emit the event and mint + transfer the coins
     event::emit(MintEvent<T> { amount, to, tx_id, index });
     let new_coin = coin::mint(&mut treasury.treasury_cap, amount, ctx);
+    transfer::public_transfer(new_coin, to);
+}
+
+/// Mints and transfers coins to the address defined in the decoded payload.
+/// The payload with the given proof is validated by the consortium before minting.
+/// A fee payload is given which contains the fee approval signed by the user
+public fun mint_with_fee<T>(
+    treasury: &mut ControlledTreasury<T>,
+    consortium: &mut Consortium,
+    denylist: &DenyList,
+    //bascule: &mut Bascule,
+    mint_payload: vector<u8>,
+    proof: vector<u8>,
+    fee_payload: vector<u8>,
+    user_signature: vector<u8>,
+    user_public_key: vector<u8>,
+    clock: &Clock,
+    ctx: &mut TxContext,
+) {
+    // Ensure the sender is authorized with claimer role
+    assert!(treasury.has_cap<T, ClaimerCap>(ctx.sender()), ENoAuthRecord);
+    // Ensure global pause is not enabled before continuing
+    assert!(!is_global_pause_enabled<T>(denylist), EMintNotAllowed);
+    // Validate the payload with consortium, if invalid, consortium will throw an error
+    let validate_proof = consortium::validate_payload(consortium, mint_payload, proof);
+
+    let (action, to_chain, to, amount_u256, txid_u256, vout) = payload_decoder::decode_mint_payload(mint_payload);
+
+    let (amount, tx_id, index) = assert_decoded_payload<T>(action, to_chain, to, amount_u256, txid_u256, vout, treasury);
+    
+    // Validate the fee payload with the user signature
+    pk_util::validate_signature(user_signature, user_public_key, &fee_payload);
+
+    let (fee_action, fee_u256, expiry_u256) = payload_decoder::decode_fee_payload(fee_payload);
+    let fee = fee_u256.try_as_u64().extract();
+    let expiry = expiry_u256.try_as_u64().extract();
+    assert!(fee_action == treasury.get_fee_action_bytes(), EInvalidActionBytes);
+    assert!(fee < amount, EFeeGreaterThanAmount);
+    // Expiry timestamp is in unix seconds, so we need to truncate the bottom 4 numbers from the clock timestamp.
+    assert!(expiry > clock.timestamp_ms() / 1000, EFeeApprovalExpired);
+
+    let mut mint_fee = treasury.get_mint_fee();
+    if (mint_fee > fee) {
+        mint_fee = fee;
+    };
+    let final_amount = amount - mint_fee;
+
+    // Resolve the proof to store the hash
+    consortium::resolve_proof(consortium, validate_proof);
+
+    // Emit the event and mint + transfer the coins
+    event::emit(MintEvent<T> { amount: final_amount, to, tx_id, index });
+    let new_coin = coin::mint(&mut treasury.treasury_cap, final_amount, ctx);
     transfer::public_transfer(new_coin, to);
 }
 
@@ -661,11 +748,27 @@ public fun is_bascule_check_enabled<T>(
     *check
 }
 
-/// Returns the action bytes for the treasury in u32.
-public fun get_action_bytes<T>(treasury: &ControlledTreasury<T>): u32 {
-    assert!(df::exists_(&treasury.id, b"action_bytes"), ENoActionBytesCheck);
-    let action = df::borrow(&treasury.id, b"action_bytes");
+/// Returns the mint action bytes for the treasury in u32.
+public fun get_mint_action_bytes<T>(treasury: &ControlledTreasury<T>): u32 {
+    assert!(df::exists_(&treasury.id, b"mint_action_bytes"), ENoActionBytes);
+    let action = df::borrow(&treasury.id, b"mint_action_bytes");
     *action
+}
+
+/// Returns the fee action bytes for the treasury in u32.
+public fun get_fee_action_bytes<T>(treasury: &ControlledTreasury<T>): u32 {
+    assert!(df::exists_(&treasury.id, b"fee_action_bytes"), ENoActionBytes);
+    let action = df::borrow(&treasury.id, b"fee_action_bytes");
+    *action
+}
+
+/// Returns the mint fee for the autoclaim.
+public fun get_mint_fee<T>(
+    treasury: &ControlledTreasury<T>,
+): u64 {
+    assert!(df::exists_(&treasury.id, b"maximum_fee"), ENoMaximumFee);
+    let fee = df::borrow(&treasury.id, b"maximum_fee");
+    *fee
 }
 
 public fun get_chain_id<T>(treasury: &ControlledTreasury<T>): u256 {
@@ -673,7 +776,6 @@ public fun get_chain_id<T>(treasury: &ControlledTreasury<T>): u256 {
     let id = df::borrow(&treasury.id, b"chain_id");
     *id
 }
-
 
 /// Returns a vector of role types assigned to the `owner`.
 public fun list_roles<T>(
@@ -728,4 +830,33 @@ fun remove_cap<T, Cap: store + drop>(
     owner: address,
 ): Cap {
     treasury.roles.remove(RoleKey<Cap> { owner })
+}
+
+/// Do all the checks to the decoded payload.
+fun assert_decoded_payload<T>(
+    action: u32,
+    to_chain: u256,
+    to: address,
+    amount_u256: u256,
+    txid_u256: u256,
+    vout: u256,
+    treasury: &ControlledTreasury<T>,
+    //bascule: &Bascule,
+): (u64, vector<u8>, u32) {
+    // Convert the u256 to u64, if it's too large, the `Option` will be empty and extract will throw an error `EOPTION_NOT_SET`
+    let amount = amount_u256.try_as_u64().extract();
+    let tx_id = bcs::to_bytes(&txid_u256);
+    let index = vout.try_as_u32().extract();
+
+    assert!(amount > 0, EMintAmountCannotBeZero);
+    assert!(to != @0x0, ERecipientZeroAddress);
+    assert!(to_chain.try_as_u64().extract() == CHAIN_ID, EInvalidChainId);
+    assert!(action == treasury.get_mint_action_bytes(), EInvalidActionBytes);
+    
+    // Validate with the bascule
+    // if (treasury.is_bascule_check_enabled()) {
+    //     bascule::validate_withdrawal(&mut bascule, tx_id, index: u32, to: address, amount: u64, ctx: &TxContext);
+    // };
+
+    (amount, tx_id, index)
 }
