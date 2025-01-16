@@ -83,9 +83,8 @@ const ENoMaximumFee: u64 = 20;
 const EFeeApprovalExpired: u64 = 21;
 // Fee is greater than amount.
 const EFeeGreaterThanAmount: u64 = 22;
-
-// Chain Id defined in the payload
-const CHAIN_ID: u64 = 9; 
+// Chain ID is not set
+const ENoChainIdCheck: u64 = 23;
 
 /// Represents a controlled treasury for managing a regulated coin.
 public struct ControlledTreasury<phantom T> has key {
@@ -133,7 +132,7 @@ public struct BurnEvent<phantom T> has copy, drop {
 
 public struct UnstakeRequestEvent<phantom T> has copy, drop {
     from: address,
-    script_pubkey:  vector<u8>,
+    script_pubkey: vector<u8>,
     amount_after_fee: u64,
 }
 
@@ -320,6 +319,20 @@ public fun set_mint_fee<T>(
         *fee = new_fee;
     } else {
         df::add(&mut treasury.id, b"maximum_fee", new_fee);
+    };
+}
+
+public fun set_chain_id<T>(
+    treasury: &mut ControlledTreasury<T>,
+    chain_id: u256,
+    ctx: &mut TxContext,
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    if (df::exists_(&treasury.id, b"chain_id")) {
+        let id = df::borrow_mut(&mut treasury.id, b"chain_id");
+        *id = chain_id;
+    } else {
+        df::add(&mut treasury.id, b"chain_id", chain_id);
     };
 }
 
@@ -756,6 +769,12 @@ public fun get_mint_fee<T>(
     assert!(df::exists_(&treasury.id, b"maximum_fee"), ENoMaximumFee);
     let fee = df::borrow(&treasury.id, b"maximum_fee");
     *fee
+}
+
+public fun get_chain_id<T>(treasury: &ControlledTreasury<T>): u256 {
+    assert!(df::exists_(&treasury.id, b"chain_id"), ENoChainIdCheck);
+    let id = df::borrow(&treasury.id, b"chain_id");
+    *id
 }
 
 /// Returns a vector of role types assigned to the `owner`.

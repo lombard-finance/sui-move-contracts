@@ -2,6 +2,7 @@
 module consortium::payload_decoder_tests;
 
 use consortium::payload_decoder;
+use consortium::consortium;
 use sui::bcs;
 
 #[test]
@@ -27,7 +28,7 @@ fun test_signature_decoder() {
     let weight_threshold = 2;
 
     let signatures = payload_decoder::decode_signatures(signatures);
-    assert!(payload_decoder::validate_signatures(signers, signatures, weights, weight_threshold, payload, hash));
+    assert!(consortium::validate_signatures(signers, signatures, weights, weight_threshold, payload, hash));
 }
 
 #[test]
