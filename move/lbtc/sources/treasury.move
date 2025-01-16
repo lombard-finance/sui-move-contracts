@@ -114,6 +114,9 @@ public struct PauserCap has store, drop {}
 /// Allows to set the mint fee for the autoclaim.
 public struct OperatorCap has store, drop {}
 
+/// Allows to call the mint_with_fee (autoclaim) function.
+public struct ClaimerCap has store, drop {}
+
 // === Events ===
 
 public struct MintEvent<phantom T> has copy, drop {
@@ -161,6 +164,9 @@ public fun new_pauser_cap(): PauserCap { PauserCap {} }
 
 /// Create a new `OperatorCap` to assign.
 public fun new_operator_cap(): OperatorCap { OperatorCap {} }
+
+/// Create a new `ClaimerCap` to assign.
+public fun new_claimer_cap(): ClaimerCap { ClaimerCap {} }
 
 /// Creates a new controlled treasury by wrapping a `TreasuryCap` and `DenyCapV2`.
 /// The treasury must be shared to allow usage across multiple transactions.
@@ -428,6 +434,8 @@ public fun mint_with_fee<T>(
     clock: &Clock,
     ctx: &mut TxContext,
 ) {
+    // Ensure the sender is authorized with claimer role
+    assert!(treasury.has_cap<T, ClaimerCap>(ctx.sender()), ENoAuthRecord);
     // Ensure global pause is not enabled before continuing
     assert!(!is_global_pause_enabled<T>(denylist), EMintNotAllowed);
     // Validate the payload with consortium, if invalid, consortium will throw an error

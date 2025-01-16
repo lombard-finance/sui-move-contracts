@@ -1,8 +1,8 @@
 #[test_only]
 module lbtc::treasury_tests;
 
-use lbtc::treasury::{Self, ControlledTreasury, AdminCap, MinterCap, PauserCap, OperatorCap, redeem, 
-set_dust_fee_rate, set_burn_commission, set_treasury_address, toggle_withdrawal};
+use lbtc::treasury::{Self, ControlledTreasury, AdminCap, MinterCap, PauserCap, OperatorCap, ClaimerCap,
+redeem, set_dust_fee_rate, set_burn_commission, set_treasury_address, toggle_withdrawal};
 use std::string;
 use sui::coin::{Self, Coin};
 use sui::deny_list::{Self, DenyList};
@@ -1048,8 +1048,9 @@ fun test_autoclaim() {
     treasury::set_fee_action_bytes<TREASURY_TESTS>(&mut treasury, 2171980436, ts.ctx());
     let operator_cap = treasury::new_operator_cap();
     treasury.add_capability<TREASURY_TESTS, OperatorCap>(TREASURY_ADMIN, operator_cap, ts.ctx());
-
     treasury::set_mint_fee<TREASURY_TESTS>(&mut treasury, 100000000, ts.ctx());
+    let claimer_cap = treasury::new_claimer_cap();
+    treasury.add_capability<TREASURY_TESTS, ClaimerCap>(USER2, claimer_cap, ts.ctx());
 
     let mut clock = clock::create_for_testing(ts.ctx());
     clock.set_for_testing(1736941840000);
