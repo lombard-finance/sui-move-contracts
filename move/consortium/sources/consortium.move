@@ -46,10 +46,6 @@ const EInvalidSignatureLength: u64 = 17;
 const MIN_VALIDATOR_SET_SIZE: u64 = 1;
 const MAX_VALIDATOR_SET_SIZE: u64 = 102;
 
-public struct ValidateProof has drop {
-    hash: vector<u8>,
-}
-
 /// Consortium struct which contains the current epoch, the public keys of the validator,
 /// the used payloads and the admin addresses 
 public struct Consortium has key {
@@ -81,12 +77,12 @@ fun init(ctx: &mut TxContext) {
 }
 
 /// Validates that the payload has not been used and that the signatures are valid.
-/// ValidateProof contains the hash of the payload if the payload is valid.
-public fun validate_payload(
-    consortium: &Consortium,
+/// If all the checks are passed, the hash of the payload is stored in the used_payloads table.
+public fun validate_and_store_payload(
+    consortium: &mut Consortium,
     payload: vector<u8>,
     proof: vector<u8>,
-): ValidateProof {
+) {
     // Payload should consist of 164 bytes (160 for message and 4 for the action)
     assert!(payload.length() == 164, EInvalidPayloadLength);
     let hash = hash::sha2_256(payload);
@@ -96,15 +92,6 @@ public fun validate_payload(
     // get the validator set for the current epoch
     let signers = consortium.get_validator_set(consortium.epoch);
     assert!(validate_signatures(signers.pub_keys, signatures, signers.weights, signers.weight_threshold, payload, hash), EInvalidPayload);
-    ValidateProof { hash }
-}
-
-/// Resolves the ValidateProof by adding the hash to the used_payloads table.
-public fun resolve_proof(
-    consortium: &mut Consortium,
-    proof: ValidateProof,
-) {
-    let ValidateProof { hash } = proof;
     consortium.used_payloads.add(hash, true);
 }
 
@@ -114,8 +101,6 @@ public fun set_next_validator_set(
     payload: vector<u8>,
     proof: vector<u8>,
 ) {
-    // Payload should consist of 804 bytes (800 for message and 4 for the action)
-    assert!(payload.length() == 804, EInvalidPayloadLength);
     let hash = hash::sha2_256(payload);
     // get the signature from the proof
     let signatures = payload_decoder::decode_signatures(proof);
@@ -124,18 +109,9 @@ public fun set_next_validator_set(
     assert!(validate_signatures(signers.pub_keys, signatures, signers.weights, signers.weight_threshold, payload, hash), EInvalidPayload);
 
     // get the new validator set from the payload and do all the checks
-    let (action, epoch, validators, weights, weight_threshold, _height) = payload_decoder::decode_valset(payload);
+    let (action, epoch, validators, weights, weight_threshold) = payload_decoder::decode_valset(payload);
     assert!(epoch == consortium.epoch + 1, EInvalidEpoch);
-    assert_validator_set(action, consortium.valset_action, validators, weights, weight_threshold);
-    consortium.epoch = epoch;
-    consortium.validator_set.add(
-        epoch, 
-        ValidatorSet {
-            pub_keys: validators,
-            weights,
-            weight_threshold,
-        }
-    );
+    assert_and_configure_validator_set(consortium, action, validators, weights, weight_threshold, epoch);
 }
 
 // === Admin Functions ===
@@ -147,25 +123,14 @@ public fun set_initial_validator_set(
     payload: vector<u8>,
     ctx: &mut TxContext,
 ) {
-    // Payload should consist of 804 bytes (800 for message and 4 for the action)
-    assert!(payload.length() == 804, EInvalidPayloadLength);
     assert!(consortium.admins.contains(&ctx.sender()), EUnauthorized);
     // To set the initial validator set, the epoch should be 0.
     // Since we assume that the initial validator set will have epoch > 0 to match the other chains,
     // we are safe that this function will only be called once
     assert!(consortium.epoch == 0, EAlreadyInitialized);
-    let (action, epoch, validators, weights, weight_threshold, _height) = payload_decoder::decode_valset(payload);
+    let (action, epoch, validators, weights, weight_threshold) = payload_decoder::decode_valset(payload);
     assert!(!consortium.validator_set.contains(epoch), EInvalidEpoch);
-    assert_validator_set(action, consortium.valset_action, validators, weights, weight_threshold);
-    consortium.epoch = epoch;
-    consortium.validator_set.add(
-        epoch, 
-        ValidatorSet {
-            pub_keys: validators,
-            weights,
-            weight_threshold,
-        }
-    );
+    assert_and_configure_validator_set(consortium, action, validators, weights, weight_threshold, epoch);
 }
 
 // Set the validator set action.
@@ -274,23 +239,27 @@ public fun validate_signatures(
                 };
             };
             weight = weight + weights[i];
+            if (weight >= weight_threshold) {
+                return true
+            };
         };
 
         i = i + 1;
     };
 
-    weight >= weight_threshold
+    false
 }
 
 // === Private Functions ===
-fun assert_validator_set(
+fun assert_and_configure_validator_set(
+    consortium: &mut Consortium,
     action: u32,
-    expected_action: u32,
     validators: vector<vector<u8>>,
     weights: vector<u256>,
     weight_threshold: u256,
+    epoch: u256,
 ) {
-    assert!(action == expected_action, EInvalidAction);
+    assert!(action == consortium.valset_action, EInvalidAction);
     assert!(validators.length() >= MIN_VALIDATOR_SET_SIZE, EInvalidValidatorSetSize);
     assert!(validators.length() <= MAX_VALIDATOR_SET_SIZE, EInvalidValidatorSetSize);
     assert!(weight_threshold > 0, EInvalidThreshold);
@@ -303,6 +272,15 @@ fun assert_validator_set(
         i = i + 1;
     };
     assert!(sum >= weight_threshold, EWeightsLowerThanThreshold);
+    consortium.epoch = epoch;
+    consortium.validator_set.add(
+        epoch, 
+        ValidatorSet {
+            pub_keys: validators,
+            weights,
+            weight_threshold,
+        }
+    );
 }
 
 // === Test Functions ===

@@ -266,76 +266,6 @@ public fun remove_capability<T, C: store + drop>(
     let _: C = treasury.remove_cap(owner);
 }
 
-// === Dynamic Field Operations ===
-public fun toggle_bascule_check<T>(
-   treasury: &mut ControlledTreasury<T>,
-   ctx: &mut TxContext,
-) {
-    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
-    if (df::exists_(&treasury.id, b"bascule_check")) {
-        let check = df::borrow_mut(&mut treasury.id, b"bascule_check");
-        *check = !*check;
-    } else {
-        df::add(&mut treasury.id, b"bascule_check", true);
-    };
-}
-
-public fun set_mint_action_bytes<T>(
-    treasury: &mut ControlledTreasury<T>,
-    mint_action_bytes: u32,
-    ctx: &mut TxContext,
-) {
-    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
-    if (df::exists_(&treasury.id, b"mint_action_bytes")) {
-        let action = df::borrow_mut(&mut treasury.id, b"mint_action_bytes");
-        *action = mint_action_bytes;
-    } else {
-        df::add(&mut treasury.id, b"mint_action_bytes", mint_action_bytes);
-    };
-}
-
-public fun set_fee_action_bytes<T>(
-    treasury: &mut ControlledTreasury<T>,
-    fee_action_bytes: u32,
-    ctx: &mut TxContext,
-) {
-    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
-    if (df::exists_(&treasury.id, b"fee_action_bytes")) {
-        let action = df::borrow_mut(&mut treasury.id, b"fee_action_bytes");
-        *action = fee_action_bytes;
-    } else {
-        df::add(&mut treasury.id, b"fee_action_bytes", fee_action_bytes);
-    };
-}
-
-public fun set_mint_fee<T>(
-    treasury: &mut ControlledTreasury<T>,
-    new_fee: u64,
-    ctx: &mut TxContext,
-) {
-    assert!(treasury.has_cap<T, OperatorCap>(ctx.sender()), ENoAuthRecord);
-    if (df::exists_(&treasury.id, b"maximum_fee")) {
-        let fee = df::borrow_mut(&mut treasury.id, b"maximum_fee");
-        *fee = new_fee;
-    } else {
-        df::add(&mut treasury.id, b"maximum_fee", new_fee);
-    };
-}
-
-public fun set_chain_id<T>(
-    treasury: &mut ControlledTreasury<T>,
-    chain_id: u256,
-    ctx: &mut TxContext,
-) {
-    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
-    if (df::exists_(&treasury.id, b"chain_id")) {
-        let id = df::borrow_mut(&mut treasury.id, b"chain_id");
-        *id = chain_id;
-    } else {
-        df::add(&mut treasury.id, b"chain_id", chain_id);
-    };
-}
-
 // === Mint operations ===
 
 /// Mints and transfers coins to a specified address.
@@ -416,14 +346,11 @@ public fun mint<T>(
     // Ensure global pause is not enabled before continuing
     assert!(!is_global_pause_enabled<T>(denylist), EMintNotAllowed);
     // Validate the payload with consortium, if invalid, consortium will throw an error
-    let validate_proof = consortium::validate_payload(consortium, payload, proof);
+    consortium::validate_and_store_payload(consortium, payload, proof);
 
     let (action, to_chain, to, amount_u256, txid_u256, vout) = payload_decoder::decode_mint_payload(payload);
 
     let (amount, tx_id, index) = assert_decoded_payload<T>(action, to_chain, to, amount_u256, txid_u256, vout, treasury);
-
-    // Resolve the proof to store the hash
-    consortium::resolve_proof(consortium, validate_proof);
 
     // Emit the event and mint + transfer the coins
     event::emit(MintEvent<T> { amount, to, tx_id, index });
@@ -452,7 +379,7 @@ public fun mint_with_fee<T>(
     // Ensure global pause is not enabled before continuing
     assert!(!is_global_pause_enabled<T>(denylist), EMintNotAllowed);
     // Validate the payload with consortium, if invalid, consortium will throw an error
-    let validate_proof = consortium::validate_payload(consortium, mint_payload, proof);
+    consortium::validate_and_store_payload(consortium, mint_payload, proof);
 
     let (action, to_chain, to, amount_u256, txid_u256, vout) = payload_decoder::decode_mint_payload(mint_payload);
 
@@ -475,23 +402,10 @@ public fun mint_with_fee<T>(
     };
     let final_amount = amount - mint_fee;
 
-    // Resolve the proof to store the hash
-    consortium::resolve_proof(consortium, validate_proof);
-
     // Emit the event and mint + transfer the coins
     event::emit(MintEvent<T> { amount: final_amount, to, tx_id, index });
     let new_coin = coin::mint(&mut treasury.treasury_cap, final_amount, ctx);
     transfer::public_transfer(new_coin, to);
-}
-
-/// Allow any internal function to burn coins.
-#[allow(unused_mut_parameter)]
-public(package) fun burn_internal<T>(
-    treasury: &mut ControlledTreasury<T>,
-    coin: Coin<T>,
-    _ctx: &mut TxContext,
-) {
-    coin::burn(&mut treasury.treasury_cap, coin);
 }
 
 /// Allow any external address to burn coins.
@@ -508,7 +422,7 @@ public fun burn<T>(
         from: ctx.sender(),
     });
 
-    burn_internal(treasury, coin, ctx);
+    coin::burn(&mut treasury.treasury_cap, coin);
 }
 
 /// Allow any external address to redeem (burn) coins to initiate BTC withdrawal.
@@ -559,7 +473,7 @@ public fun redeem<T>(
     coin.split_and_transfer(burn_commission, *treasury_address, ctx);
         
     // Burn the remaining amount after the fee from the sender's account.
-    burn_internal(treasury, coin, ctx);
+    coin::burn(&mut treasury.treasury_cap, coin);
 
     // Emit the `UnstakeRequest` event.
     event::emit(UnstakeRequestEvent<T> {
@@ -631,7 +545,67 @@ public fun disable_global_pause<T>(
 
 // === Utilities ===
 
-/// Set the value of `burn_commission`.
+/// Sets the action bytes for mint payload.
+public fun set_mint_action_bytes<T>(
+    treasury: &mut ControlledTreasury<T>,
+    mint_action_bytes: u32,
+    ctx: &mut TxContext,
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    if (df::exists_(&treasury.id, b"mint_action_bytes")) {
+        let action = df::borrow_mut(&mut treasury.id, b"mint_action_bytes");
+        *action = mint_action_bytes;
+    } else {
+        df::add(&mut treasury.id, b"mint_action_bytes", mint_action_bytes);
+    };
+}
+
+/// Sets the action bytes for fee payload.
+public fun set_fee_action_bytes<T>(
+    treasury: &mut ControlledTreasury<T>,
+    fee_action_bytes: u32,
+    ctx: &mut TxContext,
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    if (df::exists_(&treasury.id, b"fee_action_bytes")) {
+        let action = df::borrow_mut(&mut treasury.id, b"fee_action_bytes");
+        *action = fee_action_bytes;
+    } else {
+        df::add(&mut treasury.id, b"fee_action_bytes", fee_action_bytes);
+    };
+}
+
+/// Sets the maximum mint fee for the autoclaim.
+public fun set_mint_fee<T>(
+    treasury: &mut ControlledTreasury<T>,
+    new_fee: u64,
+    ctx: &mut TxContext,
+) {
+    assert!(treasury.has_cap<T, OperatorCap>(ctx.sender()), ENoAuthRecord);
+    if (df::exists_(&treasury.id, b"maximum_fee")) {
+        let fee = df::borrow_mut(&mut treasury.id, b"maximum_fee");
+        *fee = new_fee;
+    } else {
+        df::add(&mut treasury.id, b"maximum_fee", new_fee);
+    };
+}
+
+/// Sets the chain id.
+public fun set_chain_id<T>(
+    treasury: &mut ControlledTreasury<T>,
+    chain_id: u256,
+    ctx: &mut TxContext,
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    if (df::exists_(&treasury.id, b"chain_id")) {
+        let id = df::borrow_mut(&mut treasury.id, b"chain_id");
+        *id = chain_id;
+    } else {
+        df::add(&mut treasury.id, b"chain_id", chain_id);
+    };
+}
+
+/// Sets the value of `burn_commission`.
 public fun set_burn_commission<T>(
     treasury: &mut ControlledTreasury<T>,
     new_burn_commission: u64,
@@ -644,15 +618,6 @@ public fun set_burn_commission<T>(
     } else {
         df::add(&mut treasury.id, b"burn_commission", new_burn_commission);
     };
-}
-
-/// Get the value of `burn_commission`.
-public fun get_burn_commission<T>(
-    treasury: &ControlledTreasury<T>,
-): u64 {
-    assert!(df::exists_(&treasury.id, b"burn_commission"), ENoBurnCommission );
-    let burn_commission: &u64 = df::borrow(&treasury.id, b"burn_commission");
-    *burn_commission
 }
 
 /// Set the value of `dust_fee_rate`.
@@ -670,16 +635,7 @@ public fun set_dust_fee_rate<T>(
     };
 }
 
-/// Get the value of `dust_fee_rate`.
-public fun get_dust_fee_rate<T>(
-    treasury: &ControlledTreasury<T>,
-): u64 {
-    assert!(df::exists_(&treasury.id, b"dust_fee_rate"), ENoDustFeeRate );
-    let dust_fee_rate: &u64 = df::borrow(&treasury.id, b"dust_fee_rate");
-    *dust_fee_rate
-}
-
-/// Set the value of `dust_fee_rate`.
+/// Set the value of `treasury_address`.
 public fun set_treasury_address<T>(
     treasury: &mut ControlledTreasury<T>,
     new_treasury_address: address,
@@ -694,25 +650,23 @@ public fun set_treasury_address<T>(
     }; 
 }
 
-/// Set the value of `dust_fee_rate`.
-public fun get_treasury_address<T>(
-    treasury: &ControlledTreasury<T>
-): &address {
-    assert!(df::exists_(&treasury.id, b"treasury_address"), ENoTreasuryAddress );
-    let treasury_address = df::borrow(&treasury.id, b"treasury_address");
-    treasury_address
+/// Toggles `bascule_check` flag. 
+/// If it does not exist it is added and set to true.
+public fun toggle_bascule_check<T>(
+   treasury: &mut ControlledTreasury<T>,
+   ctx: &mut TxContext,
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    if (df::exists_(&treasury.id, b"bascule_check")) {
+        let check = df::borrow_mut(&mut treasury.id, b"bascule_check");
+        *check = !*check;
+    } else {
+        df::add(&mut treasury.id, b"bascule_check", true);
+    };
 }
 
-/// Check if `withdrawal_enabled` is enalbled.
-public fun is_withdrawal_enabled<T>(
-    treasury: &ControlledTreasury<T>,
-): bool {
-    assert!(df::exists_(&treasury.id, b"withdrawal_enabled"), ENoWithdrawalFlag );
-    let withdrawal_enabled: &bool = df::borrow(&treasury.id, b"withdrawal_enabled");
-    *withdrawal_enabled
-}
-
-/// Enable or Disable `withdrawal_enabled`.
+/// Toggles `withdrawal_enabled` flag. 
+/// If it does not exists, it is added and set to true.
 public fun toggle_withdrawal<T>(
     treasury: &mut ControlledTreasury<T>,
     ctx: &mut TxContext,
@@ -732,6 +686,15 @@ public fun has_cap<T, Cap: store>(
     owner: address,
 ): bool {
     treasury.roles.contains(RoleKey<Cap> { owner })
+}
+
+/// Check the status of `withdrawal_enabled`.
+public fun is_withdrawal_enabled<T>(
+    treasury: &ControlledTreasury<T>,
+): bool {
+    assert!(df::exists_(&treasury.id, b"withdrawal_enabled"), ENoWithdrawalFlag );
+    let withdrawal_enabled: &bool = df::borrow(&treasury.id, b"withdrawal_enabled");
+    *withdrawal_enabled
 }
 
 /// Checks if global pause is enabled for the next epoch.
@@ -771,10 +734,38 @@ public fun get_mint_fee<T>(
     *fee
 }
 
+/// Get the value of `burn_commission`.
+public fun get_burn_commission<T>(
+    treasury: &ControlledTreasury<T>,
+): u64 {
+    assert!(df::exists_(&treasury.id, b"burn_commission"), ENoBurnCommission );
+    let burn_commission: &u64 = df::borrow(&treasury.id, b"burn_commission");
+    *burn_commission
+}
+
+/// Get the value of `chain_id`.
 public fun get_chain_id<T>(treasury: &ControlledTreasury<T>): u256 {
     assert!(df::exists_(&treasury.id, b"chain_id"), ENoChainIdCheck);
     let id = df::borrow(&treasury.id, b"chain_id");
     *id
+}
+
+/// Get the value of `dust_fee_rate`.
+public fun get_dust_fee_rate<T>(
+    treasury: &ControlledTreasury<T>,
+): u64 {
+    assert!(df::exists_(&treasury.id, b"dust_fee_rate"), ENoDustFeeRate );
+    let dust_fee_rate: &u64 = df::borrow(&treasury.id, b"dust_fee_rate");
+    *dust_fee_rate
+}
+
+/// Get the value of `treasury_address`.
+public fun get_treasury_address<T>(
+    treasury: &ControlledTreasury<T>
+): &address {
+    assert!(df::exists_(&treasury.id, b"treasury_address"), ENoTreasuryAddress );
+    let treasury_address = df::borrow(&treasury.id, b"treasury_address");
+    treasury_address
 }
 
 /// Returns a vector of role types assigned to the `owner`.
@@ -847,10 +838,9 @@ fun assert_decoded_payload<T>(
     let amount = amount_u256.try_as_u64().extract();
     let tx_id = bcs::to_bytes(&txid_u256);
     let index = vout.try_as_u32().extract();
-
     assert!(amount > 0, EMintAmountCannotBeZero);
     assert!(to != @0x0, ERecipientZeroAddress);
-    assert!(to_chain.try_as_u64().extract() == CHAIN_ID, EInvalidChainId);
+    assert!(to_chain == treasury.get_chain_id(), EInvalidChainId);
     assert!(action == treasury.get_mint_action_bytes(), EInvalidActionBytes);
     
     // Validate with the bascule

@@ -11,6 +11,8 @@ public fun decode_fee_payload(payload: vector<u8>): (u32, u256, u256) {
     let fee = decode_left_padded_u256(&mut b);
     let expiry = decode_left_padded_u256(&mut b);
     
+    assert!(b.into_remainder_bytes().length() == 0, EInvalidPayloadLength);
+
     (action, fee, expiry)
 }
 
@@ -19,7 +21,6 @@ public fun decode_valset(payload: vector<u8>): (
     u256, 
     vector<vector<u8>>, 
     vector<u256>, 
-    u256, 
     u256
 ) {
     let mut b = bcs::new(payload);
@@ -31,27 +32,36 @@ public fun decode_valset(payload: vector<u8>): (
     let _ = bcs::peel_u256(&mut b);
 
     let weight_threshold = decode_left_padded_u256(&mut b);
-    let height = decode_left_padded_u256(&mut b);
+    let _height = decode_left_padded_u256(&mut b);
     let validators = decode_valset_array(&mut b);
     let weights = decode_u256_array(&mut b);
 
     assert!(b.into_remainder_bytes().length() == 0, EInvalidPayloadLength);
 
-    (action, epoch, validators, weights, weight_threshold, height)
+    (action, epoch, validators, weights, weight_threshold)
 }
 
-public fun decode_signatures(payload: vector<u8>): vector<vector<u8>> {
-    let mut b = bcs::new(payload);
-    decode_bytes_array(&mut b)
+public fun decode_signatures(proof: vector<u8>): vector<vector<u8>> {
+    let mut b = bcs::new(proof);
+    let signatures = decode_bytes_array(&mut b);
+
+    assert!(b.into_remainder_bytes().length() == 0, EInvalidPayloadLength);
+
+    signatures
 }
 
 public fun decode_mint_payload(payload: vector<u8>): (u32, u256, address, u256, u256, u256) {
     let mut b = bcs::new(payload);
-    (
-        decode_be_u32(&mut b), bcs::peel_u256(&mut b), 
-        bcs::peel_address(&mut b), decode_left_padded_u256(&mut b), 
-        decode_left_padded_u256(&mut b), decode_left_padded_u256(&mut b)
-    )
+    let action = decode_be_u32(&mut b);
+    let to_chain = decode_left_padded_u256(&mut b);
+    let recipient = bcs::peel_address(&mut b);
+    let amount = decode_left_padded_u256(&mut b);
+    let tx_id = decode_left_padded_u256(&mut b);
+    let vout = decode_left_padded_u256(&mut b);
+    
+    assert!(b.into_remainder_bytes().length() == 0, EInvalidPayloadLength);
+
+    (action, to_chain, recipient, amount, tx_id, vout)
 }
 
 // Convenience function which recovers the bytes of array elements.
