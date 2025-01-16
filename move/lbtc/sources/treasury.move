@@ -76,9 +76,8 @@ const ENoDustFeeRate: u64 = 17;
 const ENoBurnCommission: u64 = 18;
 // Withdrawal Flag is not set.
 const ENoWithdrawalFlag: u64 = 19;
-
-// Chain Id defined in the payload
-const CHAIN_ID: u64 = 9; 
+// Chain ID is not set
+const ENoChainIdCheck: u64 = 20;
 
 /// Represents a controlled treasury for managing a regulated coin.
 public struct ControlledTreasury<phantom T> has key {
@@ -276,6 +275,20 @@ public fun set_action_bytes<T>(
     };
 }
 
+public fun set_chain_id<T>(
+    treasury: &mut ControlledTreasury<T>,
+    chain_id: u256,
+    ctx: &mut TxContext,
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    if (df::exists_(&treasury.id, b"chain_id")) {
+        let id = df::borrow_mut(&mut treasury.id, b"chain_id");
+        *id = chain_id;
+    } else {
+        df::add(&mut treasury.id, b"chain_id", chain_id);
+    };
+}
+
 // === Mint operations ===
 
 /// Mints and transfers coins to a specified address.
@@ -367,7 +380,7 @@ public fun mint<T>(
 
     assert!(amount > 0, EMintAmountCannotBeZero);
     assert!(to != @0x0, ERecipientZeroAddress);
-    assert!(to_chain.try_as_u64().extract() == CHAIN_ID, EInvalidChainId);
+    assert!(to_chain == treasury.get_chain_id(), EInvalidChainId);
     assert!(action == treasury.get_action_bytes(), EInvalidActionBytes);
     
     let tx_id = bcs::to_bytes(&txid_u256);
@@ -654,6 +667,13 @@ public fun get_action_bytes<T>(treasury: &ControlledTreasury<T>): u32 {
     let action = df::borrow(&treasury.id, b"action_bytes");
     *action
 }
+
+public fun get_chain_id<T>(treasury: &ControlledTreasury<T>): u256 {
+    assert!(df::exists_(&treasury.id, b"chain_id"), ENoChainIdCheck);
+    let id = df::borrow(&treasury.id, b"chain_id");
+    *id
+}
+
 
 /// Returns a vector of role types assigned to the `owner`.
 public fun list_roles<T>(

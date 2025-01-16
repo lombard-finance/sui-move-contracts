@@ -39,7 +39,7 @@ public fun decode_signatures(payload: vector<u8>): vector<vector<u8>> {
 public fun decode_mint_payload(payload: vector<u8>): (u32, u256, address, u256, u256, u256) {
     let mut b = bcs::new(payload);
     (
-        decode_be_u32(&mut b), decode_left_padded_u256(&mut b), 
+        decode_be_u32(&mut b), bcs::peel_u256(&mut b), 
         bcs::peel_address(&mut b), decode_left_padded_u256(&mut b), 
         decode_left_padded_u256(&mut b), decode_left_padded_u256(&mut b)
     )
