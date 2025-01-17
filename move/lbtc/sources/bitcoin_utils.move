@@ -17,7 +17,7 @@ const OP_DATA_32: u8 = 0x20;
 const OP_DATA_20: u8 = 0x14;
 
 /// Base spend cost in satoshis.
-const BASE_SPEND_COST: u64 = 49;
+const BASE_SPEND_COST: u64 = 41;
 
 /// Size of inputs spending different output types.
 const NON_WITNESS_INPUT_SIZE: u64 = 107;
@@ -54,6 +54,29 @@ public fun get_output_type(script_pubkey: &vector<u8>): OutputType {
     return OutputType::Unsupported
 }
 
+
+/// Returns the size (in bytes) needed to encode `val` as a variable-length int.
+fun var_int_serialize_size(val: u64): u64 {
+    if (val < 0xfd) {
+        1
+    } else if (val <= 0xffff) {
+        3
+    } else if (val <= 0xffff_ffff) {
+        5
+    } else {
+        9
+    }
+}
+
+/// Compute the serialized size of a TxOut's scriptPubKey, which is:
+///   8 bytes for the value + varint size of the script length + actual script length
+fun serialize_size(script_pubkey_len: u64): u64 {
+    8
+    + var_int_serialize_size(script_pubkey_len)
+    + script_pubkey_len
+}
+
+
 /// Computes the dust limit for a given Bitcoin output type.
 ///
 /// The dust limit is the minimum payment to an address that is considered
@@ -86,8 +109,10 @@ public fun get_dust_limit_for_output(
     } else {
         additional_cost = NON_WITNESS_INPUT_SIZE;
     };
+    
+    let out_size = serialize_size(script_pubkey.length());
 
-    let total_spend_cost: u64 = BASE_SPEND_COST + additional_cost + (script_pubkey.length());
+    let total_spend_cost: u64 = BASE_SPEND_COST + additional_cost + out_size;
 
     // Calculate dust limit: (spend_cost * dust_fee_rate) / 1000
     (total_spend_cost * dust_fee_rate) / 1000
