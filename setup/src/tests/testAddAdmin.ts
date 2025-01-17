@@ -1,11 +1,11 @@
 import { SHARED_CONTROLLED_TREASURY, suiClient } from "../config";
 import { addCapability } from "../utils/addCapability";
-import { getMultisigConfig } from "../helpers/getMultisigConfig";
+import { getMultisigConfig, getTestMultisigConfig } from "../helpers/getMultisigConfig";
 
 async function testAddAdmin() {
   try {
     // Retrieve our default multisig configuration
-    const multisigConfig = getMultisigConfig();
+    const multisigConfig = getTestMultisigConfig();
 
     let result = await addCapability(
       suiClient,

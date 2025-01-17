@@ -1,11 +1,11 @@
 import { removeCapability } from "../utils/removeCapability";
 import { suiClient, SHARED_CONTROLLED_TREASURY, MULTISIG } from "../config";
-import { getMultisigConfig } from "../helpers/getMultisigConfig";
+import { getMultisigConfig, getTestMultisigConfig } from "../helpers/getMultisigConfig";
 
 async function testRemovePauser() {
   try {
     // Retrieve our default multisig configuration
-    const multisigConfig = getMultisigConfig();
+    const multisigConfig = getTestMultisigConfig();
 
     const result = await removeCapability(
       suiClient,
