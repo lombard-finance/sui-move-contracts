@@ -204,12 +204,18 @@ public fun validate_signatures(
     let mut weight: u256 = 0;
     let mut i = 0;
     while (i < signatures.length()) {
-        // We need to append the v, which is either 27 or 28.
         let mut sig = signatures[i];
-        sig.push_back(0u8);
 
         // If the signature equals to 0 it means that the validator did not sign the message.
         if (sig != zeroSig) {
+
+            if (ecdsa_k1::secp256k1_verify(&sig, &signers[i], &message, 1) == false) {
+                i = i + 1;
+                continue
+            };
+
+            // We need to append the v, which is either 27 or 28.
+            sig.push_back(0u8);
             // Hash function is set to 1 (sha256), since:
             // ecdsa_k1::SHA256: u8 = 1;
             // We can't reference this however so we need to use the magic value.

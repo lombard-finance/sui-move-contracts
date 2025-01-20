@@ -810,6 +810,9 @@ public fun list_roles<T>(
     if (has_cap<T, PauserCap>(treasury, owner)) {
         roles.push_back(string::utf8(b"PauserCap"));
     };
+    if (has_cap<T, OperatorCap>(treasury, owner)) {
+        roles.push_back(string::utf8(b"OperatorCap"));
+    };
 
     roles
 }
