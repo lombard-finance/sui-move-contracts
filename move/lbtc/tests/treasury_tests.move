@@ -2,7 +2,7 @@
 module lbtc::treasury_tests;
 
 use lbtc::treasury::{Self, ControlledTreasury, AdminCap, MinterCap, PauserCap, OperatorCap, ClaimerCap,
-redeem, set_dust_fee_rate, set_burn_commission, set_treasury_address, toggle_withdrawal};
+redeem, set_dust_fee_rate, set_burn_commission, set_treasury_address, toggle_withdrawal, LBTCWitness};
 use std::string;
 use sui::coin::{Self, Coin};
 use sui::deny_list::{Self, DenyList};
@@ -980,6 +980,9 @@ public fun test_redeem_amount_below_dust_limit() {
 
 // === V2 tests ===
 use consortium::consortium::{Self, Consortium};
+use bascule::bascule::{Self, Bascule};
+use std::type_name;
+
 
 const EInvalidBasculeCheck: u64 = 1;
 const EInvalidActionBytesCheck: u64 = 2;
@@ -996,6 +999,16 @@ fun init_consortium(ts: &mut Scenario): Consortium {
     consortium
 }
 
+fun init_bascule(ts: &mut Scenario): Bascule {
+    ts.next_tx(TREASURY_ADMIN);
+    bascule::init_for_testing(ts.ctx());
+    ts.next_tx(TREASURY_ADMIN);
+    let mut bascule: Bascule = ts.take_shared();
+    let witness_type = type_name::get<LBTCWitness>();
+    bascule::whitelist_witness(&mut bascule, witness_type.into_string());
+    bascule
+}
+
 #[test]
 fun test_manual_claim() {
     let mut ts = ts::begin(TREASURY_ADMIN);
@@ -1003,13 +1016,15 @@ fun test_manual_claim() {
     let denylist: DenyList = ts.take_shared();
 
     let mut consortium = init_consortium(&mut ts);
-    
+    let mut bascule: Bascule = init_bascule(&mut ts);
+
     let payload: vector<u8> = x"f2e73f7c0100000000000000000000000000000000000000000000000000000035834a8a0000000000000000000000003c44cdddb6a900fa2b585dd299e03d12fa4293bc0000000000000000000000000000000000000000000000000000000005f5e10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
     let proof: vector<u8> = x"00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000405b1e71e6cea98724038d2a7a63152c8b423b61908647fd7f4c803380b4fc653c5530ccca1c165dd6877d290a3ca90e30ee9048344fcb63ad52cd4b9bcfa41698";
 
     ts.next_tx(TREASURY_ADMIN);
     treasury::set_mint_action_bytes<TREASURY_TESTS>(&mut treasury, 4075241340, ts.ctx());
     treasury::set_chain_id<TREASURY_TESTS>(&mut treasury, 452312848583266388373324160190187140051835877600158453279131187531808459402, ts.ctx());
+    treasury::toggle_bascule_check<TREASURY_TESTS>(&mut treasury, ts.ctx());
 
     // Mint and transfer tokens using the multisig address
     ts.next_tx(USER2);
@@ -1017,6 +1032,7 @@ fun test_manual_claim() {
         &mut treasury,
         &mut consortium,
         &denylist,
+        &mut bascule,
         payload,
         proof,
         ts.ctx(),
@@ -1025,6 +1041,7 @@ fun test_manual_claim() {
     test_utils::destroy(treasury);
     ts::return_shared(denylist);
     ts::return_shared<Consortium>(consortium);
+    ts::return_shared<Bascule>(bascule);
 
     ts.end();
 }
@@ -1036,6 +1053,7 @@ fun test_autoclaim() {
     let denylist: DenyList = ts.take_shared();
 
     let mut consortium = init_consortium(&mut ts);
+    let mut bascule: Bascule = init_bascule(&mut ts);
     
     let payload: vector<u8> = x"f2e73f7c0100000000000000000000000000000000000000000000000000000035834a8a0000000000000000000000003c44cdddb6a900fa2b585dd299e03d12fa4293bc0000000000000000000000000000000000000000000000000000000005f5e10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
     let proof: vector<u8> = x"00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000405b1e71e6cea98724038d2a7a63152c8b423b61908647fd7f4c803380b4fc653c5530ccca1c165dd6877d290a3ca90e30ee9048344fcb63ad52cd4b9bcfa41698";
@@ -1048,6 +1066,7 @@ fun test_autoclaim() {
     treasury::set_mint_action_bytes<TREASURY_TESTS>(&mut treasury, 4075241340, ts.ctx());
     treasury::set_fee_action_bytes<TREASURY_TESTS>(&mut treasury, 2171980436, ts.ctx());
     treasury::set_chain_id<TREASURY_TESTS>(&mut treasury, 452312848583266388373324160190187140051835877600158453279131187531808459402, ts.ctx());
+    treasury::toggle_bascule_check<TREASURY_TESTS>(&mut treasury, ts.ctx());
     let operator_cap = treasury::new_operator_cap();
     treasury.add_capability<TREASURY_TESTS, OperatorCap>(TREASURY_ADMIN, operator_cap, ts.ctx());
     treasury::set_mint_fee<TREASURY_TESTS>(&mut treasury, 100000000, ts.ctx());
@@ -1062,6 +1081,7 @@ fun test_autoclaim() {
         &mut treasury,
         &mut consortium,
         &denylist,
+        &mut bascule,
         payload,
         proof,
         fee_payload,
@@ -1074,6 +1094,7 @@ fun test_autoclaim() {
     test_utils::destroy(treasury);
     ts::return_shared(denylist);
     ts::return_shared<Consortium>(consortium);
+    ts::return_shared<Bascule>(bascule);
     clock.destroy_for_testing();
 
     ts.end();

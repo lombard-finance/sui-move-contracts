@@ -36,6 +36,7 @@ use sui::dynamic_field as df;
 use sui::clock::Clock;
 use consortium::consortium::{Self, Consortium};
 use consortium::payload_decoder;
+use bascule::bascule::{Self, Bascule};
 
 /// No authorization record exists for the action.
 const ENoAuthRecord: u64 = 0;
@@ -115,6 +116,11 @@ public struct OperatorCap has store, drop {}
 
 /// Allows to call the mint_with_fee (autoclaim) function.
 public struct ClaimerCap has store, drop {}
+
+// === Witness ===
+
+/// Witness for Lombard package to be identified when calling external contracts
+public struct LBTCWitness has drop {}
 
 // === Events ===
 
@@ -338,7 +344,7 @@ public fun mint<T>(
     treasury: &mut ControlledTreasury<T>,
     consortium: &mut Consortium,
     denylist: &DenyList,
-    //bascule: &mut Bascule,
+    bascule: &mut Bascule,
     payload: vector<u8>,
     proof: vector<u8>,
     ctx: &mut TxContext,
@@ -348,9 +354,19 @@ public fun mint<T>(
     // Validate the payload with consortium, if invalid, consortium will throw an error
     consortium::validate_and_store_payload(consortium, payload, proof);
 
-    let (action, to_chain, to, amount_u256, txid_u256, vout) = payload_decoder::decode_mint_payload(payload);
+    let (
+        action, 
+        to_chain, to, 
+        amount_u256, 
+        txid_u256, 
+        vout
+    ) = payload_decoder::decode_mint_payload(payload);
 
-    let (amount, tx_id, index) = assert_decoded_payload<T>(action, to_chain, to, amount_u256, txid_u256, vout, treasury);
+    let (
+        amount, 
+        tx_id, 
+        index
+    ) = assert_decoded_payload<T>(action, to_chain, to, amount_u256, txid_u256, vout, treasury, bascule);
 
     // Emit the event and mint + transfer the coins
     event::emit(MintEvent<T> { amount, to, tx_id, index });
@@ -365,7 +381,7 @@ public fun mint_with_fee<T>(
     treasury: &mut ControlledTreasury<T>,
     consortium: &mut Consortium,
     denylist: &DenyList,
-    //bascule: &mut Bascule,
+    bascule: &mut Bascule,
     mint_payload: vector<u8>,
     proof: vector<u8>,
     fee_payload: vector<u8>,
@@ -381,9 +397,20 @@ public fun mint_with_fee<T>(
     // Validate the payload with consortium, if invalid, consortium will throw an error
     consortium::validate_and_store_payload(consortium, mint_payload, proof);
 
-    let (action, to_chain, to, amount_u256, txid_u256, vout) = payload_decoder::decode_mint_payload(mint_payload);
+    let (
+        action, 
+        to_chain, 
+        to, 
+        amount_u256, 
+        txid_u256, 
+        vout
+    ) = payload_decoder::decode_mint_payload(mint_payload);
 
-    let (amount, tx_id, index) = assert_decoded_payload<T>(action, to_chain, to, amount_u256, txid_u256, vout, treasury);
+    let (
+        amount, 
+        tx_id, 
+        index
+    ) = assert_decoded_payload<T>(action, to_chain, to, amount_u256, txid_u256, vout, treasury, bascule);
     
     // Validate the fee payload with the user signature
     pk_util::validate_signature(user_signature, user_public_key, &fee_payload);
@@ -832,7 +859,7 @@ fun assert_decoded_payload<T>(
     txid_u256: u256,
     vout: u256,
     treasury: &ControlledTreasury<T>,
-    //bascule: &Bascule,
+    bascule: &mut Bascule,
 ): (u64, vector<u8>, u32) {
     // Convert the u256 to u64, if it's too large, the `Option` will be empty and extract will throw an error `EOPTION_NOT_SET`
     let amount = amount_u256.try_as_u64().extract();
@@ -844,9 +871,9 @@ fun assert_decoded_payload<T>(
     assert!(action == treasury.get_mint_action_bytes(), EInvalidActionBytes);
     
     // Validate with the bascule
-    // if (treasury.is_bascule_check_enabled()) {
-    //     bascule::validate_withdrawal(&mut bascule, tx_id, index: u32, to: address, amount: u64, ctx: &TxContext);
-    // };
+    if (treasury.is_bascule_check_enabled()) {
+        bascule::validate_withdrawal(LBTCWitness {}, bascule, to, amount, tx_id, index);
+    };
 
     (amount, tx_id, index)
 }
