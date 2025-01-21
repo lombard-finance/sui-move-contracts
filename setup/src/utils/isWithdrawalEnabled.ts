@@ -21,7 +21,7 @@ export async function isWithdrawalEnabled(
         return result.results_decoded[0];
     } catch (error) {
         console.error(
-            `Error checking the global pause status in the Denylist:`,
+            `Error checking the Withdrawal Enabled status in Controlled Treasury`,
             error
         );
         throw error;

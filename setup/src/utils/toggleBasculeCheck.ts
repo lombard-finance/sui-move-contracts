@@ -6,7 +6,7 @@ import {
   createMultisigSigner,
   executeMultisigTransaction,
 } from "../helpers/multisigHelper";
-import { lbtc, treasury } from "../types/0xbe30647d2dbec99adc943e26f52e1a9ece3e507fc45913aa7b53c7bf80c4ed09";
+import { lbtc, treasury } from "../types/0x4ef85dbd178109cb92f709d4f3429a8c3bf28f4a04642a74c674670698fc1c60";
 
 // Define the participant structure for multisig
 interface MultisigParticipant {
