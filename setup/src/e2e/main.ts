@@ -24,7 +24,7 @@ import { addCapability } from "../utils/addCapability";
 import { mintAndTransfer } from "../utils/mintAndTransfer";
 import { hasCap } from "../utils/hasCap";
 import { isGlobalPauseEnabled } from "../utils/isGlobalPauseEnabled";
-import { getMultisigConfig } from "../helpers/getMultisigConfig";
+import { getMultisigConfig, getTestMultisigConfig } from "../helpers/getMultisigConfig";
 
 const DUMMY_TXID = new TextEncoder().encode("abcd");
 const DUMMY_IDX: number = 0;
@@ -42,7 +42,7 @@ async function e2eMintAndTransferTest() {
     console.log("Step 1: Lombard publishes the smart contract...");
 
     // Retrieve our default multisig configuration
-    const multisigConfig = getMultisigConfig();
+    const multisigConfig = getTestMultisigConfig();
 
     console.log(
       "Lombard multisig address:",

@@ -1,11 +1,11 @@
 import { SHARED_CONTROLLED_TREASURY, suiClient, MULTISIG } from "../config";
 import { addCapability } from "../utils/addCapability";
-import { getMultisigConfig } from "../helpers/getMultisigConfig";
+import { getMultisigConfig, getTestMultisigConfig } from "../helpers/getMultisigConfig";
 
 async function testAddPauser() {
   try {
     // Retrieve our default multisig configuration
-    const multisigConfig = getMultisigConfig();
+    const multisigConfig = getTestMultisigConfig();
 
     // Use the helper function to assign the PauserCap capability
     const result = await addCapability(

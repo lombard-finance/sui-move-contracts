@@ -43,3 +43,12 @@ workspace.json
 # Custom temp files for test
 temp*.txt
 .secrets
+
+# Temp files for deployment
+admin_multisig_info
+keyfile
+package_id
+shared_controlled_treasury
+signatures
+tx_bytes
+upgrade_cap
