@@ -1,5 +1,5 @@
 import { SuiClient } from "@mysten/sui/client";
-import { consortium } from "../types/0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2";
+import { consortium } from "../types/0x4ef85dbd178109cb92f709d4f3429a8c3bf28f4a04642a74c674670698fc1c60";
 import { Transaction } from "@mysten/sui/transactions";
 import { bcs } from "@mysten/sui/bcs";
 

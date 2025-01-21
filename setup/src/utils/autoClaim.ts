@@ -7,6 +7,7 @@ import {
 import { DENYLIST, LBTC_COIN_TYPE, SHARED_BASCULE } from "../config";
 import { SuiClient } from "@mysten/sui/client";
 import { createMultisigSigner, executeMultisigTransaction, generateMultiSigPublicKey } from "../helpers/multisigHelper";
+import { SUI_CLOCK_OBJECT_ID } from "@mysten/sui/utils";
 
 // Define the participant structure for multisig
 interface MultisigParticipant {
@@ -24,19 +25,26 @@ type SignerConfig =
       };
     };
 
-export async function manualClaim(
+export async function autoClaim(
   client: SuiClient,
   treasuryAddress: string,
   consortiumAddress: string,
   payload: string,
   proof: string,
+  feePayload: string,
+  signature: string,
+  public_key: string,
   signerConfig: SignerConfig
 ): Promise<any> {
-  // Manual claim the LBTC, the payload's `to` must be the same address with the sender of the transaction
+  // Claim the LBTC on behalf of the user
   const tx = new Transaction();
   const payloadToBytes = Array.from(Buffer.from(payload, "hex"));
   const proofToBytes = Array.from(Buffer.from(proof, "hex"));
-  treasury.builder.mint(
+  const feePayloadToBytes = Array.from(Buffer.from(feePayload, "hex"));
+  const signatureToBytes = Array.from(Buffer.from(signature, "hex"));
+  const public_keyToBytes = Array.from(Buffer.from(public_key, "hex"));
+
+  treasury.builder.mintWithFee(
     tx,
     [
       tx.object(treasuryAddress),
@@ -45,6 +53,10 @@ export async function manualClaim(
       tx.object(SHARED_BASCULE),
       tx.pure.vector("u8", payloadToBytes),
       tx.pure.vector("u8", proofToBytes),
+      tx.pure.vector("u8", feePayloadToBytes),
+      tx.pure.vector("u8", signatureToBytes),
+      tx.pure.vector("u8", public_keyToBytes),
+      tx.object(SUI_CLOCK_OBJECT_ID),
     ],
     [LBTC_COIN_TYPE]
   );

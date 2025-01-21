@@ -6,7 +6,7 @@ import {
   createMultisigSigner,
   executeMultisigTransaction,
 } from "../helpers/multisigHelper";
-import { treasury } from "../types/0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2";
+import { treasury } from "../types/0x4ef85dbd178109cb92f709d4f3429a8c3bf28f4a04642a74c674670698fc1c60";
 import { LBTC_COIN_TYPE, PACKAGE_ID } from "../config";
 
 // Define the participant structure for multisig
@@ -33,7 +33,7 @@ type SignerConfig =
  * @param actionBytes The action bytes number.
  * @param signerConfig Signer configuration object, either a simple signer or multisig participants and threshold.
  */
-export async function setActionBytes(
+export async function setMintActionBytes(
   client: SuiClient,
   treasuryAddress: string,
   actionBytes: number,
@@ -41,7 +41,7 @@ export async function setActionBytes(
 ): Promise<any> {
   const tx = new Transaction();
 
-  treasury.builder.setActionBytes(
+  treasury.builder.setMintActionBytes(
     tx,
     [
         tx.object(treasuryAddress),

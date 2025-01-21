@@ -2,18 +2,18 @@ import { SuiClient } from "@mysten/sui/client";
 import { treasury, lbtc } from "../types/0x4ef85dbd178109cb92f709d4f3429a8c3bf28f4a04642a74c674670698fc1c60";
 
 /**
- * Checks if the bascule check is enabled in the Controlled Treasury.
+ * Get the action bytes in the Controlled Treasury.
  *
  * @param client SuiClient instance for querying the blockchain.
- * @returns A boolean indicating whether the global pause is enabled.
+ * @returns The action bytes number.
  */
-export async function isBasculeCheckEnabled(
+export async function getMintActionBytes(
   client: SuiClient,
   treasuryAddress: string
-): Promise<boolean> {
+): Promise<number> {
   try {
     // Use the view namespace to check the global pause status
-    const result = await treasury.view.isBasculeCheckEnabled(
+    const result = await treasury.view.getMintActionBytes(
       client,
       [treasuryAddress],
       [lbtc.LBTC.TYPE_QNAME]
@@ -23,7 +23,7 @@ export async function isBasculeCheckEnabled(
     return result.results_decoded[0];
   } catch (error) {
     console.error(
-      `Error checking the bascule check flag in the Controlled Treasury`,
+      `Error checking the mint action bytes in the Controlled Treasury`,
       error
     );
     throw error;

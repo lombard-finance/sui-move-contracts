@@ -139,6 +139,7 @@ packageId=$(echo "$publish_res" | jq -r '.effects.created[] | select(.owner == "
 createdObjects=$(echo "$publish_res" | jq -r '.objectChanges[] | select(.type == "created")')
 sharedControlledTreasury=$(echo "$createdObjects" |  jq -r 'select (.objectType | contains("treasury::ControlledTreasury")).objectId')
 sharedConsortium=$(echo "$createdObjects" |  jq -r 'select (.objectType | contains("consortium::Consortium")).objectId')
+sharedBascule=$(echo "$createdObjects" | jq -r 'select (.objectType | contains("bascule::Bascule")).objectId')
 upgradeCap=$(echo "$createdObjects" | jq -r 'select (.objectType | contains("package::UpgradeCap")).objectId')
 txDigest=$(echo "$publish_res" | jq -r '.effects.transactionDigest')
 
@@ -153,6 +154,7 @@ UPGRADE_CAP=$upgradeCap
 PACKAGE_ID=$packageId
 SHARED_CONSORTIUM=$sharedConsortium
 SHARED_CONTROLLED_TREASURY=$sharedControlledTreasury
+SHARED_BASCULE=$sharedBascule
 MULTISIG_ADDRESS=$admin_multisig_address
 USER_1_ADDRESS=$user1_address
 USER_2_ADDRESS=$user2_address

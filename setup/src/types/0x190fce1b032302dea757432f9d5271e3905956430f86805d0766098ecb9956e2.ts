@@ -37,189 +37,189 @@ import {
 
 import * as _0x2 from "@typemove/sui/builtin/0x2";
 
-// export namespace bitcoin_utils {
-//   export namespace builder {
-//     export function getP2TrOutputType(
-//       tx: Transaction,
-//       args: [],
-//     ): TransactionArgument & [] {
-//       const _args: any[] = [];
+export namespace bitcoin_utils {
+  export namespace builder {
+    export function getP2TrOutputType(
+      tx: Transaction,
+      args: [],
+    ): TransactionArgument & [] {
+      const _args: any[] = [];
 
-//       // @ts-ignore
-//       return tx.moveCall({
-//         target:
-//           "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2::bitcoin_utils::get_P2TR_output_type",
-//         arguments: _args,
-//       });
-//     }
-//     export function getP2WpkhOutputType(
-//       tx: Transaction,
-//       args: [],
-//     ): TransactionArgument & [] {
-//       const _args: any[] = [];
+      // @ts-ignore
+      return tx.moveCall({
+        target:
+          "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2::bitcoin_utils::get_P2TR_output_type",
+        arguments: _args,
+      });
+    }
+    export function getP2WpkhOutputType(
+      tx: Transaction,
+      args: [],
+    ): TransactionArgument & [] {
+      const _args: any[] = [];
 
-//       // @ts-ignore
-//       return tx.moveCall({
-//         target:
-//           "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2::bitcoin_utils::get_P2WPKH_output_type",
-//         arguments: _args,
-//       });
-//     }
-//     export function getP2WshOutputType(
-//       tx: Transaction,
-//       args: [],
-//     ): TransactionArgument & [] {
-//       const _args: any[] = [];
+      // @ts-ignore
+      return tx.moveCall({
+        target:
+          "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2::bitcoin_utils::get_P2WPKH_output_type",
+        arguments: _args,
+      });
+    }
+    export function getP2WshOutputType(
+      tx: Transaction,
+      args: [],
+    ): TransactionArgument & [] {
+      const _args: any[] = [];
 
-//       // @ts-ignore
-//       return tx.moveCall({
-//         target:
-//           "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2::bitcoin_utils::get_P2WSH_output_type",
-//         arguments: _args,
-//       });
-//     }
-//     export function getDustLimitForOutput(
-//       tx: Transaction,
-//       args: [
-//         bitcoin_utils.OutputType | TransactionArgument,
-//         string | TransactionObjectArgument | TransactionArgument,
-//         bigint | TransactionArgument,
-//       ],
-//     ): TransactionArgument &
-//       [TransactionArgument, TransactionArgument, TransactionArgument] {
-//       const _args: any[] = [];
-//       _args.push(transactionArgumentOrPure(args[0], tx));
-//       _args.push(transactionArgumentOrObject(args[1], tx));
-//       _args.push(transactionArgumentOrPureU64(args[2], tx));
+      // @ts-ignore
+      return tx.moveCall({
+        target:
+          "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2::bitcoin_utils::get_P2WSH_output_type",
+        arguments: _args,
+      });
+    }
+    export function getDustLimitForOutput(
+      tx: Transaction,
+      args: [
+        bitcoin_utils.OutputType | TransactionArgument,
+        string | TransactionObjectArgument | TransactionArgument,
+        bigint | TransactionArgument,
+      ],
+    ): TransactionArgument &
+      [TransactionArgument, TransactionArgument, TransactionArgument] {
+      const _args: any[] = [];
+      _args.push(transactionArgumentOrPure(args[0], tx));
+      _args.push(transactionArgumentOrObject(args[1], tx));
+      _args.push(transactionArgumentOrPureU64(args[2], tx));
 
-//       // @ts-ignore
-//       return tx.moveCall({
-//         target:
-//           "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2::bitcoin_utils::get_dust_limit_for_output",
-//         arguments: _args,
-//       });
-//     }
-//     export function getOutputType(
-//       tx: Transaction,
-//       args: [string | TransactionObjectArgument | TransactionArgument],
-//     ): TransactionArgument & [TransactionArgument] {
-//       const _args: any[] = [];
-//       _args.push(transactionArgumentOrObject(args[0], tx));
+      // @ts-ignore
+      return tx.moveCall({
+        target:
+          "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2::bitcoin_utils::get_dust_limit_for_output",
+        arguments: _args,
+      });
+    }
+    export function getOutputType(
+      tx: Transaction,
+      args: [string | TransactionObjectArgument | TransactionArgument],
+    ): TransactionArgument & [TransactionArgument] {
+      const _args: any[] = [];
+      _args.push(transactionArgumentOrObject(args[0], tx));
 
-//       // @ts-ignore
-//       return tx.moveCall({
-//         target:
-//           "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2::bitcoin_utils::get_output_type",
-//         arguments: _args,
-//       });
-//     }
-//     export function getUnsupportedOutputType(
-//       tx: Transaction,
-//       args: [],
-//     ): TransactionArgument & [] {
-//       const _args: any[] = [];
+      // @ts-ignore
+      return tx.moveCall({
+        target:
+          "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2::bitcoin_utils::get_output_type",
+        arguments: _args,
+      });
+    }
+    export function getUnsupportedOutputType(
+      tx: Transaction,
+      args: [],
+    ): TransactionArgument & [] {
+      const _args: any[] = [];
 
-//       // @ts-ignore
-//       return tx.moveCall({
-//         target:
-//           "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2::bitcoin_utils::get_unsupported_output_type",
-//         arguments: _args,
-//       });
-//     }
-//   }
-//   export namespace view {
-//     export async function getP2TrOutputType(
-//       client: SuiClient,
-//       args: [],
-//     ): Promise<TypedDevInspectResults<[bitcoin_utils.OutputType]>> {
-//       const tx = new Transaction();
-//       builder.getP2TrOutputType(tx, args);
-//       const inspectRes = await client.devInspectTransactionBlock({
-//         transactionBlock: tx,
-//         sender: ZERO_ADDRESS,
-//       });
+      // @ts-ignore
+      return tx.moveCall({
+        target:
+          "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2::bitcoin_utils::get_unsupported_output_type",
+        arguments: _args,
+      });
+    }
+  }
+  export namespace view {
+    export async function getP2TrOutputType(
+      client: SuiClient,
+      args: [],
+    ): Promise<TypedDevInspectResults<[bitcoin_utils.OutputType]>> {
+      const tx = new Transaction();
+      builder.getP2TrOutputType(tx, args);
+      const inspectRes = await client.devInspectTransactionBlock({
+        transactionBlock: tx,
+        sender: ZERO_ADDRESS,
+      });
 
-//       return (await getMoveCoder(client)).decodeDevInspectResult<
-//         [bitcoin_utils.OutputType]
-//       >(inspectRes);
-//     }
-//     export async function getP2WpkhOutputType(
-//       client: SuiClient,
-//       args: [],
-//     ): Promise<TypedDevInspectResults<[bitcoin_utils.OutputType]>> {
-//       const tx = new Transaction();
-//       builder.getP2WpkhOutputType(tx, args);
-//       const inspectRes = await client.devInspectTransactionBlock({
-//         transactionBlock: tx,
-//         sender: ZERO_ADDRESS,
-//       });
+      return (await getMoveCoder(client)).decodeDevInspectResult<
+        [bitcoin_utils.OutputType]
+      >(inspectRes);
+    }
+    export async function getP2WpkhOutputType(
+      client: SuiClient,
+      args: [],
+    ): Promise<TypedDevInspectResults<[bitcoin_utils.OutputType]>> {
+      const tx = new Transaction();
+      builder.getP2WpkhOutputType(tx, args);
+      const inspectRes = await client.devInspectTransactionBlock({
+        transactionBlock: tx,
+        sender: ZERO_ADDRESS,
+      });
 
-//       return (await getMoveCoder(client)).decodeDevInspectResult<
-//         [bitcoin_utils.OutputType]
-//       >(inspectRes);
-//     }
-//     export async function getP2WshOutputType(
-//       client: SuiClient,
-//       args: [],
-//     ): Promise<TypedDevInspectResults<[bitcoin_utils.OutputType]>> {
-//       const tx = new Transaction();
-//       builder.getP2WshOutputType(tx, args);
-//       const inspectRes = await client.devInspectTransactionBlock({
-//         transactionBlock: tx,
-//         sender: ZERO_ADDRESS,
-//       });
+      return (await getMoveCoder(client)).decodeDevInspectResult<
+        [bitcoin_utils.OutputType]
+      >(inspectRes);
+    }
+    export async function getP2WshOutputType(
+      client: SuiClient,
+      args: [],
+    ): Promise<TypedDevInspectResults<[bitcoin_utils.OutputType]>> {
+      const tx = new Transaction();
+      builder.getP2WshOutputType(tx, args);
+      const inspectRes = await client.devInspectTransactionBlock({
+        transactionBlock: tx,
+        sender: ZERO_ADDRESS,
+      });
 
-//       return (await getMoveCoder(client)).decodeDevInspectResult<
-//         [bitcoin_utils.OutputType]
-//       >(inspectRes);
-//     }
-//     export async function getDustLimitForOutput(
-//       client: SuiClient,
-//       args: [bitcoin_utils.OutputType, string, bigint],
-//     ): Promise<TypedDevInspectResults<[bigint]>> {
-//       const tx = new Transaction();
-//       builder.getDustLimitForOutput(tx, args);
-//       const inspectRes = await client.devInspectTransactionBlock({
-//         transactionBlock: tx,
-//         sender: ZERO_ADDRESS,
-//       });
+      return (await getMoveCoder(client)).decodeDevInspectResult<
+        [bitcoin_utils.OutputType]
+      >(inspectRes);
+    }
+    export async function getDustLimitForOutput(
+      client: SuiClient,
+      args: [bitcoin_utils.OutputType, string, bigint],
+    ): Promise<TypedDevInspectResults<[bigint]>> {
+      const tx = new Transaction();
+      builder.getDustLimitForOutput(tx, args);
+      const inspectRes = await client.devInspectTransactionBlock({
+        transactionBlock: tx,
+        sender: ZERO_ADDRESS,
+      });
 
-//       return (await getMoveCoder(client)).decodeDevInspectResult<[bigint]>(
-//         inspectRes,
-//       );
-//     }
-//     export async function getOutputType(
-//       client: SuiClient,
-//       args: [string],
-//     ): Promise<TypedDevInspectResults<[bitcoin_utils.OutputType]>> {
-//       const tx = new Transaction();
-//       builder.getOutputType(tx, args);
-//       const inspectRes = await client.devInspectTransactionBlock({
-//         transactionBlock: tx,
-//         sender: ZERO_ADDRESS,
-//       });
+      return (await getMoveCoder(client)).decodeDevInspectResult<[bigint]>(
+        inspectRes,
+      );
+    }
+    export async function getOutputType(
+      client: SuiClient,
+      args: [string],
+    ): Promise<TypedDevInspectResults<[bitcoin_utils.OutputType]>> {
+      const tx = new Transaction();
+      builder.getOutputType(tx, args);
+      const inspectRes = await client.devInspectTransactionBlock({
+        transactionBlock: tx,
+        sender: ZERO_ADDRESS,
+      });
 
-//       return (await getMoveCoder(client)).decodeDevInspectResult<
-//         [bitcoin_utils.OutputType]
-//       >(inspectRes);
-//     }
-//     export async function getUnsupportedOutputType(
-//       client: SuiClient,
-//       args: [],
-//     ): Promise<TypedDevInspectResults<[bitcoin_utils.OutputType]>> {
-//       const tx = new Transaction();
-//       builder.getUnsupportedOutputType(tx, args);
-//       const inspectRes = await client.devInspectTransactionBlock({
-//         transactionBlock: tx,
-//         sender: ZERO_ADDRESS,
-//       });
+      return (await getMoveCoder(client)).decodeDevInspectResult<
+        [bitcoin_utils.OutputType]
+      >(inspectRes);
+    }
+    export async function getUnsupportedOutputType(
+      client: SuiClient,
+      args: [],
+    ): Promise<TypedDevInspectResults<[bitcoin_utils.OutputType]>> {
+      const tx = new Transaction();
+      builder.getUnsupportedOutputType(tx, args);
+      const inspectRes = await client.devInspectTransactionBlock({
+        transactionBlock: tx,
+        sender: ZERO_ADDRESS,
+      });
 
-//       return (await getMoveCoder(client)).decodeDevInspectResult<
-//         [bitcoin_utils.OutputType]
-//       >(inspectRes);
-//     }
-//   }
-// }
+      return (await getMoveCoder(client)).decodeDevInspectResult<
+        [bitcoin_utils.OutputType]
+      >(inspectRes);
+    }
+  }
+}
 
 export namespace consortium {
   export interface Consortium {

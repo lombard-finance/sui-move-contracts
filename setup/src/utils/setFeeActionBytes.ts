@@ -6,13 +6,14 @@ import {
   createMultisigSigner,
   executeMultisigTransaction,
 } from "../helpers/multisigHelper";
-import { consortium } from "../types/0x4ef85dbd178109cb92f709d4f3429a8c3bf28f4a04642a74c674670698fc1c60";
+import { treasury } from "../types/0x4ef85dbd178109cb92f709d4f3429a8c3bf28f4a04642a74c674670698fc1c60";
+import { LBTC_COIN_TYPE, PACKAGE_ID } from "../config";
 
 // Define the participant structure for multisig
 interface MultisigParticipant {
-    keypair: Ed25519Keypair;
-    weight: number;
-  }
+  keypair: Ed25519Keypair;
+  weight: number;
+}
 
 // Adjusted `signerConfig` type
 type SignerConfig =
@@ -24,21 +25,30 @@ type SignerConfig =
       };
     };
 
-export async function addInitialValidatorSet(
+/**
+ * Sets the action bytes
+ *
+ * @param client SuiClient instance for executing transactions.
+ * @param treasuryAddress The shared Controlled Treasury object.
+ * @param actionBytes The action bytes number.
+ * @param signerConfig Signer configuration object, either a simple signer or multisig participants and threshold.
+ */
+export async function setFeeActionBytes(
   client: SuiClient,
-  consortiumAddresss: string,
-  valsetPayload: number[],
+  treasuryAddress: string,
+  actionBytes: number,
   signerConfig: SignerConfig
 ): Promise<any> {
-    const tx = new Transaction();
+  const tx = new Transaction();
 
-    consortium.builder.setInitialValidatorSet(
-        tx,
-        [
-            tx.object(consortiumAddresss),
-            tx.pure.vector('u8', valsetPayload),
-        ]
-    )
+  treasury.builder.setFeeActionBytes(
+    tx,
+    [
+        tx.object(treasuryAddress),
+        tx.pure.u32(actionBytes),
+    ],
+    [LBTC_COIN_TYPE]
+  )
 
   // Determine the signer and execute the transaction
   if ("simpleSigner" in signerConfig) {
@@ -74,5 +84,4 @@ export async function addInitialValidatorSet(
       "Invalid signer configuration. Provide either `simpleSigner` or `multisig`."
     );
   }
-
 }

@@ -6,11 +6,11 @@ import {
   createMultisigSigner,
   executeMultisigTransaction,
 } from "../helpers/multisigHelper";
-import { treasury } from "../types/0x70fdf49de5fbc402f1ddb71208abd3c414348638f5b3f3cafb72ca2875efa33f";
+import { treasury } from "../types/0x4ef85dbd178109cb92f709d4f3429a8c3bf28f4a04642a74c674670698fc1c60";
 import { LBTC_COIN_TYPE, PACKAGE_ID } from "../config";
 
 // Define supported capabilities with their corresponding types
-type CapabilityType = "AdminCap" | "MinterCap" | "PauserCap";
+type CapabilityType = "AdminCap" | "MinterCap" | "PauserCap" | "OperatorCap" | "ClaimerCap";
 
 // Define the participant structure for multisig
 interface MultisigParticipant {
@@ -58,6 +58,10 @@ export async function addCapability<T>(
     cap = treasury.builder.newPauserCap(tx, []);
   } else if (capabilityType === "AdminCap") {
     cap = treasury.builder.newAdminCap(tx, []);
+  } else if (capabilityType === "OperatorCap") {
+    cap = treasury.builder.newOperatorCap(tx, []);
+  } else if (capabilityType === "ClaimerCap") {
+    cap = treasury.builder.newClaimerCap(tx, []);
   } else {
     throw new Error(`Unsupported capability type: ${capabilityType}`);
   }

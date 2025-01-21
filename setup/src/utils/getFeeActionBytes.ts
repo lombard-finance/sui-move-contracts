@@ -1,5 +1,5 @@
 import { SuiClient } from "@mysten/sui/client";
-import { treasury, lbtc } from "../types/0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2";
+import { treasury, lbtc } from "../types/0x4ef85dbd178109cb92f709d4f3429a8c3bf28f4a04642a74c674670698fc1c60";
 
 /**
  * Get the action bytes in the Controlled Treasury.
@@ -7,13 +7,13 @@ import { treasury, lbtc } from "../types/0x190fce1b032302dea757432f9d5271e390595
  * @param client SuiClient instance for querying the blockchain.
  * @returns The action bytes number.
  */
-export async function getActionBytes(
+export async function getFeeActionBytes(
   client: SuiClient,
   treasuryAddress: string
 ): Promise<number> {
   try {
     // Use the view namespace to check the global pause status
-    const result = await treasury.view.getActionBytes(
+    const result = await treasury.view.getFeeActionBytes(
       client,
       [treasuryAddress],
       [lbtc.LBTC.TYPE_QNAME]
@@ -23,7 +23,7 @@ export async function getActionBytes(
     return result.results_decoded[0];
   } catch (error) {
     console.error(
-      `Error checking the bascule check flag in the Controlled Treasury`,
+      `Error checking the fee action bytes in the Controlled Treasury`,
       error
     );
     throw error;

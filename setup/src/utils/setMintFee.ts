@@ -1,18 +1,15 @@
 import { Transaction } from "@mysten/sui/transactions";
 import { SuiClient } from "@mysten/sui/client";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
-import {
-  generateMultiSigPublicKey,
-  createMultisigSigner,
-  executeMultisigTransaction,
-} from "../helpers/multisigHelper";
-import { consortium } from "../types/0x4ef85dbd178109cb92f709d4f3429a8c3bf28f4a04642a74c674670698fc1c60";
+import { treasury } from "../types/0x4ef85dbd178109cb92f709d4f3429a8c3bf28f4a04642a74c674670698fc1c60";
+import { LBTC_COIN_TYPE } from "../config";
+import { createMultisigSigner, executeMultisigTransaction, generateMultiSigPublicKey } from "../helpers/multisigHelper";
 
 // Define the participant structure for multisig
 interface MultisigParticipant {
-    keypair: Ed25519Keypair;
-    weight: number;
-  }
+  keypair: Ed25519Keypair;
+  weight: number;
+}
 
 // Adjusted `signerConfig` type
 type SignerConfig =
@@ -24,21 +21,28 @@ type SignerConfig =
       };
     };
 
-export async function addInitialValidatorSet(
+    
+/**
+ * Toggles (enable/disable) the `withdrawal_enabled` bool.
+ */
+export async function setMintFee(
   client: SuiClient,
-  consortiumAddresss: string,
-  valsetPayload: number[],
+  treasuryObjectId: string,
+  mintFee: number,
   signerConfig: SignerConfig
+ 
 ): Promise<any> {
-    const tx = new Transaction();
+  const tx = new Transaction();
 
-    consortium.builder.setInitialValidatorSet(
-        tx,
-        [
-            tx.object(consortiumAddresss),
-            tx.pure.vector('u8', valsetPayload),
-        ]
-    )
+  // treasury::toggle_withdrawal<T>
+  treasury.builder.setMintFee(
+    tx,
+    [
+      tx.object(treasuryObjectId),   // &mut ControlledTreasury<T>
+      tx.pure.u64(mintFee),   // new_dust_fee_rate: u64
+    ],
+    [LBTC_COIN_TYPE]
+  );
 
   // Determine the signer and execute the transaction
   if ("simpleSigner" in signerConfig) {
@@ -74,5 +78,4 @@ export async function addInitialValidatorSet(
       "Invalid signer configuration. Provide either `simpleSigner` or `multisig`."
     );
   }
-
 }
