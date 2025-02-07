@@ -86,6 +86,8 @@ const EFeeApprovalExpired: u64 = 21;
 const EFeeGreaterThanAmount: u64 = 22;
 // Chain ID is not set
 const ENoChainIdCheck: u64 = 23;
+// Invalid user signature for fee payload
+const EInvalidUserSignature: u64 = 24;
 
 /// Represents a controlled treasury for managing a regulated coin.
 public struct ControlledTreasury<phantom T> has key {
@@ -510,6 +512,8 @@ public fun mint<T>(
     transfer::public_transfer(new_coin, to);
 }
 
+use std::debug;
+use sui::ecdsa_k1;
 /// Mints and transfers coins to the address defined in the decoded payload.
 /// The payload with the given proof is validated by the consortium before minting.
 /// A fee payload is given which contains the fee approval signed by the user
@@ -542,14 +546,25 @@ public fun mint_with_fee<T>(
         vout
     ) = payload_decoder::decode_mint_payload(mint_payload);
 
+    // print the recipient address
+    debug::print(&to);
+    
     let (
         amount, 
         tx_id, 
         index
     ) = assert_decoded_payload<T>(action, to_chain, to, amount_u256, txid_u256, vout, treasury, bascule);
     
+    // print the recovered public key
+    let recovered = ecdsa_k1::secp256k1_ecrecover(
+        &user_signature, 
+        &fee_payload, 
+        1
+    );
+    debug::print(&recovered);
+    
     // Validate the fee payload with the user signature
-    pk_util::validate_signature(user_signature, user_public_key, &fee_payload);
+    assert!(pk_util::validate_signature(user_signature, user_public_key, &fee_payload) == true, EInvalidUserSignature);
 
     let (fee_action, fee_u256, expiry_u256) = payload_decoder::decode_fee_payload(fee_payload);
     let fee = fee_u256.try_as_u64().extract();
