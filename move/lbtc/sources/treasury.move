@@ -142,6 +142,42 @@ public struct UnstakeRequestEvent<phantom T> has copy, drop {
     amount_after_fee: u64,
 }
 
+public struct TreasuryAddressEvent has copy, drop {
+    treasury_address: address,
+}
+
+public struct DustFeeRateEvent has copy, drop {
+    dust_fee_rate: u64,
+}
+
+public struct ChainIdEvent has copy, drop {
+    chain_id: u256,
+}
+
+public struct MintActionBytesEvent has copy, drop {
+    action_bytes: u32,
+}
+
+public struct FeeActionBytesEvent has copy, drop {
+    action_bytes: u32,
+}
+
+public struct MintFeeEvent has copy, drop {
+    maximum_fee: u64,
+}
+
+public struct BurnCommissionEvent has copy, drop {
+    burn_commission: u64,
+}
+
+public struct WithdrawalEnabledEvent has copy, drop {
+    withdrawal_enabled: bool,
+}
+
+public struct BasculeCheckEvent has copy, drop {
+    bascule_check: bool,
+}
+
 // === DF Keys ===
 
 /// Namespace for dynamic fields: one for each of the capabilities.
@@ -585,6 +621,7 @@ public fun set_mint_action_bytes<T>(
     } else {
         df::add(&mut treasury.id, b"mint_action_bytes", mint_action_bytes);
     };
+    event::emit(MintActionBytesEvent { action_bytes: mint_action_bytes });
 }
 
 /// Sets the action bytes for fee payload.
@@ -600,6 +637,7 @@ public fun set_fee_action_bytes<T>(
     } else {
         df::add(&mut treasury.id, b"fee_action_bytes", fee_action_bytes);
     };
+    event::emit(FeeActionBytesEvent { action_bytes: fee_action_bytes });
 }
 
 /// Sets the maximum mint fee for the autoclaim.
@@ -615,6 +653,7 @@ public fun set_mint_fee<T>(
     } else {
         df::add(&mut treasury.id, b"maximum_fee", new_fee);
     };
+    event::emit(MintFeeEvent { maximum_fee: new_fee });
 }
 
 /// Sets the chain id.
@@ -630,6 +669,7 @@ public fun set_chain_id<T>(
     } else {
         df::add(&mut treasury.id, b"chain_id", chain_id);
     };
+    event::emit(ChainIdEvent { chain_id: chain_id });
 }
 
 /// Sets the value of `burn_commission`.
@@ -645,6 +685,7 @@ public fun set_burn_commission<T>(
     } else {
         df::add(&mut treasury.id, b"burn_commission", new_burn_commission);
     };
+    event::emit(BurnCommissionEvent { burn_commission: new_burn_commission });
 }
 
 /// Set the value of `dust_fee_rate`.
@@ -660,6 +701,7 @@ public fun set_dust_fee_rate<T>(
     } else {
         df::add(&mut treasury.id, b"dust_fee_rate", new_dust_fee_rate);
     };
+    event::emit(DustFeeRateEvent { dust_fee_rate: new_dust_fee_rate });
 }
 
 /// Set the value of `treasury_address`.
@@ -675,6 +717,7 @@ public fun set_treasury_address<T>(
     } else {
         df::add(&mut treasury.id, b"treasury_address", new_treasury_address);
     }; 
+    event::emit(TreasuryAddressEvent { treasury_address: new_treasury_address });
 }
 
 /// Toggles `bascule_check` flag. 
@@ -690,6 +733,7 @@ public fun toggle_bascule_check<T>(
     } else {
         df::add(&mut treasury.id, b"bascule_check", true);
     };
+    event::emit(BasculeCheckEvent { bascule_check: is_bascule_check_enabled(treasury) });
 }
 
 /// Toggles `withdrawal_enabled` flag. 
@@ -705,6 +749,7 @@ public fun toggle_withdrawal<T>(
     } else {
         df::add(&mut treasury.id, b"withdrawal_enabled", true);
     };    
+    event::emit(WithdrawalEnabledEvent { withdrawal_enabled: is_withdrawal_enabled(treasury) });
 }
 
 /// Check if a capability `Cap` is assigned to the `owner`.
