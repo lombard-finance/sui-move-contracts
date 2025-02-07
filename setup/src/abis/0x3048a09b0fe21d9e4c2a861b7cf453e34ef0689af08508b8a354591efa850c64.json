@@ -1,7 +1,826 @@
 {
+  "bascule": {
+    "fileFormatVersion": 7,
+    "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+    "name": "bascule",
+    "friends": [],
+    "structs": {
+      "AlreadyReported": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "deposit_id",
+            "type": "U256"
+          },
+          {
+            "name": "status",
+            "type": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "DepositState",
+                "typeArguments": []
+              }
+            }
+          }
+        ]
+      },
+      "BASCULE": {
+        "abilities": {
+          "abilities": [
+            "Drop"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "dummy_field",
+            "type": "Bool"
+          }
+        ]
+      },
+      "Bascule": {
+        "abilities": {
+          "abilities": [
+            "Key"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "UID",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "mIsPaused",
+            "type": "Bool"
+          },
+          {
+            "name": "mWithdrawalValidators",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "vec_set",
+                "name": "VecSet",
+                "typeArguments": [
+                  {
+                    "Struct": {
+                      "address": "0x1",
+                      "module": "ascii",
+                      "name": "String",
+                      "typeArguments": []
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "mValidateThreshold",
+            "type": "U64"
+          },
+          {
+            "name": "mDepositHistory",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "table",
+                "name": "Table",
+                "typeArguments": [
+                  "U256",
+                  {
+                    "Struct": {
+                      "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                      "module": "bascule",
+                      "name": "DepositState",
+                      "typeArguments": []
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "BasculeOwnerCap": {
+        "abilities": {
+          "abilities": [
+            "Store",
+            "Key"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "UID",
+                "typeArguments": []
+              }
+            }
+          }
+        ]
+      },
+      "BasculePauserCap": {
+        "abilities": {
+          "abilities": [
+            "Store",
+            "Key"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "UID",
+                "typeArguments": []
+              }
+            }
+          }
+        ]
+      },
+      "BasculeReporterCap": {
+        "abilities": {
+          "abilities": [
+            "Store",
+            "Key"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "UID",
+                "typeArguments": []
+              }
+            }
+          }
+        ]
+      },
+      "DepositReported": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "deposit_id",
+            "type": "U256"
+          }
+        ]
+      },
+      "UpdateValidateThreshold": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "old_threshold",
+            "type": "U64"
+          },
+          {
+            "name": "new_threshold",
+            "type": "U64"
+          }
+        ]
+      },
+      "WithdrawalNotValidated": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "deposit_id",
+            "type": "U256"
+          },
+          {
+            "name": "amount",
+            "type": "U64"
+          }
+        ]
+      },
+      "WithdrawalValidated": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "deposit_id",
+            "type": "U256"
+          },
+          {
+            "name": "amount",
+            "type": "U64"
+          }
+        ]
+      }
+    },
+    "enums": {
+      "DepositState": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop",
+            "Store"
+          ]
+        },
+        "typeParameters": [],
+        "variants": {
+          "Reported": [],
+          "Withdrawn": []
+        }
+      }
+    },
+    "exposedFunctions": {
+      "add_withdrawal_validator": {
+        "visibility": "Private",
+        "isEntry": true,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "BasculeOwnerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "Bascule",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Struct": {
+              "address": "0x1",
+              "module": "ascii",
+              "name": "String",
+              "typeArguments": []
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "deposit_is_reported": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "Bascule",
+                "typeArguments": []
+              }
+            }
+          },
+          "U256"
+        ],
+        "return": [
+          "Bool"
+        ]
+      },
+      "deposit_is_unreported": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "Bascule",
+                "typeArguments": []
+              }
+            }
+          },
+          "U256"
+        ],
+        "return": [
+          "Bool"
+        ]
+      },
+      "deposit_is_withdrawn": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "Bascule",
+                "typeArguments": []
+              }
+            }
+          },
+          "U256"
+        ],
+        "return": [
+          "Bool"
+        ]
+      },
+      "get_deposit_state": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "Bascule",
+                "typeArguments": []
+              }
+            }
+          },
+          "U256"
+        ],
+        "return": [
+          {
+            "Struct": {
+              "address": "0x1",
+              "module": "option",
+              "name": "Option",
+              "typeArguments": [
+                {
+                  "Struct": {
+                    "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                    "module": "bascule",
+                    "name": "DepositState",
+                    "typeArguments": []
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "get_validate_threshold": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "Bascule",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "grant_pauser": {
+        "visibility": "Private",
+        "isEntry": true,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "BasculeOwnerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address",
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "grant_reporter": {
+        "visibility": "Private",
+        "isEntry": true,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "BasculeOwnerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address",
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "is_paused": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "Bascule",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "Bool"
+        ]
+      },
+      "is_reported": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "DepositState",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "Bool"
+        ]
+      },
+      "is_validator": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "Bascule",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Struct": {
+              "address": "0x1",
+              "module": "ascii",
+              "name": "String",
+              "typeArguments": []
+            }
+          }
+        ],
+        "return": [
+          "Bool"
+        ]
+      },
+      "is_withdrawn": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "DepositState",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "Bool"
+        ]
+      },
+      "pause": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "BasculePauserCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "Bascule",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "remove_withdrawal_validator": {
+        "visibility": "Private",
+        "isEntry": true,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "BasculeOwnerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "Bascule",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Struct": {
+              "address": "0x1",
+              "module": "ascii",
+              "name": "String",
+              "typeArguments": []
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "report_deposit": {
+        "visibility": "Private",
+        "isEntry": true,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "BasculeReporterCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "Bascule",
+                "typeArguments": []
+              }
+            }
+          },
+          "U256",
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "unpause": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "BasculePauserCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "Bascule",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "update_validate_threshold": {
+        "visibility": "Private",
+        "isEntry": true,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "BasculeOwnerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "Bascule",
+                "typeArguments": []
+              }
+            }
+          },
+          "U64",
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "validate_withdrawal": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": [
+              "Drop"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "TypeParameter": 0
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "Bascule",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address",
+          "U64",
+          {
+            "Vector": "U8"
+          },
+          "U32"
+        ],
+        "return": []
+      }
+    }
+  },
   "bitcoin_utils": {
     "fileFormatVersion": 7,
-    "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+    "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
     "name": "bitcoin_utils",
     "friends": [],
     "structs": {},
@@ -32,7 +851,7 @@
         "return": [
           {
             "Struct": {
-              "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+              "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
               "module": "bitcoin_utils",
               "name": "OutputType",
               "typeArguments": []
@@ -48,7 +867,7 @@
         "return": [
           {
             "Struct": {
-              "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+              "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
               "module": "bitcoin_utils",
               "name": "OutputType",
               "typeArguments": []
@@ -64,7 +883,7 @@
         "return": [
           {
             "Struct": {
-              "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+              "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
               "module": "bitcoin_utils",
               "name": "OutputType",
               "typeArguments": []
@@ -79,7 +898,7 @@
         "parameters": [
           {
             "Struct": {
-              "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+              "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
               "module": "bitcoin_utils",
               "name": "OutputType",
               "typeArguments": []
@@ -110,7 +929,7 @@
         "return": [
           {
             "Struct": {
-              "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+              "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
               "module": "bitcoin_utils",
               "name": "OutputType",
               "typeArguments": []
@@ -126,7 +945,7 @@
         "return": [
           {
             "Struct": {
-              "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+              "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
               "module": "bitcoin_utils",
               "name": "OutputType",
               "typeArguments": []
@@ -138,7 +957,7 @@
   },
   "consortium": {
     "fileFormatVersion": 6,
-    "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+    "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
     "name": "consortium",
     "friends": [],
     "structs": {
@@ -176,7 +995,7 @@
                   "U256",
                   {
                     "Struct": {
-                      "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                      "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                       "module": "consortium",
                       "name": "ValidatorSet",
                       "typeArguments": []
@@ -203,25 +1022,13 @@
             }
           },
           {
+            "name": "valset_action",
+            "type": "U32"
+          },
+          {
             "name": "admins",
             "type": {
               "Vector": "Address"
-            }
-          }
-        ]
-      },
-      "ValidateProof": {
-        "abilities": {
-          "abilities": [
-            "Drop"
-          ]
-        },
-        "typeParameters": [],
-        "fields": [
-          {
-            "name": "hash",
-            "type": {
-              "Vector": "U8"
             }
           }
         ]
@@ -264,7 +1071,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "consortium",
                 "name": "Consortium",
                 "typeArguments": []
@@ -293,7 +1100,7 @@
           {
             "Reference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "consortium",
                 "name": "Consortium",
                 "typeArguments": []
@@ -313,7 +1120,7 @@
           {
             "Reference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "consortium",
                 "name": "Consortium",
                 "typeArguments": []
@@ -326,7 +1133,7 @@
           {
             "Reference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "consortium",
                 "name": "ValidatorSet",
                 "typeArguments": []
@@ -343,7 +1150,7 @@
           {
             "Reference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "consortium",
                 "name": "Consortium",
                 "typeArguments": []
@@ -366,7 +1173,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "consortium",
                 "name": "Consortium",
                 "typeArguments": []
@@ -387,32 +1194,6 @@
         ],
         "return": []
       },
-      "resolve_proof": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
-                "module": "consortium",
-                "name": "Consortium",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "Struct": {
-              "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
-              "module": "consortium",
-              "name": "ValidateProof",
-              "typeArguments": []
-            }
-          }
-        ],
-        "return": []
-      },
       "set_initial_validator_set": {
         "visibility": "Public",
         "isEntry": false,
@@ -421,7 +1202,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "consortium",
                 "name": "Consortium",
                 "typeArguments": []
@@ -452,7 +1233,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "consortium",
                 "name": "Consortium",
                 "typeArguments": []
@@ -468,15 +1249,44 @@
         ],
         "return": []
       },
-      "validate_payload": {
+      "set_valset_action": {
         "visibility": "Public",
         "isEntry": false,
         "typeParameters": [],
         "parameters": [
           {
-            "Reference": {
+            "MutableReference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "consortium",
+                "name": "Consortium",
+                "typeArguments": []
+              }
+            }
+          },
+          "U32",
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "validate_and_store_payload": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "consortium",
                 "name": "Consortium",
                 "typeArguments": []
@@ -490,22 +1300,43 @@
             "Vector": "U8"
           }
         ],
-        "return": [
+        "return": []
+      },
+      "validate_signatures": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
           {
-            "Struct": {
-              "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
-              "module": "consortium",
-              "name": "ValidateProof",
-              "typeArguments": []
+            "Vector": {
+              "Vector": "U8"
             }
+          },
+          {
+            "Vector": {
+              "Vector": "U8"
+            }
+          },
+          {
+            "Vector": "U256"
+          },
+          "U256",
+          {
+            "Vector": "U8"
+          },
+          {
+            "Vector": "U8"
           }
+        ],
+        "return": [
+          "Bool"
         ]
       }
     }
   },
   "lbtc": {
     "fileFormatVersion": 6,
-    "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+    "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
     "name": "lbtc",
     "friends": [],
     "structs": {
@@ -528,7 +1359,7 @@
   },
   "multisig": {
     "fileFormatVersion": 6,
-    "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+    "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
     "name": "multisig",
     "friends": [],
     "structs": {},
@@ -630,11 +1461,26 @@
   },
   "payload_decoder": {
     "fileFormatVersion": 6,
-    "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+    "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
     "name": "payload_decoder",
     "friends": [],
     "structs": {},
     "exposedFunctions": {
+      "decode_fee_payload": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Vector": "U8"
+          }
+        ],
+        "return": [
+          "U32",
+          "U256",
+          "U256"
+        ]
+      },
       "decode_mint_payload": {
         "visibility": "Public",
         "isEntry": false,
@@ -690,53 +1536,36 @@
           {
             "Vector": "U256"
           },
-          "U256",
           "U256"
-        ]
-      },
-      "validate_signatures": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [],
-        "parameters": [
-          {
-            "Vector": {
-              "Vector": "U8"
-            }
-          },
-          {
-            "Vector": {
-              "Vector": "U8"
-            }
-          },
-          {
-            "Vector": "U256"
-          },
-          "U256",
-          {
-            "Vector": "U8"
-          },
-          {
-            "Vector": "U8"
-          }
-        ],
-        "return": [
-          "Bool"
         ]
       }
     }
   },
   "pk_util": {
-    "fileFormatVersion": 6,
-    "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+    "fileFormatVersion": 7,
+    "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
     "name": "pk_util",
     "friends": [
       {
-        "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+        "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
         "name": "multisig"
       }
     ],
     "structs": {},
+    "enums": {
+      "KeyType": {
+        "abilities": {
+          "abilities": []
+        },
+        "typeParameters": [],
+        "variants": {
+          "Ed25519": [],
+          "Invalid": [],
+          "Secp256k1": [],
+          "Secp256r1": []
+        }
+      }
+    },
     "exposedFunctions": {
       "is_valid_key": {
         "visibility": "Friend",
@@ -767,12 +1596,33 @@
           }
         ],
         "return": []
+      },
+      "validate_signature": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Vector": "U8"
+          },
+          {
+            "Vector": "U8"
+          },
+          {
+            "Reference": {
+              "Vector": "U8"
+            }
+          }
+        ],
+        "return": [
+          "Bool"
+        ]
       }
     }
   },
   "treasury": {
     "fileFormatVersion": 6,
-    "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+    "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
     "name": "treasury",
     "friends": [],
     "structs": {
@@ -814,6 +1664,21 @@
           {
             "name": "from",
             "type": "Address"
+          }
+        ]
+      },
+      "ClaimerCap": {
+        "abilities": {
+          "abilities": [
+            "Drop",
+            "Store"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "dummy_field",
+            "type": "Bool"
           }
         ]
       },
@@ -890,6 +1755,20 @@
           }
         ]
       },
+      "LBTCWitness": {
+        "abilities": {
+          "abilities": [
+            "Drop"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "dummy_field",
+            "type": "Bool"
+          }
+        ]
+      },
       "MintEvent": {
         "abilities": {
           "abilities": [
@@ -946,6 +1825,21 @@
           {
             "name": "left",
             "type": "U64"
+          }
+        ]
+      },
+      "OperatorCap": {
+        "abilities": {
+          "abilities": [
+            "Drop",
+            "Store"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "dummy_field",
+            "type": "Bool"
           }
         ]
       },
@@ -1018,6 +1912,36 @@
             "type": "U64"
           }
         ]
+      },
+      "WitnessRoleKey": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop",
+            "Store"
+          ]
+        },
+        "typeParameters": [
+          {
+            "constraints": {
+              "abilities": []
+            },
+            "isPhantom": true
+          }
+        ],
+        "fields": [
+          {
+            "name": "owner",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "ascii",
+                "name": "String",
+                "typeArguments": []
+              }
+            }
+          }
+        ]
       }
     },
     "exposedFunctions": {
@@ -1039,7 +1963,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -1067,7 +1991,7 @@
         ],
         "return": []
       },
-      "burn": {
+      "add_witness_mint_capability": {
         "visibility": "Public",
         "isEntry": false,
         "typeParameters": [
@@ -1079,7 +2003,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -1092,14 +2016,18 @@
           },
           {
             "Struct": {
-              "address": "0x2",
-              "module": "coin",
-              "name": "Coin",
-              "typeArguments": [
-                {
-                  "TypeParameter": 0
-                }
-              ]
+              "address": "0x1",
+              "module": "ascii",
+              "name": "String",
+              "typeArguments": []
+            }
+          },
+          {
+            "Struct": {
+              "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+              "module": "treasury",
+              "name": "MinterCap",
+              "typeArguments": []
             }
           },
           {
@@ -1115,8 +2043,8 @@
         ],
         "return": []
       },
-      "burn_internal": {
-        "visibility": "Friend",
+      "burn": {
+        "visibility": "Public",
         "isEntry": false,
         "typeParameters": [
           {
@@ -1127,7 +2055,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -1174,7 +2102,7 @@
         "parameters": [
           {
             "Struct": {
-              "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+              "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
               "module": "treasury",
               "name": "ControlledTreasury",
               "typeArguments": [
@@ -1242,7 +2170,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -1297,7 +2225,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -1340,34 +2268,6 @@
         ],
         "return": []
       },
-      "get_action_bytes": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
-                "module": "treasury",
-                "name": "ControlledTreasury",
-                "typeArguments": [
-                  {
-                    "TypeParameter": 0
-                  }
-                ]
-              }
-            }
-          }
-        ],
-        "return": [
-          "U32"
-        ]
-      },
       "get_burn_commission": {
         "visibility": "Public",
         "isEntry": false,
@@ -1380,7 +2280,7 @@
           {
             "Reference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -1396,6 +2296,34 @@
           "U64"
         ]
       },
+      "get_chain_id": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "treasury",
+                "name": "ControlledTreasury",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "return": [
+          "U256"
+        ]
+      },
       "get_dust_fee_rate": {
         "visibility": "Public",
         "isEntry": false,
@@ -1408,7 +2336,91 @@
           {
             "Reference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "treasury",
+                "name": "ControlledTreasury",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "get_fee_action_bytes": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "treasury",
+                "name": "ControlledTreasury",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "return": [
+          "U32"
+        ]
+      },
+      "get_mint_action_bytes": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "treasury",
+                "name": "ControlledTreasury",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "return": [
+          "U32"
+        ]
+      },
+      "get_mint_fee": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -1436,7 +2448,7 @@
           {
             "Reference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -1452,6 +2464,42 @@
           {
             "Reference": "Address"
           }
+        ]
+      },
+      "get_witness_minter_cap_left": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "treasury",
+                "name": "ControlledTreasury",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "Struct": {
+              "address": "0x1",
+              "module": "ascii",
+              "name": "String",
+              "typeArguments": []
+            }
+          }
+        ],
+        "return": [
+          "U64"
         ]
       },
       "has_cap": {
@@ -1471,7 +2519,7 @@
           {
             "Reference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -1500,7 +2548,7 @@
           {
             "Reference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -1552,7 +2600,7 @@
           {
             "Reference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -1580,7 +2628,7 @@
           {
             "Reference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -1618,7 +2666,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -1632,7 +2680,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "consortium",
                 "name": "Consortium",
                 "typeArguments": []
@@ -1645,6 +2693,16 @@
                 "address": "0x2",
                 "module": "deny_list",
                 "name": "DenyList",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "Bascule",
                 "typeArguments": []
               }
             }
@@ -1680,7 +2738,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -1716,6 +2774,153 @@
             "Vector": "U8"
           },
           "U32",
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "mint_with_fee": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "treasury",
+                "name": "ControlledTreasury",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "consortium",
+                "name": "Consortium",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "deny_list",
+                "name": "DenyList",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "bascule",
+                "name": "Bascule",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Vector": "U8"
+          },
+          {
+            "Vector": "U8"
+          },
+          {
+            "Vector": "U8"
+          },
+          {
+            "Vector": "U8"
+          },
+          {
+            "Vector": "U8"
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "clock",
+                "name": "Clock",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "mint_with_witness": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          },
+          {
+            "abilities": [
+              "Drop"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "TypeParameter": 1
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "treasury",
+                "name": "ControlledTreasury",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          },
+          "U64",
+          "Address",
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "deny_list",
+                "name": "DenyList",
+                "typeArguments": []
+              }
+            }
+          },
           {
             "MutableReference": {
               "Struct": {
@@ -1777,7 +2982,7 @@
         "return": [
           {
             "Struct": {
-              "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+              "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
               "module": "treasury",
               "name": "ControlledTreasury",
               "typeArguments": [
@@ -1797,9 +3002,25 @@
         "return": [
           {
             "Struct": {
-              "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+              "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
               "module": "treasury",
               "name": "AdminCap",
+              "typeArguments": []
+            }
+          }
+        ]
+      },
+      "new_claimer_cap": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [],
+        "return": [
+          {
+            "Struct": {
+              "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+              "module": "treasury",
+              "name": "ClaimerCap",
               "typeArguments": []
             }
           }
@@ -1825,9 +3046,25 @@
         "return": [
           {
             "Struct": {
-              "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+              "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
               "module": "treasury",
               "name": "MinterCap",
+              "typeArguments": []
+            }
+          }
+        ]
+      },
+      "new_operator_cap": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [],
+        "return": [
+          {
+            "Struct": {
+              "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+              "module": "treasury",
+              "name": "OperatorCap",
               "typeArguments": []
             }
           }
@@ -1841,7 +3078,7 @@
         "return": [
           {
             "Struct": {
-              "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+              "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
               "module": "treasury",
               "name": "PauserCap",
               "typeArguments": []
@@ -1861,7 +3098,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -1918,7 +3155,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -1943,7 +3180,7 @@
         ],
         "return": []
       },
-      "set_action_bytes": {
+      "remove_witness_mint_capability": {
         "visibility": "Public",
         "isEntry": false,
         "typeParameters": [
@@ -1955,7 +3192,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -1966,7 +3203,14 @@
               }
             }
           },
-          "U32",
+          {
+            "Struct": {
+              "address": "0x1",
+              "module": "ascii",
+              "name": "String",
+              "typeArguments": []
+            }
+          },
           {
             "MutableReference": {
               "Struct": {
@@ -1992,7 +3236,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -2004,6 +3248,43 @@
             }
           },
           "U64",
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "set_chain_id": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "treasury",
+                "name": "ControlledTreasury",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          },
+          "U256",
           {
             "MutableReference": {
               "Struct": {
@@ -2029,7 +3310,118 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "treasury",
+                "name": "ControlledTreasury",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          },
+          "U64",
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "set_fee_action_bytes": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "treasury",
+                "name": "ControlledTreasury",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          },
+          "U32",
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "set_mint_action_bytes": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "treasury",
+                "name": "ControlledTreasury",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          },
+          "U32",
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "set_mint_fee": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -2066,7 +3458,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -2102,7 +3494,7 @@
         "parameters": [
           {
             "Struct": {
-              "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+              "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
               "module": "treasury",
               "name": "ControlledTreasury",
               "typeArguments": [
@@ -2127,7 +3519,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -2163,7 +3555,7 @@
           {
             "MutableReference": {
               "Struct": {
-                "address": "0x190fce1b032302dea757432f9d5271e3905956430f86805d0766098ecb9956e2",
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
                 "module": "treasury",
                 "name": "ControlledTreasury",
                 "typeArguments": [
@@ -2186,6 +3578,42 @@
           }
         ],
         "return": []
+      },
+      "witness_has_minter_cap": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+                "module": "treasury",
+                "name": "ControlledTreasury",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "Struct": {
+              "address": "0x1",
+              "module": "ascii",
+              "name": "String",
+              "typeArguments": []
+            }
+          }
+        ],
+        "return": [
+          "Bool"
+        ]
       }
     }
   }

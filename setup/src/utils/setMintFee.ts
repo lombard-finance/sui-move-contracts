@@ -1,7 +1,7 @@
 import { Transaction } from "@mysten/sui/transactions";
 import { SuiClient } from "@mysten/sui/client";
 import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
-import { treasury } from "../types/0x4ef85dbd178109cb92f709d4f3429a8c3bf28f4a04642a74c674670698fc1c60";
+import { treasury } from "../types/0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64";
 import { LBTC_COIN_TYPE } from "../config";
 import { createMultisigSigner, executeMultisigTransaction, generateMultiSigPublicKey } from "../helpers/multisigHelper";
 
@@ -43,6 +43,7 @@ export async function setMintFee(
     ],
     [LBTC_COIN_TYPE]
   );
+  tx.setGasBudget(5000000000);
 
   // Determine the signer and execute the transaction
   if ("simpleSigner" in signerConfig) {

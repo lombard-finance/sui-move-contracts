@@ -2,7 +2,7 @@
 module lbtc::treasury_tests;
 
 use lbtc::treasury::{Self, ControlledTreasury, AdminCap, MinterCap, PauserCap, OperatorCap, ClaimerCap,
-redeem, set_dust_fee_rate, set_burn_commission, set_treasury_address, toggle_withdrawal, LBTCWitness};
+redeem, set_dust_fee_rate, set_burn_commission, set_treasury_address, toggle_withdrawal, get_witness_minter_cap_left, LBTCWitness};
 use std::string;
 use sui::coin::{Self, Coin};
 use sui::deny_list::{Self, DenyList};
@@ -24,6 +24,10 @@ const OP_1: u8 = 0x51;
 const OP_DATA_32: u8 = 0x20;
 
 public struct TREASURY_TESTS has drop {}
+
+public struct TestWitness has drop {}
+
+public struct WrongTestWitness has drop {}
 
 #[test]
 fun test_global_pause_is_enabled_for_next_epoch() {
@@ -106,6 +110,222 @@ fun test_global_pause_is_disabled_for_next_epoch() {
             &denylist,
             ts.ctx()
         ),
+    );
+
+    test_utils::destroy(treasury);
+    ts::return_shared(denylist);
+
+    ts.end();
+}
+
+#[test]
+fun test_mint_with_witness() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    // Assign MinterCap to the multisig address
+    ts.next_tx(TREASURY_ADMIN);
+    let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
+    let witness_type = type_name::get<TestWitness>();
+    treasury.add_witness_mint_capability<TREASURY_TESTS>(witness_type.into_string(), minter_cap, ts.ctx());
+
+    // Mint and transfer tokens using the multisig address
+    ts.next_tx(USER);
+    let denylist: DenyList = ts.take_shared();
+    treasury::mint_with_witness(
+        TestWitness {},
+        &mut treasury,
+        1000,
+        USER,
+        &denylist,
+        ts.ctx(),
+    );
+
+    test_utils::destroy(treasury);
+    ts::return_shared(denylist);
+
+    ts.end();
+}
+
+#[test, expected_failure(abort_code = ::lbtc::treasury::EMintLimitExceeded)]
+fun test_mint_with_witness_over_limit() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    // Assign MinterCap to the multisig address
+    ts.next_tx(TREASURY_ADMIN);
+    let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
+    let witness_type = type_name::get<TestWitness>();
+    treasury.add_witness_mint_capability<TREASURY_TESTS>(witness_type.into_string(), minter_cap, ts.ctx());
+
+    // Mint and transfer tokens using the multisig address
+    ts.next_tx(USER);
+    let denylist: DenyList = ts.take_shared();
+    treasury::mint_with_witness(
+        TestWitness {},
+        &mut treasury,
+        MINT_LIMIT + 1,
+        USER,
+        &denylist,
+        ts.ctx(),
+    );
+
+    test_utils::destroy(treasury);
+    ts::return_shared(denylist);
+
+    ts.end();
+}
+
+#[test, expected_failure(abort_code = ::lbtc::treasury::EMintLimitExceeded)]
+fun test_mint_with_witness_over_limit_in_the_same_epoch() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    // Assign MinterCap to the multisig address
+    ts.next_tx(TREASURY_ADMIN);
+    let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
+    let witness_type = type_name::get<TestWitness>();
+    treasury.add_witness_mint_capability<TREASURY_TESTS>(witness_type.into_string(), minter_cap, ts.ctx());
+
+    // Mint and transfer tokens using the multisig address
+    ts.next_tx(USER);
+    let denylist: DenyList = ts.take_shared();
+    treasury::mint_with_witness(
+        TestWitness {},
+        &mut treasury,
+        MINT_LIMIT - 1,
+        USER,
+        &denylist,
+        ts.ctx(),
+    );
+    ts.next_tx(USER);
+    treasury::mint_with_witness(
+        TestWitness {},
+        &mut treasury,
+        2,
+        USER,
+        &denylist,
+        ts.ctx(),
+    );
+
+    // Check remaining limit for this epoch
+    assert!(get_witness_minter_cap_left(&treasury, witness_type.into_string()) == 1);
+
+    test_utils::destroy(treasury);
+    ts::return_shared(denylist);
+    ts.end();
+}
+
+#[test]
+fun test_mint_with_witness_over_limit_in_different_epoch() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    // Assign MinterCap to the multisig address
+    ts.next_tx(TREASURY_ADMIN);
+    let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
+    let witness_type = type_name::get<TestWitness>();
+    treasury.add_witness_mint_capability<TREASURY_TESTS>(witness_type.into_string(), minter_cap, ts.ctx());
+
+    // Mint and transfer tokens using the multisig address
+    ts.next_tx(USER);
+    let denylist: DenyList = ts.take_shared();
+    treasury::mint_with_witness(
+        TestWitness {},
+        &mut treasury,
+        MINT_LIMIT - 1,
+        USER,
+        &denylist,
+        ts.ctx(),
+    );
+    ts.next_epoch(USER);
+    treasury::mint_with_witness(
+        TestWitness {},
+        &mut treasury,
+        2,
+        USER,
+        &denylist,
+        ts.ctx(),
+    );
+
+    // Check remaining limit for this epoch
+    assert!(get_witness_minter_cap_left(&treasury, witness_type.into_string()) == MINT_LIMIT - 2);
+
+    test_utils::destroy(treasury);
+    ts::return_shared(denylist);
+
+    ts.end();
+}
+
+#[test, expected_failure(abort_code = ::lbtc::treasury::ENoAuthRecord)]
+fun test_cannot_mint_with_witness_with_wrong_witness() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);    
+    
+    // Assign MinterCap to the multisig address
+    ts.next_tx(TREASURY_ADMIN);
+    let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
+    let witness_type = type_name::get<TestWitness>();
+    treasury.add_witness_mint_capability<TREASURY_TESTS>(witness_type.into_string(), minter_cap, ts.ctx());
+
+    // Mint and transfer tokens using the multisig address
+    ts.next_tx(USER);
+    let denylist: DenyList = ts.take_shared();
+    treasury::mint_with_witness(
+        WrongTestWitness {},
+        &mut treasury,
+        1000,
+        USER,
+        &denylist,
+        ts.ctx(),
+    );
+
+    test_utils::destroy(treasury);
+    ts::return_shared(denylist);
+
+    ts.end();
+}
+
+#[test, expected_failure(abort_code = ::lbtc::treasury::EMintNotAllowed)]
+fun test_cannot_mint_with_witness_when_global_pause_enabled() {
+    // Start a test transaction scenario
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    // Get the default multisig setup
+    let (pks, weights, threshold) = multisig_tests::default_multisig_setup();
+
+    // Derive the multisig address
+    let multisig_address = lbtc::multisig::derive_multisig_address(pks, weights, threshold);
+
+   // Assign roles
+    ts.next_tx(TREASURY_ADMIN);
+    let pauser_cap = treasury::new_pauser_cap();
+    treasury.add_capability<TREASURY_TESTS, PauserCap>(multisig_address, pauser_cap, ts.ctx());
+    let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
+    let witness_type = type_name::get<TestWitness>();
+    treasury.add_witness_mint_capability<TREASURY_TESTS>(witness_type.into_string(), minter_cap, ts.ctx());
+
+    // Enable global pause
+    ts.next_tx(multisig_address);
+    let mut denylist: DenyList = ts.take_shared();
+    treasury::enable_global_pause(
+      &mut treasury,
+      &mut denylist,
+      pks,
+      weights,
+      threshold,
+      ts.ctx()
+    );
+
+    ts.next_epoch(USER);
+    treasury::mint_with_witness(
+        TestWitness {},
+        &mut treasury,
+        MINT_LIMIT + 1,
+        USER,
+        &denylist,
+        ts.ctx(),
     );
 
     test_utils::destroy(treasury);
@@ -1002,11 +1222,14 @@ fun init_consortium(ts: &mut Scenario, init_valset: vector<u8>): Consortium {
 
 fun init_bascule(ts: &mut Scenario): Bascule {
     ts.next_tx(TREASURY_ADMIN);
-    bascule::init_for_testing(ts.ctx());
+    bascule::test_init(ts.ctx());
     ts.next_tx(TREASURY_ADMIN);
     let mut bascule: Bascule = ts.take_shared();
     let witness_type = type_name::get<LBTCWitness>();
-    bascule::whitelist_witness(&mut bascule, witness_type.into_string());
+    let basculeOwnerCap :bascule::BasculeOwnerCap = ts.take_from_sender();
+    bascule::add_withdrawal_validator(&basculeOwnerCap, &mut bascule, witness_type.into_string(), ts.ctx());
+    bascule::update_validate_threshold(&basculeOwnerCap, &mut bascule, 200000000, ts.ctx());
+    ts.return_to_sender(basculeOwnerCap);
     bascule
 }
 

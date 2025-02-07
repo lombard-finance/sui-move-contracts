@@ -3,7 +3,7 @@ import { Transaction } from "@mysten/sui/transactions";
 import {
   lbtc,
   treasury,
-} from "../types/0x4ef85dbd178109cb92f709d4f3429a8c3bf28f4a04642a74c674670698fc1c60";
+} from "../types/0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64";
 import { DENYLIST, LBTC_COIN_TYPE, SHARED_BASCULE } from "../config";
 import { SuiClient } from "@mysten/sui/client";
 import { createMultisigSigner, executeMultisigTransaction, generateMultiSigPublicKey } from "../helpers/multisigHelper";

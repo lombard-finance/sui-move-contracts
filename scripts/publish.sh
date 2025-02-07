@@ -139,14 +139,14 @@ packageId=$(echo "$publish_res" | jq -r '.effects.created[] | select(.owner == "
 createdObjects=$(echo "$publish_res" | jq -r '.objectChanges[] | select(.type == "created")')
 sharedControlledTreasury=$(echo "$createdObjects" |  jq -r 'select (.objectType | contains("treasury::ControlledTreasury")).objectId')
 sharedConsortium=$(echo "$createdObjects" |  jq -r 'select (.objectType | contains("consortium::Consortium")).objectId')
-sharedBascule=$(echo "$createdObjects" | jq -r 'select (.objectType | contains("bascule::Bascule")).objectId')
+sharedBascule=$(echo "$createdObjects" | jq -r 'select (.objectType | endswith("bascule::Bascule")).objectId')
 upgradeCap=$(echo "$createdObjects" | jq -r 'select (.objectType | contains("package::UpgradeCap")).objectId')
 txDigest=$(echo "$publish_res" | jq -r '.effects.transactionDigest')
 
 echo "Package ID: $packageId"
 
 # Generate the .env file with the necessary variables
-cat >.env<<-ENV
+cat >../setup/.env<<-ENV
 SUI_NETWORK=$FULLNODE_URL
 SUI_ENV=$NETWORK
 TX_DIGEST=$txDigest

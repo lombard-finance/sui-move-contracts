@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "config": {
-    "package_id": "0x10a062a4f7b580600ccdaf5c993c0bdc9b0f114510331a14a962aebb4c53ef22",
-    "consortium_package_id": "0xac86fa9a99e321c574dcd5a8f146101db92f6712d5540140961360e1aff75eac"
+    "package_id": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+    "consortium_package_id": "0xfbdac15ba12ae49aa7499e2d62c9151777cc551bde39e830d11f03462ba281d6"
   },
   "scripts": {
     "generateTypes": "env-cmd -f .env pnpm typemove-sui --target-dir=./src/types --abi-dir=./src/abis $npm_package_config_package_id --network=testnet",
@@ -17,6 +17,7 @@
     "testAddPauser": "env-cmd -f .env ts-node src/tests/testAddPauser.ts",
     "testRemovePauser": "env-cmd -f .env ts-node src/tests/testRemovePauser.ts",
     "testMintAndTransfer": "env-cmd -f .env ts-node src/tests/testMintAndTransfer.ts",
+    "testMintWithWitness": "env-cmd -f .env ts-node src/tests/testMintWithWitness.ts",
     "testEnableGlobalPause": "env-cmd -f .env ts-node src/tests/testEnableGlobalPause.ts",
     "testDisableGlobalPause": "env-cmd -f .env ts-node src/tests/testDisableGlobalPause.ts",
     "testRedeem": "env-cmd -f .env ts-node src/tests/testRedeem.ts",

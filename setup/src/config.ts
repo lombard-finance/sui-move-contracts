@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 import { SuiClient } from "@mysten/sui/client";
 
-config({});
+config({ path: '.env' });
 
 type NetworkEnvironment = "devnet" | "testnet" | "mainnet";
 
@@ -26,9 +26,9 @@ export const MULTISIG = {
 };
 
 export const PACKAGE_ID = process.env.PACKAGE_ID!;
+export const SHARED_CONSORTIUM = process.env.SHARED_CONSORTIUM!;
 export const SHARED_CONTROLLED_TREASURY =
   process.env.SHARED_CONTROLLED_TREASURY!;
-export const SHARED_CONSORTIUM = process.env.SHARED_CONSORTIUM!;
 export const SHARED_BASCULE = process.env.SHARED_BASCULE!;
 export const LBTC_COIN_TYPE = `${PACKAGE_ID}::lbtc::LBTC`;
 export const ONE_LBTC = 1 * 10 ** 8;
@@ -38,3 +38,6 @@ export const DENYLIST = "0x403";
 export const suiClient = new SuiClient({
   url: SUI_NETWORK,
 });
+
+config({ path: '.test-witness.env' });
+export const TEST_WITNESS_PACKAGE_ID = process.env.TEST_WITNESS_PACKAGE_ID!;

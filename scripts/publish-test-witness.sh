@@ -5,7 +5,7 @@
 # creates multisig addresses, requests tokens, and publishes the contract with multisig signatures.
 
 # Set the Move package path (update this to your contract's directory)
-MOVE_PACKAGE_PATH="../move/consortium"
+MOVE_PACKAGE_PATH="../setup/src/testWitness/test_witness"
 
 # check this is being run from the right location
 if [[ "$PWD" != *"/scripts" ]]; then
@@ -137,27 +137,16 @@ echo $publish_res > .publish.res.json
 # Extract the env variables from the publish result
 packageId=$(echo "$publish_res" | jq -r '.effects.created[] | select(.owner == "Immutable" and .reference.version == 1) | .reference.objectId')
 createdObjects=$(echo "$publish_res" | jq -r '.objectChanges[] | select(.type == "created")')
-sharedConsortium=$(echo "$createdObjects" |  jq -r 'select (.objectType | contains("consortium::Consortium")).objectId')
 upgradeCap=$(echo "$createdObjects" | jq -r 'select (.objectType | contains("package::UpgradeCap")).objectId')
 txDigest=$(echo "$publish_res" | jq -r '.effects.transactionDigest')
 
 echo "Package ID: $packageId"
 
 # Generate the .env file with the necessary variables
-cat >../setup/.consortium.env<<-ENV
+cat >../setup/.test-witness.env<<-ENV
 SUI_NETWORK=$FULLNODE_URL
 SUI_ENV=$NETWORK
-TX_DIGEST=$txDigest
-UPGRADE_CAP=$upgradeCap
-PACKAGE_ID=$packageId
-SHARED_CONSORTIUM=$sharedConsortium
-MULTISIG_ADDRESS=$admin_multisig_address
-USER_1_ADDRESS=$user1_address
-USER_2_ADDRESS=$user2_address
-USER_1_PK=$user1_pk
-USER_2_PK=$user2_pk
-USER_1_SK=$user1_sk
-USER_2_SK=$user2_sk
+TEST_WITNESS_PACKAGE_ID=$packageId
 ENV
 
 echo "Environment variables have been set in .env file."

@@ -17,10 +17,10 @@ async function testRedeem() {
   try {
     // Retrieve our default multisig configuration
     const multisigConfig = getTestMultisigConfig();
-
+    
     // Execute the mint and transfer logic
     console.log("Mint and transfer lbtc")
-    const result = await mintAndTransfer(
+    const mintAndTransferResult = await mintAndTransfer(
       suiClient,
       SHARED_CONTROLLED_TREASURY, // Controlled Treasury object
       ONE_LBTC, // Amount to mint
@@ -30,21 +30,31 @@ async function testRedeem() {
       DUMMY_IDX, // Placeholder BTC deposit index
       multisigConfig // Multisig configuration
     );
+    await suiClient.waitForTransaction({ digest: mintAndTransferResult.digest })
+console.log(mintAndTransferResult);
     //set dynamic fields
     const withdrawalEnabled = await isWithdrawalEnabled(suiClient, SHARED_CONTROLLED_TREASURY);
     console.log("isWithdrawalEnabled: ", withdrawalEnabled);
     if (!withdrawalEnabled) {
       console.log("Toggle withdrawal");
-      await toggleWithdrawal(suiClient, SHARED_CONTROLLED_TREASURY, { multisig: multisigConfig });
+      const toggleResult = await toggleWithdrawal(suiClient, SHARED_CONTROLLED_TREASURY, { multisig: multisigConfig });
+      await suiClient.waitForTransaction({ digest: toggleResult.digest })
+
     }
     console.log("Set Treasury Address");
-    await setTreasuryAddress(suiClient, SHARED_CONTROLLED_TREASURY, MULTISIG.ADDRESS , { multisig: multisigConfig })
+    const setTreasuryAddressResult = await setTreasuryAddress(suiClient, SHARED_CONTROLLED_TREASURY, MULTISIG.ADDRESS , { multisig: multisigConfig })
     console.log("Set Dust Fee Rate");
-    await setDustFeeRate(suiClient, SHARED_CONTROLLED_TREASURY, 10, { multisig: multisigConfig })
-    console.log("Set Burn Commission");
-    await setBurnCommission(suiClient, SHARED_CONTROLLED_TREASURY, 100, { multisig: multisigConfig })
+    await suiClient.waitForTransaction({ digest: setTreasuryAddressResult.digest })
 
-    const coinId = result.effects.created[0].reference.objectId;
+    const setDustFeeRateResult = await setDustFeeRate(suiClient, SHARED_CONTROLLED_TREASURY, 10, { multisig: multisigConfig })
+    console.log("Set Burn Commission");
+    await suiClient.waitForTransaction({ digest: setDustFeeRateResult.digest })
+
+    const burnCommissionResult = await setBurnCommission(suiClient, SHARED_CONTROLLED_TREASURY, 100, { multisig: multisigConfig })
+
+    await suiClient.waitForTransaction({ digest: burnCommissionResult.digest })
+
+    const coinId = mintAndTransferResult.effects.created[0].reference.objectId;
 
     console.log("Redeem lbtc")
     const claimResponse = await redeem(

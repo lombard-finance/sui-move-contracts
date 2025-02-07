@@ -131,6 +131,10 @@ public struct MintEvent<phantom T> has copy, drop {
     index: u32,
 }
 
+public struct MintWithWitnessEvent<phantom T> has copy, drop {
+    amount: u64,
+    to: address
+}
 public struct BurnEvent<phantom T> has copy, drop {
     amount: u64,
     from: address,
@@ -182,6 +186,8 @@ public struct BasculeCheckEvent has copy, drop {
 
 /// Namespace for dynamic fields: one for each of the capabilities.
 public struct RoleKey<phantom T> has copy, store, drop { owner: address }
+
+public struct WitnessRoleKey<phantom T> has copy, store, drop { owner: std::ascii::String }
 
 // Note all "address" can represent multi-signature addresses and be authorized at any threshold
 
@@ -283,6 +289,25 @@ public fun add_capability<T, C: store + drop>(
     treasury.add_cap(owner, cap);
 }
 
+/// Allow the admin to add a minter capability for a witness to the treasury
+/// Authorization checks that the sender has an AdminCap and that the witness
+/// does not already have a MinterCap.
+///
+/// Aborts if:
+/// - the sender does not have AdminCap
+/// - the witness already has a MinterCap
+#[allow(unused_mut_parameter)]
+public fun add_witness_mint_capability<T>(
+    treasury: &mut ControlledTreasury<T>,
+    owner: std::ascii::String,
+    cap: MinterCap,
+    ctx: &mut TxContext,
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    assert!(!treasury.witness_has_minter_cap<T>(owner), ERecordExists);
+    treasury.add_witness_minter_cap(owner, cap);
+}
+
 /// Allow the admin to remove capabilities from the treasury
 /// Authorization checks that a capability under the given name is owned by the caller.
 ///
@@ -306,6 +331,24 @@ public fun remove_capability<T, C: store + drop>(
     };
 
     let _: C = treasury.remove_cap(owner);
+}
+
+/// Allow the admin to remove a witness's minter capability from the treasury
+/// Authorization checks that the sender has an AdminCap and that the witness
+/// actually possesses a MinterCap.
+///
+/// Aborts if:
+/// - the sender does not have AdminCap
+/// - the witness does not have a MinterCap
+#[allow(unused_mut_parameter)]
+public fun remove_witness_mint_capability<T>(
+    treasury: &mut ControlledTreasury<T>,
+    owner: std::ascii::String,
+    ctx: &mut TxContext,
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    assert!(treasury.witness_has_minter_cap<T>(owner), ENoAuthRecord);
+    let _: MinterCap = treasury.remove_witness_minter_cap(owner);
 }
 
 // === Mint operations ===
@@ -364,6 +407,63 @@ public fun mint_and_transfer<T>(
 
     // Emit the event and mint + transfer the coins
     event::emit(MintEvent<T> { amount, to, tx_id, index });
+    let new_coin = coin::mint(&mut treasury.treasury_cap, amount, ctx);
+    transfer::public_transfer(new_coin, to);
+}
+
+// === Mint operations ===
+
+/// Mints and transfers coins to a specified address.
+/// - The witness is associated with a valid MinterCap.
+/// - The amount to mint must be positive and within the remaining mint limit of the MinterCap.
+/// - Global minting must be allowed (i.e. global pause must be disabled).
+///
+/// Notes:
+/// - The minting limit is refreshed at the start of a new epoch.
+///
+/// Aborts if:
+/// - The caller does not possess the required MinterCap.
+/// - The requested amount exceeds the available mint limit.
+/// - Global minting is paused.
+/// 
+/// Emits: MintWithWitnessEvent
+public fun mint_with_witness<T, U: drop>(
+    _witness: U,
+    treasury: &mut ControlledTreasury<T>,
+    amount: u64,
+    to: address,
+    denylist: &DenyList,
+    ctx: &mut TxContext,
+
+) {
+    // Check if the amount is greater than 0
+    assert!(amount > 0, EMintAmountCannotBeZero);
+
+    // Get the type name of the witness as a string identifier
+    let witness_type = type_name::get<U>();
+
+    // Verify that the witness has a minter capability
+    // The witness_type is converted to a string to check in the treasury
+    assert!(treasury.witness_has_minter_cap<T>(witness_type.into_string()), ENoAuthRecord);
+
+    // Ensure global pause is not enabled before continuing
+    assert!(!is_global_pause_enabled<T>(denylist), EMintNotAllowed);
+
+    // Get the MinterCap and check the limit; if a new epoch - reset it
+    let MinterCap { limit, epoch, left } = get_witness_cap_mut(treasury, witness_type.into_string());
+
+    // Reset the limit if this is a new epoch
+    if (ctx.epoch() > *epoch) {
+        *left = *limit;
+        *epoch = ctx.epoch();
+    };
+
+    // Check that the amount is within the mint limit; update the limit
+    assert!(amount <= *left, EMintLimitExceeded);
+    *left = *left - amount;
+
+    // Emit the event and mint + transfer the coins
+    event::emit(MintWithWitnessEvent<T> { amount, to });
     let new_coin = coin::mint(&mut treasury.treasury_cap, amount, ctx);
     transfer::public_transfer(new_coin, to);
 }
@@ -760,6 +860,23 @@ public fun has_cap<T, Cap: store>(
     treasury.roles.contains(RoleKey<Cap> { owner })
 }
 
+/// Get remaining mint limit for each epoch.
+public fun get_witness_minter_cap_left<T>(
+    treasury: &ControlledTreasury<T>,
+    owner: std::ascii::String,
+): u64 {
+    assert!(treasury.roles.contains(WitnessRoleKey<MinterCap> { owner }), ENoAuthRecord);
+    treasury.get_witness_cap<T>(owner).left
+}
+
+/// Check if a capability `Cap` is assigned to the `owner`.
+public fun witness_has_minter_cap<T>(
+    treasury: &ControlledTreasury<T>,
+    owner: std::ascii::String,
+): bool {
+    treasury.roles.contains(WitnessRoleKey<MinterCap> { owner })
+}
+
 /// Check the status of `withdrawal_enabled`.
 public fun is_withdrawal_enabled<T>(
     treasury: &ControlledTreasury<T>,
@@ -876,12 +993,28 @@ fun get_cap<T, Cap: store + drop>(
     treasury.roles.borrow(RoleKey<Cap> { owner })
 }
 
+/// Get Mint capability for the `owner`.
+fun get_witness_cap<T>(
+    treasury: &ControlledTreasury<T>,
+    owner: std::ascii::String,
+): &MinterCap {
+    treasury.roles.borrow(WitnessRoleKey<MinterCap> { owner })
+}
+
 /// Get a mutable ref to the capability for the `owner`.
 fun get_cap_mut<T, Cap: store + drop>(
     treasury: &mut ControlledTreasury<T>,
     owner: address,
 ): &mut Cap {
     treasury.roles.borrow_mut(RoleKey<Cap> { owner })
+}
+
+/// Get a mutable ref to the Mint capability for the `owner`.
+fun get_witness_cap_mut<T>(
+    treasury: &mut ControlledTreasury<T>,
+    owner: std::ascii::String,
+): &mut MinterCap {
+    treasury.roles.borrow_mut(WitnessRoleKey<MinterCap> { owner })
 }
 
 /// Adds a capability `cap` for `owner`.
@@ -893,12 +1026,29 @@ fun add_cap<T, Cap: store + drop>(
     treasury.roles.add(RoleKey<Cap> { owner }, cap)
 }
 
+/// Adds a capability `cap` for `owner`.
+fun add_witness_minter_cap<T>(
+    treasury: &mut ControlledTreasury<T>,
+    owner: std::ascii::String,
+    cap: MinterCap,
+) {
+    treasury.roles.add(WitnessRoleKey<MinterCap> { owner }, cap)
+}
+
 /// Remove a `Cap` from the `owner`.
 fun remove_cap<T, Cap: store + drop>(
     treasury: &mut ControlledTreasury<T>,
     owner: address,
 ): Cap {
     treasury.roles.remove(RoleKey<Cap> { owner })
+}
+
+/// Remove a `Cap` from the `owner`.
+fun remove_witness_minter_cap<T>(
+    treasury: &mut ControlledTreasury<T>,
+    owner: std::ascii::String,
+): MinterCap {
+    treasury.roles.remove(WitnessRoleKey<MinterCap> { owner })
 }
 
 /// Do all the checks to the decoded payload.
