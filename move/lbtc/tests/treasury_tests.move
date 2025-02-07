@@ -1200,7 +1200,7 @@ public fun test_redeem_amount_below_dust_limit() {
 
 // === V2 tests ===
 use consortium::consortium::{Self, Consortium};
-use bascule::bascule::{Self, Bascule};
+use bascule::bascule::{Self, Bascule, BasculeOwnerCap};
 use std::type_name;
 
 
@@ -1226,7 +1226,7 @@ fun init_bascule(ts: &mut Scenario): Bascule {
     ts.next_tx(TREASURY_ADMIN);
     let mut bascule: Bascule = ts.take_shared();
     let witness_type = type_name::get<LBTCWitness>();
-    let basculeOwnerCap :bascule::BasculeOwnerCap = ts.take_from_sender();
+    let basculeOwnerCap : BasculeOwnerCap = ts.take_from_sender();
     bascule::add_withdrawal_validator(&basculeOwnerCap, &mut bascule, witness_type.into_string(), ts.ctx());
     bascule::update_validate_threshold(&basculeOwnerCap, &mut bascule, 200000000, ts.ctx());
     ts.return_to_sender(basculeOwnerCap);
@@ -1291,6 +1291,7 @@ fun test_autoclaim() {
     treasury::set_fee_action_bytes<TREASURY_TESTS>(&mut treasury, 2171980436, ts.ctx());
     treasury::set_chain_id<TREASURY_TESTS>(&mut treasury, 452312848583266388373324160190187140051835877600158453279131187531808459402, ts.ctx());
     treasury::toggle_bascule_check<TREASURY_TESTS>(&mut treasury, ts.ctx());
+
     let operator_cap = treasury::new_operator_cap();
     treasury.add_capability<TREASURY_TESTS, OperatorCap>(TREASURY_ADMIN, operator_cap, ts.ctx());
     treasury::set_mint_fee<TREASURY_TESTS>(&mut treasury, 100000000, ts.ctx());
