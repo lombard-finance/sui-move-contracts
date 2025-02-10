@@ -34,6 +34,7 @@ use sui::event;
 use sui::bcs;
 use sui::dynamic_field as df;
 use sui::clock::Clock;
+use sui::hash::blake2b256;
 use consortium::consortium::{Self, Consortium};
 use consortium::payload_decoder;
 use bascule::bascule::{Self, Bascule};
@@ -88,6 +89,8 @@ const EFeeGreaterThanAmount: u64 = 22;
 const ENoChainIdCheck: u64 = 23;
 // Invalid user signature for fee payload
 const EInvalidUserSignature: u64 = 24;
+// Fee payload signature public key doesn't match mint payload recipient
+const ERecipientPublicKeyMismatch: u64 = 25;
 
 /// Represents a controlled treasury for managing a regulated coin.
 public struct ControlledTreasury<phantom T> has key {
@@ -525,7 +528,7 @@ public fun mint_with_fee<T>(
     mint_payload: vector<u8>,
     proof: vector<u8>,
     fee_payload: vector<u8>,
-    user_signature: vector<u8>,
+    mut user_signature: vector<u8>,
     user_public_key: vector<u8>,
     clock: &Clock,
     ctx: &mut TxContext,
@@ -545,9 +548,6 @@ public fun mint_with_fee<T>(
         txid_u256, 
         vout
     ) = payload_decoder::decode_mint_payload(mint_payload);
-
-    // print the recipient address
-    debug::print(&to);
     
     let (
         amount, 
@@ -555,16 +555,12 @@ public fun mint_with_fee<T>(
         index
     ) = assert_decoded_payload<T>(action, to_chain, to, amount_u256, txid_u256, vout, treasury, bascule);
     
-    // print the recovered public key
-    let recovered = ecdsa_k1::secp256k1_ecrecover(
-        &user_signature, 
-        &fee_payload, 
-        1
-    );
-    debug::print(&recovered);
-    
     // Validate the fee payload with the user signature
     assert!(pk_util::validate_signature(user_signature, user_public_key, &fee_payload) == true, EInvalidUserSignature);
+
+    // Ensure user public key matches mint action recipient.
+    let hashed_recipient = blake2b256(&user_public_key);
+    assert!(to.to_bytes() == hashed_recipient, ERecipientPublicKeyMismatch);
 
     let (fee_action, fee_u256, expiry_u256) = payload_decoder::decode_fee_payload(fee_payload);
     let fee = fee_u256.try_as_u64().extract();
