@@ -11,6 +11,7 @@ use sui::test_scenario::{Self as ts, Scenario};
 use sui::test_utils;
 
 const EWrongMintAmount: u64 = 0;
+const EWrongPauseState: u64 = 1;
 
 const TREASURY_ADMIN: address = @0x3;
 const MINT_LIMIT: u64 = 1000000;
@@ -77,6 +78,30 @@ fun test_return_native() {
     ts.end();
 }
 
+#[test]
+fun test_enable_disable_pause() {
+    // Start a test transaction scenario
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let treasury = create_test_currency(&mut ts);
+
+    // Enable pause
+    ts.next_tx(TREASURY_ADMIN);
+    let cap = ts.take_from_sender<AdminCap>();
+    let mut vault: Vault<WTEST> = ts.take_shared();
+    bridge::enable_pause(&cap, &mut vault);
+    assert!(vault.is_paused_enabled() == true, EWrongPauseState);
+
+    // Disable pause
+    ts.next_tx(TREASURY_ADMIN);
+    bridge::disable_pause(&cap, &mut vault);
+    assert!(vault.is_paused_enabled() == false, EWrongPauseState);
+    ts.return_to_sender(cap);
+    test_utils::destroy(treasury);
+    ts::return_shared(vault);
+
+    ts.end();
+}
+
 #[test, expected_failure(abort_code = bridge::EInsufficientBalance)]
 fun test_insiffucient_vault_balance() {
     // Start a test transaction scenario
@@ -95,6 +120,63 @@ fun test_insiffucient_vault_balance() {
     let wrapped_coin = ts.take_from_sender<Coin<WTEST>>();
     assert!(wrapped_coin.value() == 1000, EWrongMintAmount);
     ts.return_to_sender(wrapped_coin);
+    test_utils::destroy(treasury);
+    ts::return_shared(denylist);
+    ts::return_shared(vault);
+
+    ts.end();
+}
+
+#[test, expected_failure(abort_code = bridge::EVaultIsPaused)]
+fun test_claim_when_pause_enabled() {
+    // Start a test transaction scenario
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    // Whitelist the witness
+    ts.next_tx(TREASURY_ADMIN);
+    let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
+    let witness_type = type_name::get<BridgeWitness>();
+    treasury.add_witness_mint_capability<BRIDGE_TESTS>(witness_type.into_string(), minter_cap, ts.ctx());
+    // enable pause
+    let cap = ts.take_from_sender<AdminCap>();
+    let mut vault: Vault<WTEST> = ts.take_shared();
+    bridge::enable_pause(&cap, &mut vault);
+    ts.return_to_sender(cap);
+
+    // Claim the native token by locking the wrapped one
+    ts.next_tx(TREASURY_ADMIN);
+    let denylist: DenyList = ts.take_shared();
+    let wrapped_coin = coin::mint_for_testing<WTEST>(1000, ts.ctx());
+    bridge::claim_native<WTEST, BRIDGE_TESTS>(wrapped_coin, &mut vault, &mut treasury, &denylist, ts.ctx());
+    test_utils::destroy(treasury);
+    ts::return_shared(denylist);
+    ts::return_shared(vault);
+
+    ts.end();
+}
+
+#[test, expected_failure(abort_code = bridge::EVaultIsPaused)]
+fun test_return_when_pause_enabled() {
+    // Start a test transaction scenario
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    // Fill the vault with the wrapped token
+    ts.next_tx(TREASURY_ADMIN);
+    let mut vault: Vault<WTEST> = ts.take_shared();
+    bridge::fill_vault(&mut vault, balance::create_for_testing(1000));
+    // enable pause
+    let cap = ts.take_from_sender<AdminCap>();
+    bridge::enable_pause(&cap, &mut vault);
+    ts.return_to_sender(cap);
+
+    // Burn the native token to unlock the wrapped one
+    ts.next_tx(TREASURY_ADMIN);
+    let denylist: DenyList = ts.take_shared();
+    let coin = ts.take_from_sender<Coin<BRIDGE_TESTS>>();
+    let wrapped_coin = bridge::return_native<BRIDGE_TESTS, WTEST>(coin, &mut vault, &mut treasury, ts.ctx());
+    transfer::public_transfer(wrapped_coin, ts.ctx().sender());
     test_utils::destroy(treasury);
     ts::return_shared(denylist);
     ts::return_shared(vault);
