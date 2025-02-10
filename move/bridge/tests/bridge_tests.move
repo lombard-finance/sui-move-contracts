@@ -1,7 +1,7 @@
 #[test_only]
 module bridge::bridge_tests;
 
-use bridge::bridge::{Self, Vault, AdminCap, BridgeWitness};
+use bridge::bridge::{Self, Vault, AdminCap, PauserCap, BridgeWitness};
 use lbtc::treasury::{Self, ControlledTreasury};
 use std::type_name;
 use sui::coin::{Self, Coin};
@@ -14,6 +14,7 @@ const EWrongMintAmount: u64 = 0;
 const EWrongPauseState: u64 = 1;
 
 const TREASURY_ADMIN: address = @0x3;
+const PAUSER: address = @0xFACE;
 const MINT_LIMIT: u64 = 1000000;
 
 public struct BRIDGE_TESTS has drop {}
@@ -84,18 +85,23 @@ fun test_enable_disable_pause() {
     let mut ts = ts::begin(TREASURY_ADMIN);
     let treasury = create_test_currency(&mut ts);
 
-    // Enable pause
+    // Assign PauserCap
     ts.next_tx(TREASURY_ADMIN);
     let cap = ts.take_from_sender<AdminCap>();
     let mut vault: Vault<WTEST> = ts.take_shared();
-    bridge::enable_pause(&cap, &mut vault);
+    let pauser_cap = bridge::new_pauser_cap();
+    bridge::add_capability(&cap, &mut vault, PAUSER, pauser_cap);
+    ts.return_to_sender(cap);
+
+    // Enable pause
+    ts.next_tx(PAUSER);
+    bridge::enable_pause(&mut vault, ts.ctx());
     assert!(vault.is_paused_enabled() == true, EWrongPauseState);
 
     // Disable pause
-    ts.next_tx(TREASURY_ADMIN);
-    bridge::disable_pause(&cap, &mut vault);
+    ts.next_tx(PAUSER);
+    bridge::disable_pause(&mut vault, ts.ctx());
     assert!(vault.is_paused_enabled() == false, EWrongPauseState);
-    ts.return_to_sender(cap);
     test_utils::destroy(treasury);
     ts::return_shared(vault);
 
@@ -135,14 +141,18 @@ fun test_claim_when_pause_enabled() {
 
     // Whitelist the witness
     ts.next_tx(TREASURY_ADMIN);
+    let mut vault: Vault<WTEST> = ts.take_shared();
     let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
     let witness_type = type_name::get<BridgeWitness>();
     treasury.add_witness_mint_capability<BRIDGE_TESTS>(witness_type.into_string(), minter_cap, ts.ctx());
-    // enable pause
     let cap = ts.take_from_sender<AdminCap>();
-    let mut vault: Vault<WTEST> = ts.take_shared();
-    bridge::enable_pause(&cap, &mut vault);
+    let pauser_cap = bridge::new_pauser_cap();
+    bridge::add_capability(&cap, &mut vault, PAUSER, pauser_cap);
     ts.return_to_sender(cap);
+    
+    // enable pause
+    ts.next_tx(PAUSER);
+    bridge::enable_pause(&mut vault, ts.ctx());
 
     // Claim the native token by locking the wrapped one
     ts.next_tx(TREASURY_ADMIN);
@@ -165,11 +175,15 @@ fun test_return_when_pause_enabled() {
     // Fill the vault with the wrapped token
     ts.next_tx(TREASURY_ADMIN);
     let mut vault: Vault<WTEST> = ts.take_shared();
-    bridge::fill_vault(&mut vault, balance::create_for_testing(1000));
-    // enable pause
     let cap = ts.take_from_sender<AdminCap>();
-    bridge::enable_pause(&cap, &mut vault);
+    bridge::fill_vault(&mut vault, balance::create_for_testing(1000));
+    let pauser_cap = bridge::new_pauser_cap();
+    bridge::add_capability(&cap, &mut vault, PAUSER, pauser_cap);
     ts.return_to_sender(cap);
+    
+    // enable pause
+    ts.next_tx(PAUSER);
+    bridge::enable_pause(&mut vault, ts.ctx());
 
     // Burn the native token to unlock the wrapped one
     ts.next_tx(TREASURY_ADMIN);
@@ -179,6 +193,36 @@ fun test_return_when_pause_enabled() {
     transfer::public_transfer(wrapped_coin, ts.ctx().sender());
     test_utils::destroy(treasury);
     ts::return_shared(denylist);
+    ts::return_shared(vault);
+
+    ts.end();
+}
+
+#[test, expected_failure(abort_code = bridge::ENoAuthRecord)]
+fun test_enable_pause_no_auth() {
+    // Start a test transaction scenario
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let treasury = create_test_currency(&mut ts);
+
+    // Assign PauserCap
+    ts.next_tx(TREASURY_ADMIN);
+    let mut vault: Vault<WTEST> = ts.take_shared();
+    let cap = ts.take_from_sender<AdminCap>();
+    let pauser_cap = bridge::new_pauser_cap();
+    bridge::add_capability(&cap, &mut vault, PAUSER, pauser_cap);
+    ts.return_to_sender(cap);
+
+    // Remove PauserCap
+    ts.next_tx(TREASURY_ADMIN);
+    let cap = ts.take_from_sender<AdminCap>();
+    bridge::remove_capability<WTEST, PauserCap>(&cap, &mut vault, PAUSER);
+    ts.return_to_sender(cap);
+
+    // enable pause
+    ts.next_tx(PAUSER);
+    bridge::enable_pause(&mut vault, ts.ctx());
+
+    test_utils::destroy(treasury);
     ts::return_shared(vault);
 
     ts.end();
