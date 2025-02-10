@@ -16,10 +16,18 @@ public enum KeyType {
 
 /// Validates a signature.
 public fun validate_signature(user_signature: vector<u8>, public_key: vector<u8>, message: &vector<u8>): bool {
+    // Since the key will contain a prefix for ID purposes, we need to chop it off to verify properly.
+    let mut chopped_pk = vector::empty();
+    let mut i = 1;
+    while (i < public_key.length()) {
+        chopped_pk.push_back(public_key[i]);
+        i = i + 1;
+    };
+
     match (get_key_type(&public_key)) {
-        KeyType::Ed25519 => sui::ed25519::ed25519_verify(&user_signature, &public_key, message),
-        KeyType::Secp256k1 => sui::ecdsa_k1::secp256k1_verify(&user_signature, &public_key, message, 1),
-        KeyType::Secp256r1 => sui::ecdsa_r1::secp256r1_verify(&user_signature, &public_key, message, 1),
+        KeyType::Ed25519 => sui::ed25519::ed25519_verify(&user_signature, &chopped_pk, message),
+        KeyType::Secp256k1 => sui::ecdsa_k1::secp256k1_verify(&user_signature, &chopped_pk, message, 1),
+        KeyType::Secp256r1 => sui::ecdsa_r1::secp256r1_verify(&user_signature, &chopped_pk, message, 1),
         KeyType::Invalid => false,
     }
 }
