@@ -119,6 +119,50 @@ fun test_global_pause_is_disabled_for_next_epoch() {
 }
 
 #[test]
+fun test_global_pause_v2() {
+    // Start a test transaction scenario
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury= create_test_currency(&mut ts);
+
+    // Assign PauserCap to the multisig address
+    ts.next_tx(TREASURY_ADMIN);
+    let pauser_cap = treasury::new_pauser_cap();
+    treasury.add_capability<TREASURY_TESTS, PauserCap>(TREASURY_ADMIN, pauser_cap, ts.ctx());
+
+    // Enable global pause v2
+    ts.next_tx(TREASURY_ADMIN);
+    let mut denylist: DenyList = ts.take_shared();
+    treasury::enable_global_pause_v2(&mut treasury, &mut denylist, ts.ctx());
+
+    // Ensure the global pause is active for next epoch
+    ts.next_epoch(TREASURY_ADMIN);
+    assert!(
+        coin::deny_list_v2_is_global_pause_enabled_current_epoch<TREASURY_TESTS>(
+            &denylist,
+            ts.ctx()
+        ),
+    );
+
+    // Disable global pause v2
+    ts.next_tx(TREASURY_ADMIN);
+    treasury::disable_global_pause_v2(&mut treasury, &mut denylist, ts.ctx());
+
+    // Ensure the global pause is active for next epoch
+    ts.next_epoch(TREASURY_ADMIN);
+    assert!(
+        !coin::deny_list_v2_is_global_pause_enabled_current_epoch<TREASURY_TESTS>(
+            &denylist,
+            ts.ctx()
+        ),
+    );
+
+    test_utils::destroy(treasury);
+    ts::return_shared(denylist);
+
+    ts.end();
+}
+
+#[test]
 fun test_mint_with_witness() {
     let mut ts = ts::begin(TREASURY_ADMIN);
     let mut treasury = create_test_currency(&mut ts);
