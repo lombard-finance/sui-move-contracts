@@ -706,6 +706,38 @@ public fun disable_global_pause<T>(
     coin::deny_list_v2_disable_global_pause(deny_list, &mut treasury.deny_cap, ctx);
 }
 
+/// Enables the global pause for the coin.
+/// Requires: `PauserCap`
+///
+/// Aborts if:
+/// - Sender does not have the required `PauserCap`.
+public fun enable_global_pause_v2<T>(
+    treasury: &mut ControlledTreasury<T>,
+    deny_list: &mut DenyList,
+    ctx: &mut TxContext,
+) {
+    // Ensure the sender has PauserCap
+    assert!(treasury.has_cap<T, PauserCap>(ctx.sender()), ENoAuthRecord);
+
+    coin::deny_list_v2_enable_global_pause(deny_list, &mut treasury.deny_cap, ctx);
+}
+
+/// Disables the global pause for the coin.
+/// Requires the sender to have the `PauserCap` assigned.
+///
+/// Aborts if:
+/// - Sender does not have the required `PauserCap`.
+public fun disable_global_pause_v2<T>(
+    treasury: &mut ControlledTreasury<T>,
+    deny_list: &mut DenyList,
+    ctx: &mut TxContext,
+) {
+    // Ensure the sender has PauserCap
+    assert!(treasury.has_cap<T, PauserCap>(ctx.sender()), ENoAuthRecord);
+
+    coin::deny_list_v2_disable_global_pause(deny_list, &mut treasury.deny_cap, ctx);
+}
+
 // === Utilities ===
 
 /// Sets the action bytes for mint payload.
