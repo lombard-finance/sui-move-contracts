@@ -73,7 +73,6 @@ fun init(ctx: &mut TxContext) {
 }
 
 /// Validates that the payload has not been used and that the signatures are valid.
-/// If all the checks are passed, the hash of the payload is stored in the used_payloads table.
 public fun validate_payload(
     consortium: &mut Consortium,
     payload: vector<u8>,
