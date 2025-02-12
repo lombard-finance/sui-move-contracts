@@ -35,9 +35,11 @@ use sui::bcs;
 use sui::dynamic_field as df;
 use sui::clock::Clock;
 use sui::hash::blake2b256;
+use sui::table::{Self, Table};
 use consortium::consortium::{Self, Consortium};
 use consortium::payload_decoder;
 use bascule::bascule::{Self, Bascule};
+use std::hash;
 
 /// No authorization record exists for the action.
 const ENoAuthRecord: u64 = 0;
@@ -91,6 +93,10 @@ const ENoChainIdCheck: u64 = 23;
 const EInvalidUserSignature: u64 = 24;
 // Fee payload signature public key doesn't match mint payload recipient
 const ERecipientPublicKeyMismatch: u64 = 25;
+/// Payload has already been used.
+const EUsedPayload: u64 = 26;
+/// Used payload table does not exist
+const ENoUsedPayloads: u64 = 27;
 
 /// Represents a controlled treasury for managing a regulated coin.
 public struct ControlledTreasury<phantom T> has key {
@@ -492,8 +498,11 @@ public fun mint<T>(
 ) {
     // Ensure global pause is not enabled before continuing
     assert!(!is_global_pause_enabled<T>(denylist), EMintNotAllowed);
+    // Check if the payload is used
+    let hash = hash::sha2_256(payload);
+    assert!(!treasury.is_payload_used(hash), EUsedPayload);
     // Validate the payload with consortium, if invalid, consortium will throw an error
-    consortium::validate_and_store_payload(consortium, payload, proof);
+    consortium::validate_payload(consortium, payload, proof);
 
     let (
         action, 
@@ -508,6 +517,11 @@ public fun mint<T>(
         tx_id, 
         index
     ) = assert_decoded_payload<T>(action, to_chain, to, amount_u256, txid_u256, vout, treasury, bascule);
+    
+    // Store the used payload
+    let used_payloads = 
+        df::borrow_mut<vector<u8>, Table<vector<u8>, bool>>(&mut treasury.id, b"used_payloads");
+    used_payloads.add(hash, true);
 
     // Emit the event and mint + transfer the coins
     event::emit(MintEvent<T> { amount, to, tx_id, index });
@@ -515,8 +529,6 @@ public fun mint<T>(
     transfer::public_transfer(new_coin, to);
 }
 
-use std::debug;
-use sui::ecdsa_k1;
 /// Mints and transfers coins to the address defined in the decoded payload.
 /// The payload with the given proof is validated by the consortium before minting.
 /// A fee payload is given which contains the fee approval signed by the user
@@ -528,7 +540,7 @@ public fun mint_with_fee<T>(
     mint_payload: vector<u8>,
     proof: vector<u8>,
     fee_payload: vector<u8>,
-    mut user_signature: vector<u8>,
+    user_signature: vector<u8>,
     user_public_key: vector<u8>,
     clock: &Clock,
     ctx: &mut TxContext,
@@ -537,8 +549,11 @@ public fun mint_with_fee<T>(
     assert!(treasury.has_cap<T, ClaimerCap>(ctx.sender()), ENoAuthRecord);
     // Ensure global pause is not enabled before continuing
     assert!(!is_global_pause_enabled<T>(denylist), EMintNotAllowed);
+    // Check if the payload is used
+    let hash = hash::sha2_256(mint_payload);
+    assert!(!treasury.is_payload_used(hash), EUsedPayload);
     // Validate the payload with consortium, if invalid, consortium will throw an error
-    consortium::validate_and_store_payload(consortium, mint_payload, proof);
+    consortium::validate_payload(consortium, mint_payload, proof);
 
     let (
         action, 
@@ -575,6 +590,11 @@ public fun mint_with_fee<T>(
         mint_fee = fee;
     };
     let final_amount = amount - mint_fee;
+
+    // Store the used payload
+    let used_payloads = 
+        df::borrow_mut<vector<u8>, Table<vector<u8>, bool>>(&mut treasury.id, b"used_payloads");
+    used_payloads.add(hash, true);
 
     // Emit the event and mint + transfer the coins
     event::emit(MintEvent<T> { amount: final_amount, to, tx_id, index });
@@ -750,6 +770,17 @@ public fun disable_global_pause_v2<T>(
 }
 
 // === Utilities ===
+
+/// Set used payload table
+/// This function should be called once by the admin when the upgrade happens
+public fun set_payload_table<T>(
+    treasury: &mut ControlledTreasury<T>,
+    ctx: &mut TxContext,
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    assert!(!df::exists_(&treasury.id, b"used_payloads"), ERecordExists);
+    df::add(&mut treasury.id, b"used_payloads", table::new<vector<u8>, bool>(ctx));
+}
 
 /// Sets the action bytes for mint payload.
 public fun set_mint_action_bytes<T>(
@@ -941,6 +972,13 @@ public fun is_bascule_check_enabled<T>(
     assert!(df::exists_(&treasury.id, b"bascule_check"), ENoBasculeCheck);
     let check = df::borrow(&treasury.id, b"bascule_check");
     *check
+}
+
+/// Check if the payload has been used.
+public fun is_payload_used<T>(treasury: &ControlledTreasury<T>, hash: vector<u8>): bool {
+    assert!(df::exists_(&treasury.id, b"used_payloads"), ENoUsedPayloads);
+    let used_payloads = df::borrow<vector<u8>, Table<vector<u8>, bool>>(&treasury.id, b"used_payloads");
+    used_payloads.contains(hash)
 }
 
 /// Returns the mint action bytes for the treasury in u32.

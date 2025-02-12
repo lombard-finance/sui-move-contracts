@@ -45,9 +45,7 @@ fun test_consortium_validation() {
     scenario.next_tx(USER);
     {
         let mut consortium = ts::take_shared<Consortium>(scenario);
-        assert!(!consortium.is_payload_used(HASH1), EInvalidPayload);
-        consortium::validate_and_store_payload(&mut consortium, PAYLOAD1, SIGNATURES1);
-        assert!(consortium.is_payload_used(HASH1), EInvalidPayload);
+        consortium::validate_payload(&mut consortium, PAYLOAD1, SIGNATURES1);
         ts::return_shared<Consortium>(consortium); 
     };
     ts::end(scenario_val);
@@ -122,9 +120,7 @@ fun test_next_validator_set_and_validation() {
     scenario.next_tx(USER);
     {
         let mut consortium = ts::take_shared<Consortium>(scenario);
-        assert!(!consortium.is_payload_used(HASH2), EInvalidPayload);
-        consortium::validate_and_store_payload(&mut consortium, PAYLOAD2, SIGNATURES2);
-        assert!(consortium.is_payload_used(HASH2), EInvalidPayload);
+        consortium::validate_payload(&mut consortium, PAYLOAD2, SIGNATURES2);
         ts::return_shared<Consortium>(consortium); 
     };
     
@@ -214,39 +210,6 @@ fun test_set_validators_unauthorized() {
     ts::end(scenario_val);
 }
 
-#[test, expected_failure(abort_code = consortium::EUsedPayload)]
-fun test_used_payload() {
-    // Begin a new test scenario with ADMIN_USER
-    let mut scenario_val = ts::begin(ADMIN_USER);
-    let scenario = &mut scenario_val;
-
-    {
-        init_for_testing(scenario.ctx());
-    };
-
-    scenario.next_tx(ADMIN_USER);
-    {
-        let mut consortium = ts::take_shared<Consortium>(scenario);
-        consortium::set_initial_validator_set(&mut consortium, INIT_VALSET, scenario.ctx());
-        ts::return_shared<Consortium>(consortium);
-    };
-
-    scenario.next_tx(ADMIN_USER);
-    {
-        let mut consortium = ts::take_shared<Consortium>(scenario);
-        consortium::validate_and_store_payload(&mut consortium, PAYLOAD1, SIGNATURES1);
-        ts::return_shared<Consortium>(consortium);
-    };
-
-    scenario.next_tx(USER);
-    {
-        let mut consortium = ts::take_shared<Consortium>(scenario);
-        consortium::validate_and_store_payload(&mut consortium, PAYLOAD1, SIGNATURES1);
-        ts::return_shared<Consortium>(consortium);
-    };
-    ts::end(scenario_val);
-}
-
 #[test, expected_failure(abort_code = consortium::EInvalidPayloadLength)]
 fun test_invalid_payload_length() {
     // Begin a new test scenario with ADMIN_USER
@@ -268,7 +231,7 @@ fun test_invalid_payload_length() {
     scenario.next_tx(ADMIN_USER);
     {
         let mut consortium = ts::take_shared<Consortium>(scenario);
-        consortium::validate_and_store_payload(&mut consortium, invalid_payload, SIGNATURES1);
+        consortium::validate_payload(&mut consortium, invalid_payload, SIGNATURES1);
         ts::return_shared<Consortium>(consortium);
     };
 
@@ -295,7 +258,7 @@ fun test_invalid_payload() {
     scenario.next_tx(ADMIN_USER);
     {
         let mut consortium = ts::take_shared<Consortium>(scenario);
-        consortium::validate_and_store_payload(&mut consortium, PAYLOAD2, SIGNATURES1);
+        consortium::validate_payload(&mut consortium, PAYLOAD2, SIGNATURES1);
         ts::return_shared<Consortium>(consortium);
     };
 
@@ -440,7 +403,7 @@ fun test_invalid_signature() {
     scenario.next_tx(ADMIN_USER);
     {
         let mut consortium = ts::take_shared<Consortium>(scenario);
-        consortium::validate_and_store_payload(&mut consortium, payload, proof);
+        consortium::validate_payload(&mut consortium, payload, proof);
         ts::return_shared<Consortium>(consortium);
     };
 

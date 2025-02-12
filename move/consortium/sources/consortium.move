@@ -11,36 +11,34 @@ const EUnauthorized: u64 = 0;
 const EAdminAlreadyExists: u64 = 1;
 /// Admin does not exist.
 const EAdminDoesNotExist: u64 = 2;
-/// Payload has already been used.
-const EUsedPayload: u64 = 3;
 /// Invalid payload.
-const EInvalidPayload: u64 = 4;
+const EInvalidPayload: u64 = 3;
 /// Admin vector should contain at least one address.
-const ECannotRemoveLastAdmin: u64 = 5;
+const ECannotRemoveLastAdmin: u64 = 4;
 /// Validator set does not exist for the given epoch.
-const EValidatorSetDoesNotExist: u64 = 6;
+const EValidatorSetDoesNotExist: u64 = 5;
 /// Validator set has already been initialized.
-const EAlreadyInitialized: u64 = 7;
+const EAlreadyInitialized: u64 = 6;
 /// Invalid action.
-const EInvalidAction: u64 = 8;
+const EInvalidAction: u64 = 7;
 /// Invalid validator set size.
-const EInvalidValidatorSetSize: u64 = 9;
+const EInvalidValidatorSetSize: u64 = 8;
 /// Invalid threshold.
-const EInvalidThreshold: u64 = 10;
+const EInvalidThreshold: u64 = 9;
 /// Invalid validators and weights.
-const EInvalidValidatorsAndWeights: u64 = 11;
+const EInvalidValidatorsAndWeights: u64 = 10;
 /// Weights cannot be zero.
-const EZeroWeight: u64 = 12;
+const EZeroWeight: u64 = 11;
 /// Weights are lower than the threshold.
-const EWeightsLowerThanThreshold: u64 = 13;
+const EWeightsLowerThanThreshold: u64 = 12;
 /// Epoch is invalid.
-const EInvalidEpoch: u64 = 14;
+const EInvalidEpoch: u64 = 13;
 /// Payload length is invalid.
-const EInvalidPayloadLength: u64 = 15;
+const EInvalidPayloadLength: u64 = 14;
 /// Payload hash mismatch.
-const EHashMismatch: u64 = 16;
+const EHashMismatch: u64 = 15;
 /// Invalid signature length.
-const EInvalidSignatureLength: u64 = 17;
+const EInvalidSignatureLength: u64 = 16;
 
 // === Constants ===
 const MIN_VALIDATOR_SET_SIZE: u64 = 1;
@@ -52,7 +50,6 @@ public struct Consortium has key {
     id: UID,
     epoch: u256,
     validator_set: Table<u256, ValidatorSet>,
-    used_payloads: Table<vector<u8>, bool>,
     valset_action: u32,
     admins: vector<address>,
 }
@@ -69,7 +66,6 @@ fun init(ctx: &mut TxContext) {
         id: object::new(ctx),
         epoch: 0,
         validator_set: table::new<u256, ValidatorSet>(ctx),
-        used_payloads: table::new<vector<u8>, bool>(ctx),
         valset_action: 1252728175,
         admins: vector::singleton(ctx.sender()),
     };
@@ -78,21 +74,19 @@ fun init(ctx: &mut TxContext) {
 
 /// Validates that the payload has not been used and that the signatures are valid.
 /// If all the checks are passed, the hash of the payload is stored in the used_payloads table.
-public fun validate_and_store_payload(
+public fun validate_payload(
     consortium: &mut Consortium,
     payload: vector<u8>,
     proof: vector<u8>,
 ) {
     // Payload should consist of 164 bytes (160 for message and 4 for the action)
     assert!(payload.length() == 164, EInvalidPayloadLength);
-    let hash = hash::sha2_256(payload);
-    assert!(!consortium.is_payload_used(hash), EUsedPayload);
     // get the signatures from the proof
     let signatures = payload_decoder::decode_signatures(proof);
     // get the validator set for the current epoch
     let signers = consortium.get_validator_set(consortium.epoch);
+    let hash = hash::sha2_256(payload);
     assert!(validate_signatures(signers.pub_keys, signatures, signers.weights, signers.weight_threshold, payload, hash), EInvalidPayload);
-    consortium.used_payloads.add(hash, true);
 }
 
 // Increments the epoch and updates the validator set.
@@ -173,11 +167,6 @@ public fun remove_admin(
 public fun get_validator_set(consortium: &Consortium, epoch: u256): &ValidatorSet {
     assert!(consortium.validator_set.contains(epoch), EValidatorSetDoesNotExist);
     consortium.validator_set.borrow(epoch)
-}
-
-/// Check if the payload has been used.
-public fun is_payload_used(consortium: &Consortium, hash: vector<u8>): bool {
-    consortium.used_payloads.contains(hash)
 }
 
 /// Get the current epoch
