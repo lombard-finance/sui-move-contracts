@@ -39,6 +39,8 @@ const EInvalidPayloadLength: u64 = 14;
 const EHashMismatch: u64 = 15;
 /// Invalid signature length.
 const EInvalidSignatureLength: u64 = 16;
+/// Invalid Validator Public key length.
+const EInvalidValidatorPubKeyLength: u64 = 17;
 
 // === Constants ===
 const MIN_VALIDATOR_SET_SIZE: u64 = 1;
@@ -262,6 +264,7 @@ fun assert_and_configure_validator_set(
     let mut sum = 0;
     while (i < weights.length()) {
         assert!(weights[i] > 0, EZeroWeight);
+        assert!(validators[i].length() == 65, EInvalidValidatorPubKeyLength);
         sum = sum + weights[i];
         i = i + 1;
     };
