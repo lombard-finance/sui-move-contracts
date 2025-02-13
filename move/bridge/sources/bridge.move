@@ -15,6 +15,8 @@ const EVaultIsPaused: u64 = 1;
 const ENoAuthRecord: u64 = 2;
 /// Attempt to assign a role that already exists.
 const ERecordExists: u64 = 3;
+/// Error when trying to return a zero amount coin
+const EZeroAmountCoin: u64 = 4;
 
 // Vault to store the wrapped token
 public struct Vault<phantom WT> has key {
@@ -44,6 +46,14 @@ public struct WithdrawEvent<phantom WT> has copy, drop {
 public struct DepositEvent<phantom WT> has copy, drop {
     amount: u64,
     address: address
+}
+
+public struct CapabilityAssignedEvent<phantom WT, phantom C> has copy, drop {
+    owner: address
+}
+
+public struct CapabilityRemovedEvent<phantom WT, phantom C> has copy, drop {
+    owner: address
 }
 
 // Witness to mint the native token
@@ -80,7 +90,7 @@ public fun claim_native<WT, T>(
     denylist: &DenyList,
     ctx: &mut TxContext,
 ) {
-    assert!(vault.is_paused == false, EVaultIsPaused);
+    assert!(!vault.is_paused, EVaultIsPaused);
     let witness = BridgeWitness {};
     let amount = coin.value();
     vault.balance.join(coin.into_balance());
@@ -96,8 +106,9 @@ public fun return_native<T, WT>(
     treasury: &mut ControlledTreasury<T>,
     ctx: &mut TxContext,
 ): Coin<WT> {
-    assert!(vault.is_paused == false, EVaultIsPaused);
-    let amount= coin.value();
+    assert!(!vault.is_paused, EVaultIsPaused);
+    let amount = coin.value();
+    assert!(amount > 0, EZeroAmountCoin);
     assert!(vault.balance.value() >= amount, EInsufficientBalance);
     let coin_to_deposit = vault.balance.split(amount).into_coin(ctx);
     treasury::burn(treasury, coin, ctx);
@@ -120,7 +131,7 @@ public fun add_capability<WT, C: store + drop>(
     cap: C,
 ) {
     assert!(!vault.has_cap<WT, C>(owner), ERecordExists);
-
+    event::emit(CapabilityAssignedEvent<WT, C> { owner });
     vault.add_cap(owner, cap);
 }
 
@@ -136,7 +147,7 @@ public fun remove_capability<WT, C: store + drop>(
     owner: address,
 ) {
     assert!(vault.has_cap<WT, C>(owner), ENoAuthRecord);
-
+    event::emit(CapabilityRemovedEvent<WT, C> { owner });
     let _: C = vault.remove_cap(owner);
 }
 
