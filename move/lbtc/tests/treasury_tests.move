@@ -1293,8 +1293,9 @@ fun test_manual_claim() {
     treasury::set_mint_action_bytes<TREASURY_TESTS>(&mut treasury, 4075241340, ts.ctx());
     treasury::set_chain_id<TREASURY_TESTS>(&mut treasury, 452312848583266388373324160190187140051835877600158453279131187531808459402, ts.ctx());
     treasury::toggle_bascule_check<TREASURY_TESTS>(&mut treasury, ts.ctx());
+    treasury::set_payload_table<TREASURY_TESTS>(&mut treasury, ts.ctx());
 
-    // Mint and transfer tokens using the multisig address
+    // Mint and transfer tokens
     ts.next_tx(USER2);
     treasury::mint<TREASURY_TESTS>(
         &mut treasury,
@@ -1335,6 +1336,7 @@ fun test_autoclaim() {
     treasury::set_fee_action_bytes<TREASURY_TESTS>(&mut treasury, 2171980436, ts.ctx());
     treasury::set_chain_id<TREASURY_TESTS>(&mut treasury, 452312848583266388373324160190187140051835877600158453279131187531808459402, ts.ctx());
     treasury::toggle_bascule_check<TREASURY_TESTS>(&mut treasury, ts.ctx());
+    treasury::set_payload_table<TREASURY_TESTS>(&mut treasury, ts.ctx());
 
     let operator_cap = treasury::new_operator_cap();
     treasury.add_capability<TREASURY_TESTS, OperatorCap>(TREASURY_ADMIN, operator_cap, ts.ctx());
@@ -1344,7 +1346,7 @@ fun test_autoclaim() {
 
     let mut clock = clock::create_for_testing(ts.ctx());
     clock.set_for_testing(1736941840000);
-    // Mint and transfer tokens using the multisig address
+    // Mint and transfer tokens
     ts.next_tx(USER2);
     treasury::mint_with_fee<TREASURY_TESTS>(
         &mut treasury,
@@ -1365,6 +1367,55 @@ fun test_autoclaim() {
     ts::return_shared<Consortium>(consortium);
     ts::return_shared<Bascule>(bascule);
     clock.destroy_for_testing();
+
+    ts.end();
+}
+
+#[test, expected_failure(abort_code = lbtc::treasury::EUsedPayload)]
+fun test_claim_used_payload() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+    let denylist: DenyList = ts.take_shared();
+
+    let mut consortium = init_consortium(&mut ts, INIT_VALSET);
+    let mut bascule: Bascule = init_bascule(&mut ts);
+    
+    let payload: vector<u8> = x"f2e73f7c0100000000000000000000000000000000000000000000000000000035834a8a0000000000000000000000003c44cdddb6a900fa2b585dd299e03d12fa4293bc0000000000000000000000000000000000000000000000000000000005f5e10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+    let proof: vector<u8> = x"00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000405b1e71e6cea98724038d2a7a63152c8b423b61908647fd7f4c803380b4fc653c5530ccca1c165dd6877d290a3ca90e30ee9048344fcb63ad52cd4b9bcfa41698";
+
+    ts.next_tx(TREASURY_ADMIN);
+    treasury::set_mint_action_bytes<TREASURY_TESTS>(&mut treasury, 4075241340, ts.ctx());
+    treasury::set_chain_id<TREASURY_TESTS>(&mut treasury, 452312848583266388373324160190187140051835877600158453279131187531808459402, ts.ctx());
+    treasury::toggle_bascule_check<TREASURY_TESTS>(&mut treasury, ts.ctx());
+    treasury::set_payload_table<TREASURY_TESTS>(&mut treasury, ts.ctx());
+
+    // Mint and transfer tokens
+    ts.next_tx(USER2);
+    treasury::mint<TREASURY_TESTS>(
+        &mut treasury,
+        &mut consortium,
+        &denylist,
+        &mut bascule,
+        payload,
+        proof,
+        ts.ctx(),
+    );
+
+    ts.next_tx(TREASURY_ADMIN);
+    treasury::mint<TREASURY_TESTS>(
+        &mut treasury,
+        &mut consortium,
+        &denylist,
+        &mut bascule,
+        payload,
+        proof,
+        ts.ctx(),
+    );
+
+    test_utils::destroy(treasury);
+    ts::return_shared(denylist);
+    ts::return_shared<Consortium>(consortium);
+    ts::return_shared<Bascule>(bascule);
 
     ts.end();
 }
@@ -1423,6 +1474,38 @@ fun test_no_action_bytes() {
     ts.end();
 }
 
+#[test, expected_failure(abort_code = lbtc::treasury::ENoUsedPayloads)]
+fun test_no_used_payloads_table() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let treasury = create_test_currency(&mut ts);
+
+    // Check if used payloads table exist
+    ts.next_tx(TREASURY_ADMIN);
+    assert!(treasury::is_payload_used<TREASURY_TESTS>(&treasury, b"1234"));
+   
+    test_utils::destroy(treasury);
+
+    ts.end();
+}
+
+#[test, expected_failure(abort_code = lbtc::treasury::ERecordExists)]
+fun test_set_used_payloads_twice() {
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+
+    // Check if used payloads table exist
+    ts.next_tx(TREASURY_ADMIN);
+    treasury::set_payload_table<TREASURY_TESTS>(&mut treasury, ts.ctx());
+
+    // Check if used payloads table exist
+    ts.next_tx(TREASURY_ADMIN);
+    treasury::set_payload_table<TREASURY_TESTS>(&mut treasury, ts.ctx());
+   
+    test_utils::destroy(treasury);
+
+    ts.end();
+}
+
 // === Tests with wrong payloads ===
 
 const INIT_VALSET_WRONG_PAYLOAD: vector<u8> = x"4aab1d6f000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000c0000000000000000000000000000000000000000000000000000000000000004104ba5734d8f7091719471e7f7ed6b9df170dc70cc661ca05e688601ad984f068b0d67351e5f06073092499336ab0839ef8a521afd334e53807205fa2f08eec74f4000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000041049d9031e97dd78ff8c15aa86939de9b1e791066a0224e331bc962a2099a7b1f0464b8bbafe1535f2301c72c2cb3535b172da30b02686ab0393d348614f157fbdb00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001";
@@ -1439,6 +1522,7 @@ fun init_and_mint(payload: vector<u8>, proof: vector<u8>) {
     treasury::set_mint_action_bytes<TREASURY_TESTS>(&mut treasury, 4075241340, ts.ctx());
     treasury::set_chain_id<TREASURY_TESTS>(&mut treasury, 452312848583266388373324160190187140051835877600158453279131187531808459402, ts.ctx());
     treasury::toggle_bascule_check<TREASURY_TESTS>(&mut treasury, ts.ctx());
+    treasury::set_payload_table<TREASURY_TESTS>(&mut treasury, ts.ctx());
 
     // Mint and transfer tokens using the multisig address
     ts.next_tx(USER2);
