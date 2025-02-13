@@ -133,6 +133,32 @@ fun test_insiffucient_vault_balance() {
     ts.end();
 }
 
+#[test, expected_failure(abort_code = bridge::EZeroAmountCoin)]
+fun test_return_zero_amount_coin() {
+    // Start a test transaction scenario
+    let mut ts = ts::begin(TREASURY_ADMIN);
+    let mut treasury = create_test_currency(&mut ts);
+    
+    // Fill the vault with the wrapped token
+    ts.next_tx(TREASURY_ADMIN);
+    let mut vault: Vault<WTEST> = ts.take_shared();
+    bridge::fill_vault(&mut vault, balance::create_for_testing(1000));
+
+    // Burn the native token to unlock the wrapped one
+    ts.next_tx(TREASURY_ADMIN);
+    let denylist: DenyList = ts.take_shared();
+    let mut coin = ts.take_from_sender<Coin<BRIDGE_TESTS>>();
+    let zero_coin = coin.split(0, ts.ctx());
+    let wrapped_coin = bridge::return_native<BRIDGE_TESTS, WTEST>(zero_coin, &mut vault, &mut treasury, ts.ctx());
+    transfer::public_transfer(wrapped_coin, ts.ctx().sender());
+    ts.return_to_sender(coin);
+    test_utils::destroy(treasury);
+    ts::return_shared(denylist);
+    ts::return_shared(vault);
+
+    ts.end();
+}
+
 #[test, expected_failure(abort_code = bridge::EVaultIsPaused)]
 fun test_claim_when_pause_enabled() {
     // Start a test transaction scenario
