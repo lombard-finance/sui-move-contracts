@@ -19,7 +19,7 @@ const ERecordExists: u64 = 3;
 const EZeroAmountCoin: u64 = 4;
 
 // Vault to store the wrapped token
-public struct Vault<phantom WT> has key {
+public struct Vault<phantom WT, phantom T> has key {
     id: UID,
     balance: Balance<WT>,
     is_paused: bool,
@@ -35,24 +35,24 @@ public struct AdminCap has key, store {
 public struct PauserCap has store, drop {}
 
 /// Namespace for dynamic fields: one for each of the capabilities.
-public struct RoleKey<phantom T> has copy, store, drop { owner: address }
+public struct RoleKey<phantom C> has copy, store, drop { owner: address }
 
 // === Events ===
-public struct WithdrawEvent<phantom WT> has copy, drop {
+public struct WithdrawEvent<phantom WT, phantom T> has copy, drop {
     amount: u64,
     address: address
 }
 
-public struct DepositEvent<phantom WT> has copy, drop {
+public struct DepositEvent<phantom WT, phantom T> has copy, drop {
     amount: u64,
     address: address
 }
 
-public struct CapabilityAssignedEvent<phantom WT, phantom C> has copy, drop {
+public struct CapabilityAssignedEvent<phantom WT, phantom T, phantom C> has copy, drop {
     owner: address
 }
 
-public struct CapabilityRemovedEvent<phantom WT, phantom C> has copy, drop {
+public struct CapabilityRemovedEvent<phantom WT, phantom T, phantom C> has copy, drop {
     owner: address
 }
 
@@ -69,10 +69,10 @@ fun init(ctx: &mut TxContext) {
     transfer::public_transfer(cap, ctx.sender());
 }
 
-// Initialize the vault with zero balance
+// Initialize the vault with zero balance, by specifying the wrapped token - token pair
 // Only admin can call this function
-public fun new_vault<WT>(_cap: &AdminCap, ctx: &mut TxContext) {
-    let vault = Vault<WT> {
+public fun new_vault<WT, T>(_cap: &AdminCap, ctx: &mut TxContext) {
+    let vault = Vault<WT, T> {
         id: object::new(ctx),
         balance: balance::zero<WT>(),
         is_paused: false,
@@ -85,7 +85,7 @@ public fun new_vault<WT>(_cap: &AdminCap, ctx: &mut TxContext) {
 /// Aborts if the vault is paused
 public fun claim_native<WT, T>(
     coin: Coin<WT>,
-    vault: &mut Vault<WT>,
+    vault: &mut Vault<WT, T>,
     treasury: &mut ControlledTreasury<T>,
     denylist: &DenyList,
     ctx: &mut TxContext,
@@ -95,14 +95,14 @@ public fun claim_native<WT, T>(
     let amount = coin.value();
     vault.balance.join(coin.into_balance());
     treasury::mint_with_witness(witness, treasury, amount, ctx.sender(), denylist, ctx);
-    event::emit(WithdrawEvent<WT> { amount, address: ctx.sender() });
+    event::emit(WithdrawEvent<WT, T> { amount, address: ctx.sender() });
 }
 
 /// Burn the native token and get wrapped token in return
 /// Aborts if the vault is paused
 public fun return_native<T, WT>(
     coin: Coin<T>,
-    vault: &mut Vault<WT>,
+    vault: &mut Vault<WT, T>,
     treasury: &mut ControlledTreasury<T>,
     ctx: &mut TxContext,
 ): Coin<WT> {
@@ -112,7 +112,7 @@ public fun return_native<T, WT>(
     assert!(vault.balance.value() >= amount, EInsufficientBalance);
     let coin_to_deposit = vault.balance.split(amount).into_coin(ctx);
     treasury::burn(treasury, coin, ctx);
-    event::emit(DepositEvent<WT> { amount, address: ctx.sender() });
+    event::emit(DepositEvent<WT, T> { amount, address: ctx.sender() });
     coin_to_deposit
 }
 
@@ -124,14 +124,14 @@ public fun return_native<T, WT>(
 /// Aborts if:
 /// - the receiver already has a `C` cap
 #[allow(unused_mut_parameter)]
-public fun add_capability<WT, C: store + drop>(
+public fun add_capability<WT, T, C: store + drop>(
     _admin_cap: &AdminCap,
-    vault: &mut Vault<WT>,
+    vault: &mut Vault<WT, T>,
     owner: address,
     cap: C,
 ) {
-    assert!(!vault.has_cap<WT, C>(owner), ERecordExists);
-    event::emit(CapabilityAssignedEvent<WT, C> { owner });
+    assert!(!vault.has_cap<WT, T, C>(owner), ERecordExists);
+    event::emit(CapabilityAssignedEvent<WT, T, C> { owner });
     vault.add_cap(owner, cap);
 }
 
@@ -141,13 +141,13 @@ public fun add_capability<WT, C: store + drop>(
 /// Aborts if:
 /// - the receiver does not have `C` cap
 #[allow(unused_mut_parameter)]
-public fun remove_capability<WT, C: store + drop>(
+public fun remove_capability<WT, T, C: store + drop>(
     _cap: &AdminCap,
-    vault: &mut Vault<WT>,
+    vault: &mut Vault<WT, T>,
     owner: address,
 ) {
-    assert!(vault.has_cap<WT, C>(owner), ENoAuthRecord);
-    event::emit(CapabilityRemovedEvent<WT, C> { owner });
+    assert!(vault.has_cap<WT, T, C>(owner), ENoAuthRecord);
+    event::emit(CapabilityRemovedEvent<WT, T, C> { owner });
     let _: C = vault.remove_cap(owner);
 }
 
@@ -156,27 +156,27 @@ public fun remove_capability<WT, C: store + drop>(
 /// Enables the pause for the vault.
 /// 
 /// Aborts if sender does not have the `PauserCap`.
-public fun enable_pause<WT>(vault: &mut Vault<WT>, ctx: &mut TxContext) {
-    assert!(vault.has_cap<WT, PauserCap>(ctx.sender()), ENoAuthRecord);
+public fun enable_pause<WT, T>(vault: &mut Vault<WT, T>, ctx: &mut TxContext) {
+    assert!(vault.has_cap<WT, T, PauserCap>(ctx.sender()), ENoAuthRecord);
     vault.is_paused = true;
 }
 
 /// Disables the pause for the vault.
 /// 
 /// Aborts if sender does not have the `PauserCap`.
-public fun disable_pause<WT>(vault: &mut Vault<WT>, ctx: &mut TxContext) {
-    assert!(vault.has_cap<WT, PauserCap>(ctx.sender()), ENoAuthRecord);
+public fun disable_pause<WT, T>(vault: &mut Vault<WT, T>, ctx: &mut TxContext) {
+    assert!(vault.has_cap<WT, T, PauserCap>(ctx.sender()), ENoAuthRecord);
     vault.is_paused = false;
 }
 
 // Get the current state of the pause
-public fun is_paused_enabled<WT>(vault: &Vault<WT>): bool {
+public fun is_paused_enabled<WT, T>(vault: &Vault<WT ,T>): bool {
     vault.is_paused
 }
 
 /// Check if a capability `Cap` is assigned to the `owner`.
-public fun has_cap<WT, Cap: store>(
-    vault: &Vault<WT>,
+public fun has_cap<WT, T, Cap: store>(
+    vault: &Vault<WT, T>,
     owner: address,
 ): bool {
     vault.roles.contains(RoleKey<Cap> { owner })
@@ -185,8 +185,8 @@ public fun has_cap<WT, Cap: store>(
 // === Private functions ===
 
 /// Adds a capability `cap` for `owner`.
-fun add_cap<WT, Cap: store + drop>(
-    vault: &mut Vault<WT>,
+fun add_cap<WT, T, Cap: store + drop>(
+    vault: &mut Vault<WT, T>,
     owner: address,
     cap: Cap,
 ) {
@@ -194,8 +194,8 @@ fun add_cap<WT, Cap: store + drop>(
 }
 
 /// Remove a `Cap` from the `owner`.
-fun remove_cap<WT, Cap: store + drop>(
-    vault: &mut Vault<WT>,
+fun remove_cap<WT, T, Cap: store + drop>(
+    vault: &mut Vault<WT, T>,
     owner: address,
 ): Cap {
     vault.roles.remove(RoleKey<Cap> { owner })
@@ -208,6 +208,6 @@ public fun init_for_testing(ctx: &mut TxContext) {
 }
 
 #[test_only]
-public fun fill_vault<WT>(vault: &mut Vault<WT>, amount: Balance<WT>) {
+public fun fill_vault<WT, T>(vault: &mut Vault<WT, T>, amount: Balance<WT>) {
     vault.balance.join(amount);
 }

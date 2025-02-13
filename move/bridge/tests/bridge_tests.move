@@ -35,7 +35,7 @@ fun test_claim_native() {
     // Claim the native token by locking the wrapped one
     ts.next_tx(TREASURY_ADMIN);
     let denylist: DenyList = ts.take_shared();
-    let mut vault: Vault<WTEST> = ts.take_shared();
+    let mut vault: Vault<WTEST, BRIDGE_TESTS> = ts.take_shared();
     let wrapped_coin = coin::mint_for_testing<WTEST>(1000, ts.ctx());
     bridge::claim_native<WTEST, BRIDGE_TESTS>(wrapped_coin, &mut vault, &mut treasury, &denylist, ts.ctx());
 
@@ -58,7 +58,7 @@ fun test_return_native() {
     
     // Fill the vault with the wrapped token
     ts.next_tx(TREASURY_ADMIN);
-    let mut vault: Vault<WTEST> = ts.take_shared();
+    let mut vault: Vault<WTEST, BRIDGE_TESTS> = ts.take_shared();
     bridge::fill_vault(&mut vault, balance::create_for_testing(1000));
 
     // Burn the native token to unlock the wrapped one
@@ -88,7 +88,7 @@ fun test_enable_disable_pause() {
     // Assign PauserCap
     ts.next_tx(TREASURY_ADMIN);
     let cap = ts.take_from_sender<AdminCap>();
-    let mut vault: Vault<WTEST> = ts.take_shared();
+    let mut vault: Vault<WTEST, BRIDGE_TESTS> = ts.take_shared();
     let pauser_cap = bridge::new_pauser_cap();
     bridge::add_capability(&cap, &mut vault, PAUSER, pauser_cap);
     ts.return_to_sender(cap);
@@ -117,7 +117,7 @@ fun test_insiffucient_vault_balance() {
     // Burn the native token to unlock the wrapped one
     ts.next_tx(TREASURY_ADMIN);
     let denylist: DenyList = ts.take_shared();
-    let mut vault: Vault<WTEST> = ts.take_shared();
+    let mut vault: Vault<WTEST, BRIDGE_TESTS> = ts.take_shared();
     let coin = ts.take_from_sender<Coin<BRIDGE_TESTS>>();
     let wrapped_coin = bridge::return_native<BRIDGE_TESTS, WTEST>(coin, &mut vault, &mut treasury, ts.ctx());
     transfer::public_transfer(wrapped_coin, ts.ctx().sender());
@@ -141,7 +141,7 @@ fun test_return_zero_amount_coin() {
     
     // Fill the vault with the wrapped token
     ts.next_tx(TREASURY_ADMIN);
-    let mut vault: Vault<WTEST> = ts.take_shared();
+    let mut vault: Vault<WTEST, BRIDGE_TESTS> = ts.take_shared();
     bridge::fill_vault(&mut vault, balance::create_for_testing(1000));
 
     // Burn the native token to unlock the wrapped one
@@ -167,7 +167,7 @@ fun test_claim_when_pause_enabled() {
 
     // Whitelist the witness
     ts.next_tx(TREASURY_ADMIN);
-    let mut vault: Vault<WTEST> = ts.take_shared();
+    let mut vault: Vault<WTEST, BRIDGE_TESTS> = ts.take_shared();
     let minter_cap = treasury::new_minter_cap(MINT_LIMIT, ts.ctx());
     let witness_type = type_name::get<BridgeWitness>();
     treasury.add_witness_mint_capability<BRIDGE_TESTS>(witness_type.into_string(), minter_cap, ts.ctx());
@@ -200,7 +200,7 @@ fun test_return_when_pause_enabled() {
 
     // Fill the vault with the wrapped token
     ts.next_tx(TREASURY_ADMIN);
-    let mut vault: Vault<WTEST> = ts.take_shared();
+    let mut vault: Vault<WTEST, BRIDGE_TESTS> = ts.take_shared();
     let cap = ts.take_from_sender<AdminCap>();
     bridge::fill_vault(&mut vault, balance::create_for_testing(1000));
     let pauser_cap = bridge::new_pauser_cap();
@@ -232,7 +232,7 @@ fun test_enable_pause_no_auth() {
 
     // Assign PauserCap
     ts.next_tx(TREASURY_ADMIN);
-    let mut vault: Vault<WTEST> = ts.take_shared();
+    let mut vault: Vault<WTEST, BRIDGE_TESTS> = ts.take_shared();
     let cap = ts.take_from_sender<AdminCap>();
     let pauser_cap = bridge::new_pauser_cap();
     bridge::add_capability(&cap, &mut vault, PAUSER, pauser_cap);
@@ -241,7 +241,7 @@ fun test_enable_pause_no_auth() {
     // Remove PauserCap
     ts.next_tx(TREASURY_ADMIN);
     let cap = ts.take_from_sender<AdminCap>();
-    bridge::remove_capability<WTEST, PauserCap>(&cap, &mut vault, PAUSER);
+    bridge::remove_capability<WTEST, BRIDGE_TESTS, PauserCap>(&cap, &mut vault, PAUSER);
     ts.return_to_sender(cap);
 
     // enable pause
@@ -289,7 +289,7 @@ public(package) fun create_test_currency(
 
     ts.next_tx(TREASURY_ADMIN);
     let cap = ts.take_from_sender<AdminCap>();
-    bridge::new_vault<WTEST>(&cap, ts.ctx());
+    bridge::new_vault<WTEST, BRIDGE_TESTS>(&cap, ts.ctx());
     ts.return_to_sender(cap);
 
     treasury
