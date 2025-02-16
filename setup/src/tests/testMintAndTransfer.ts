@@ -6,7 +6,7 @@ import {
   DENYLIST,
 } from "../config";
 import { mintAndTransfer } from "../utils/mintAndTransfer";
-import { getMultisigConfig } from "../helpers/getMultisigConfig";
+import { getMultisigConfig, getTestMultisigConfig } from "../helpers/getMultisigConfig";
 
 const DUMMY_TXID = new TextEncoder().encode("abcd");
 const DUMMY_IDX: number = 0;
@@ -14,7 +14,7 @@ const DUMMY_IDX: number = 0;
 async function testMintAndTransfer() {
   try {
     // Retrieve our default multisig configuration
-    const multisigConfig = getMultisigConfig();
+    const multisigConfig = getTestMultisigConfig();
 
     // Execute the mint and transfer logic
     const result = await mintAndTransfer(
