@@ -1,4 +1,4 @@
-module bridge::bridge;
+module bridge_vault::bridge_vault;
 
 use sui::coin::{Coin};
 use sui::balance::{Self, Balance};
@@ -6,6 +6,7 @@ use sui::deny_list::DenyList;
 use sui::event;
 use sui::bag::{Self, Bag};
 use lbtc::treasury::{Self, ControlledTreasury};
+use bridge::bridge::{Self, Bridge};
 
 // Error when the vault balance is not enough to cover the native to wrapped token conversion
 const EInsufficientBalance: u64 = 0;
@@ -104,16 +105,19 @@ public fun return_native<T, WT>(
     coin: Coin<T>,
     vault: &mut Vault<WT, T>,
     treasury: &mut ControlledTreasury<T>,
+    bridge: &mut Bridge,
+    target_chain: u8,
+    target_address: vector<u8>,
     ctx: &mut TxContext,
-): Coin<WT> {
+) {
     assert!(!vault.is_paused, EVaultIsPaused);
     let amount = coin.value();
     assert!(amount > 0, EZeroAmountCoin);
     assert!(vault.balance.value() >= amount, EInsufficientBalance);
     let coin_to_deposit = vault.balance.split(amount).into_coin(ctx);
+    bridge::send_token(bridge, target_chain, target_address, coin_to_deposit, ctx);
     treasury::burn(treasury, coin, ctx);
     event::emit(DepositEvent<WT, T> { amount, address: ctx.sender() });
-    coin_to_deposit
 }
 
 // === Admin operations ===
