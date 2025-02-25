@@ -6,7 +6,7 @@
         "bascule": "0x2c8c813ff75e23c3e6a1bb3de23281e2c5a28b5dd199b4adff269cff97af7edc"
     },
     "object": {
-        "treasury": "0xc8f3d6d596ed86012a289166400d3650d9f888f612bf9c35b0cde7bc1b053408"
+        "treasury": "0xc8f3d6d596ed86012a289166400d3650d9f888f612bf9c35b0cde7bc1b053408",
         "consortium": "0x5d0922bfc25cd4babc76e7e320b0e9b4d4950408bae9632a5fedf2a1f8dc29dc",
         "bascule": "0xd8b1c1f9b893330180fa1fc52a316461a5fabd258fa15633e9a5ba5da71af49e"
     }
