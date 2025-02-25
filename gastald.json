@@ -1,5 +1,13 @@
 {
-    "packageid": "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa",
-    "consortium": "0x0a4956f6a7a454ae5ce622262ac303b75b741e9cd6bca80ea343ea1c6696e716",
-    "treasury": "0xc8f3d6d596ed86012a289166400d3650d9f888f612bf9c35b0cde7bc1b053408"
+    "packages": {
+        "lbtc_v2_current": "0xbe409fa89cd3eedbe426fdae9c53a231f2fff9dc66c3ca797163b5b5b2aba977",
+        "lbtc_v1_deprecated": "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa",
+        "consortium": "0xac06835e991ab38bbd69a41a0fca6ecad49c80bcc8ab498cc4abb978eff7f069",
+        "bascule": "0x2c8c813ff75e23c3e6a1bb3de23281e2c5a28b5dd199b4adff269cff97af7edc"
+    },
+    "object": {
+        "treasury": "0xc8f3d6d596ed86012a289166400d3650d9f888f612bf9c35b0cde7bc1b053408"
+        "consortium": "0x5d0922bfc25cd4babc76e7e320b0e9b4d4950408bae9632a5fedf2a1f8dc29dc",
+        "bascule": "0xd8b1c1f9b893330180fa1fc52a316461a5fabd258fa15633e9a5ba5da71af49e"
+    }
 }
