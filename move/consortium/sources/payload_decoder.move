@@ -5,15 +5,17 @@ use sui::bcs::{Self, BCS};
 
 const EInvalidPayloadLength: u64 = 1;
 
-public fun decode_fee_payload(payload: vector<u8>): (u32, u256, u256) {
+public fun decode_fee_payload(payload: vector<u8>): (u32, u256, address, u256, u256) {
     let mut b = bcs::new(payload);
     let action = decode_be_u32(&mut b);
+    let chain_id = decode_left_padded_u256(&mut b);
+    let verifying_contract = bcs::peel_address(&mut b);
     let fee = decode_left_padded_u256(&mut b);
     let expiry = decode_left_padded_u256(&mut b);
     
     assert!(b.into_remainder_bytes().length() == 0, EInvalidPayloadLength);
 
-    (action, fee, expiry)
+    (action, chain_id, verifying_contract, fee, expiry)
 }
 
 public fun decode_valset(payload: vector<u8>): (

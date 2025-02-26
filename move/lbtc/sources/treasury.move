@@ -41,6 +41,10 @@ use consortium::payload_decoder;
 use bascule::bascule::{Self, Bascule};
 use std::hash;
 
+// deprecated imports
+use lbtc::consortium::Consortium as ConsortiumDeprecated;
+use lbtc::bascule::Bascule as BasculeDeprecated;
+
 /// No authorization record exists for the action.
 const ENoAuthRecord: u64 = 0;
 /// Mint operation exceeds the allowed limit.
@@ -97,6 +101,13 @@ const ERecipientPublicKeyMismatch: u64 = 25;
 const EUsedPayload: u64 = 26;
 /// Used payload table does not exist
 const ENoUsedPayloads: u64 = 27;
+/// Invalid verifying contract
+const EInvalidVerifyingContract: u64 = 28;
+/// No package ID set
+const ENoPackageIdCheck: u64 = 29;
+
+/// For deprecated functions
+const EDeprecated: u64 = 9999;
 
 /// Represents a controlled treasury for managing a regulated coin.
 public struct ControlledTreasury<phantom T> has key {
@@ -142,6 +153,23 @@ public struct MintEvent<phantom T> has copy, drop {
     index: u32,
 }
 
+public struct MintWithPayloadEvent<phantom T> has copy, drop {
+    amount: u64,
+    to: address,
+    tx_id: vector<u8>,
+    index: u32,
+    payload_hash: vector<u8>,
+}
+
+public struct MintWithFeeEvent<phantom T> has copy, drop {
+    amount: u64,
+    to: address,
+    tx_id: vector<u8>,
+    index: u32,
+    fee: u64,
+    payload_hash: vector<u8>,
+}
+
 public struct MintWithWitnessEvent<phantom T> has copy, drop {
     amount: u64,
     to: address
@@ -167,6 +195,10 @@ public struct DustFeeRateEvent has copy, drop {
 
 public struct ChainIdEvent has copy, drop {
     chain_id: u256,
+}
+
+public struct PackageIdEvent has copy, drop {
+    package_id: address,
 }
 
 public struct MintActionBytesEvent has copy, drop {
@@ -486,8 +518,8 @@ public fun mint_with_witness<T, U: drop>(
 /// - payload is not validated by the consortium
 /// - global pause is enabled
 ///
-/// Emits: MintEvent
-public fun mint<T>(
+/// Emits: MintWithPayloadEvent
+public fun mint_v2<T>(
     treasury: &mut ControlledTreasury<T>,
     consortium: &mut Consortium,
     denylist: &DenyList,
@@ -524,15 +556,30 @@ public fun mint<T>(
     used_payloads.add(hash, true);
 
     // Emit the event and mint + transfer the coins
-    event::emit(MintEvent<T> { amount, to, tx_id, index });
+    event::emit(MintWithPayloadEvent<T> { amount, to, tx_id, index, payload_hash: hash });
     let new_coin = coin::mint(&mut treasury.treasury_cap, amount, ctx);
     transfer::public_transfer(new_coin, to);
+}
+
+#[deprecated(note = b"Not valid")]
+public fun mint<T>(
+    _treasury: &mut ControlledTreasury<T>,
+    _consortium: &mut ConsortiumDeprecated,
+    _denylist: &DenyList,
+    _bascule: &mut BasculeDeprecated,
+    _payload: vector<u8>,
+    _proof: vector<u8>,
+    _ctx: &mut TxContext,
+) {
+    abort EDeprecated
 }
 
 /// Mints and transfers coins to the address defined in the decoded payload.
 /// The payload with the given proof is validated by the consortium before minting.
 /// A fee payload is given which contains the fee approval signed by the user
-public fun mint_with_fee<T>(
+///
+/// Emits: MintWithFeeEvent
+public fun mint_with_fee_v2<T>(
     treasury: &mut ControlledTreasury<T>,
     consortium: &mut Consortium,
     denylist: &DenyList,
@@ -577,9 +624,11 @@ public fun mint_with_fee<T>(
     let hashed_recipient = blake2b256(&user_public_key);
     assert!(to.to_bytes() == hashed_recipient, ERecipientPublicKeyMismatch);
 
-    let (fee_action, fee_u256, expiry_u256) = payload_decoder::decode_fee_payload(fee_payload);
+    let (fee_action, chain_id, verifying_contract, fee_u256, expiry_u256) = payload_decoder::decode_fee_payload(fee_payload);
     let fee = fee_u256.try_as_u64().extract();
     let expiry = expiry_u256.try_as_u64().extract();
+    assert!(chain_id == treasury.get_chain_id(), EInvalidChainId);
+    assert!(verifying_contract == treasury.get_package_id(), EInvalidVerifyingContract);
     assert!(fee_action == treasury.get_fee_action_bytes(), EInvalidActionBytes);
     assert!(fee < amount, EFeeGreaterThanAmount);
     // Expiry timestamp is in unix seconds, so we need to truncate the bottom 4 numbers from the clock timestamp.
@@ -597,9 +646,31 @@ public fun mint_with_fee<T>(
     used_payloads.add(hash, true);
 
     // Emit the event and mint + transfer the coins
-    event::emit(MintEvent<T> { amount: final_amount, to, tx_id, index });
     let new_coin = coin::mint(&mut treasury.treasury_cap, final_amount, ctx);
     transfer::public_transfer(new_coin, to);
+
+    // Mint fee to treasury
+    let new_coin = coin::mint(&mut treasury.treasury_cap, mint_fee, ctx);
+    transfer::public_transfer(new_coin, *get_treasury_address(treasury));
+
+    event::emit(MintWithFeeEvent<T> { amount: final_amount, to, tx_id, index, fee, payload_hash: hash });
+}
+
+#[deprecated( note = b"Not valid")]
+public fun mint_with_fee<T>(
+    treasury: &mut ControlledTreasury<T>,
+    consortium: &mut ConsortiumDeprecated,
+    denylist: &DenyList,
+    bascule: &mut BasculeDeprecated,
+    mint_payload: vector<u8>,
+    proof: vector<u8>,
+    fee_payload: vector<u8>,
+    user_signature: vector<u8>,
+    user_public_key: vector<u8>,
+    clock: &Clock,
+    ctx: &mut TxContext,
+) {
+    abort EDeprecated
 }
 
 /// Allow any external address to burn coins.
@@ -846,6 +917,22 @@ public fun set_chain_id<T>(
     event::emit(ChainIdEvent { chain_id: chain_id });
 }
 
+/// Sets the package id.
+public fun set_package_id<T>(
+    treasury: &mut ControlledTreasury<T>,
+    package_id: address,
+    ctx: &mut TxContext,
+) {
+    assert!(treasury.has_cap<T, AdminCap>(ctx.sender()), ENoAuthRecord);
+    if (df::exists_(&treasury.id, b"package_id")) {
+        let id = df::borrow_mut(&mut treasury.id, b"package_id");
+        *id = package_id;
+    } else {
+        df::add(&mut treasury.id, b"package_id", package_id);
+    };
+    event::emit(PackageIdEvent { package_id: package_id });
+}
+
 /// Sets the value of `burn_commission`.
 public fun set_burn_commission<T>(
     treasury: &mut ControlledTreasury<T>,
@@ -1017,6 +1104,13 @@ public fun get_burn_commission<T>(
 public fun get_chain_id<T>(treasury: &ControlledTreasury<T>): u256 {
     assert!(df::exists_(&treasury.id, b"chain_id"), ENoChainIdCheck);
     let id = df::borrow(&treasury.id, b"chain_id");
+    *id
+}
+
+/// Get the value of `package_id`.
+public fun get_package_id<T>(treasury: &ControlledTreasury<T>): address {
+    assert!(df::exists_(&treasury.id, b"package_id"), ENoPackageIdCheck);
+    let id = df::borrow(&treasury.id, b"package_id");
     *id
 }
 

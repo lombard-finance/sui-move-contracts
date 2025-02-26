@@ -92,12 +92,14 @@ fun test_initial_valset_decoder() {
 
 #[test]
 fun test_fee_payload_decoder() {
-    let fee_payload = x"8175ca940000000000000000000000000000000000000000000000000000000005f5e0ff00000000000000000000000000000000000000000000000000000000678621c7";
+    let fee_payload = x"04acbbb20100000000000000000000000000000000000000000000000000000035834a8abfde966bacd4260852155f7b523ef157f0b75a0e1e8a0784e463c3ef0bb69deb000000000000000000000000000000000000000000000000000000000000000300000000000000000000000000000000000000000000000000000000ffffffff";
 
-    let (action, fee, expiry) = payload_decoder::decode_fee_payload(fee_payload);
-    assert!(action == 2171980436);
-    assert!(fee == 99999999);
-    assert!(expiry == 1736843719);
+    let (action, chain_id, verifying_contract, fee, expiry) = payload_decoder::decode_fee_payload(fee_payload);
+    assert!(action == 78429106);
+    assert!(chain_id == 452312848583266388373324160190187140051835877600158453279131187531808459402);
+    assert!(verifying_contract == @0xbfde966bacd4260852155f7b523ef157f0b75a0e1e8a0784e463c3ef0bb69deb);
+    assert!(fee == 3);
+    assert!(expiry == 4294967295);
 }
 
 #[test, expected_failure(abort_code = payload_decoder::EInvalidPayloadLength)]

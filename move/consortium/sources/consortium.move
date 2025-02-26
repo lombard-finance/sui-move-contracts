@@ -33,14 +33,12 @@ const EZeroWeight: u64 = 11;
 const EWeightsLowerThanThreshold: u64 = 12;
 /// Epoch is invalid.
 const EInvalidEpoch: u64 = 13;
-/// Payload length is invalid.
-const EInvalidPayloadLength: u64 = 14;
 /// Payload hash mismatch.
-const EHashMismatch: u64 = 15;
+const EHashMismatch: u64 = 14;
 /// Invalid signature length.
-const EInvalidSignatureLength: u64 = 16;
+const EInvalidSignatureLength: u64 = 15;
 /// Invalid Validator Public key length.
-const EInvalidValidatorPubKeyLength: u64 = 17;
+const EInvalidValidatorPubKeyLength: u64 = 16;
 
 // === Constants ===
 const MIN_VALIDATOR_SET_SIZE: u64 = 1;
@@ -80,8 +78,6 @@ public fun validate_payload(
     payload: vector<u8>,
     proof: vector<u8>,
 ) {
-    // Payload should consist of 164 bytes (160 for message and 4 for the action)
-    assert!(payload.length() == 164, EInvalidPayloadLength);
     // get the signatures from the proof
     let signatures = payload_decoder::decode_signatures(proof);
     // get the validator set for the current epoch
@@ -120,10 +116,9 @@ public fun set_initial_validator_set(
 ) {
     assert!(consortium.admins.contains(&ctx.sender()), EUnauthorized);
     // To set the initial validator set, the epoch should be 0.
-    // Since we assume that the initial validator set will have epoch > 0 to match the other chains,
-    // we are safe that this function will only be called once
     assert!(consortium.epoch == 0, EAlreadyInitialized);
     let (action, epoch, validators, weights, weight_threshold) = payload_decoder::decode_valset(payload);
+    assert!(epoch > 0, EInvalidEpoch);
     assert!(!consortium.validator_set.contains(epoch), EInvalidEpoch);
     assert_and_configure_validator_set(consortium, action, validators, weights, weight_threshold, epoch);
 }
@@ -194,46 +189,15 @@ public fun validate_signatures(
     let mut weight: u256 = 0;
     let mut i = 0;
     while (i < signatures.length()) {
-        let mut sig = signatures[i];
+        let sig = signatures[i];
 
         // If the signature equals to 0 it means that the validator did not sign the message.
         if (sig != zeroSig) {
-
             if (ecdsa_k1::secp256k1_verify(&sig, &signers[i], &message, 1) == false) {
                 i = i + 1;
                 continue
             };
 
-            // We need to append the v, which is either 27 or 28.
-            sig.push_back(0u8);
-            // Hash function is set to 1 (sha256), since:
-            // ecdsa_k1::SHA256: u8 = 1;
-            // We can't reference this however so we need to use the magic value.
-            let recovered = ecdsa_k1::secp256k1_ecrecover(
-                &sig, 
-                &message, 
-                1
-            );
-
-            // We only receive the x coordinate, so we need to decompress the recovered point.
-            let decompressed = ecdsa_k1::decompress_pubkey(&recovered);
-
-            // If that didn't work, we try v = 28.
-            if (decompressed != signers[i]) {
-                let _ = sig.pop_back();
-                sig.push_back(1u8);
-                let recovered = ecdsa_k1::secp256k1_ecrecover(
-                    &sig, 
-                    &message, 
-                    1
-                );
-
-                let decompressed = ecdsa_k1::decompress_pubkey(&recovered);
-                if (decompressed != signers[i]) {
-                    i = i + 1;
-                    continue
-                };
-            };
             weight = weight + weights[i];
             if (weight >= weight_threshold) {
                 return true

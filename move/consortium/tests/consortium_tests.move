@@ -207,34 +207,6 @@ fun test_set_validators_unauthorized() {
     ts::end(scenario_val);
 }
 
-#[test, expected_failure(abort_code = consortium::EInvalidPayloadLength)]
-fun test_invalid_payload_length() {
-    // Begin a new test scenario with ADMIN_USER
-    let mut scenario_val = ts::begin(ADMIN_USER);
-    let scenario = &mut scenario_val;
-    let invalid_payload = x"f1f2f3f4";
-
-    {
-        init_for_testing(scenario.ctx());
-    };
-
-    scenario.next_tx(ADMIN_USER);
-    {
-        let mut consortium = ts::take_shared<Consortium>(scenario);
-        consortium::set_initial_validator_set(&mut consortium, INIT_VALSET, scenario.ctx());
-        ts::return_shared<Consortium>(consortium);
-    };
-
-    scenario.next_tx(ADMIN_USER);
-    {
-        let mut consortium = ts::take_shared<Consortium>(scenario);
-        consortium::validate_payload(&mut consortium, invalid_payload, SIGNATURES1);
-        ts::return_shared<Consortium>(consortium);
-    };
-
-    ts::end(scenario_val);
-}
-
 #[test, expected_failure(abort_code = consortium::EInvalidPayload)]
 fun test_invalid_payload() {
     // Begin a new test scenario with ADMIN_USER
