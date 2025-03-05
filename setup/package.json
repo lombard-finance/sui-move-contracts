@@ -45,7 +45,8 @@
     "testGetChainId": "env-cmd -f .env ts-node src/tests/testGetChainId.ts",
     "testSetNextValidatorSet": "env-cmd -f .env ts-node src/tests/testSetNextValidatorSet.ts",
     "testPauseEnabled": "env-cmd -f .env ts-node src/tests/testPauseEnabled.ts",
-    "testEnableGlobalPauseSingular": "env-cmd -f .env ts-node src/tests/testEnableGlobalPauseSingular.ts"
+    "testEnableGlobalPauseSingular": "env-cmd -f .env ts-node src/tests/testEnableGlobalPauseSingular.ts",
+    "testDisableGlobalPauseSingular": "env-cmd -f .env ts-node src/tests/testDisableGlobalPauseSingular.ts"
   },
   "keywords": [],
   "author": "",
