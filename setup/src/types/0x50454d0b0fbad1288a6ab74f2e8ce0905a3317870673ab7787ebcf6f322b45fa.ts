@@ -2,7 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-/* Generated types for 0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64, original address 0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64 */
+/* Generated types for 0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa, original address 0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa */
 
 import { TypeDescriptor, ANY_TYPE } from "@typemove/move";
 import { MoveCoder, TypedEventInstance } from "@typemove/sui";
@@ -46,7 +46,7 @@ export namespace bascule {
 
   export namespace AlreadyReported {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::AlreadyReported";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::AlreadyReported";
 
     const TYPE = new TypeDescriptor<AlreadyReported>(
       AlreadyReported.TYPE_QNAME,
@@ -69,7 +69,7 @@ export namespace bascule {
 
   export namespace BASCULE {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::BASCULE";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::BASCULE";
 
     const TYPE = new TypeDescriptor<BASCULE>(BASCULE.TYPE_QNAME);
 
@@ -88,7 +88,7 @@ export namespace bascule {
 
   export namespace Bascule {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::Bascule";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::Bascule";
 
     const TYPE = new TypeDescriptor<Bascule>(Bascule.TYPE_QNAME);
 
@@ -103,7 +103,7 @@ export namespace bascule {
 
   export namespace BasculeOwnerCap {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::BasculeOwnerCap";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::BasculeOwnerCap";
 
     const TYPE = new TypeDescriptor<BasculeOwnerCap>(
       BasculeOwnerCap.TYPE_QNAME,
@@ -120,7 +120,7 @@ export namespace bascule {
 
   export namespace BasculePauserCap {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::BasculePauserCap";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::BasculePauserCap";
 
     const TYPE = new TypeDescriptor<BasculePauserCap>(
       BasculePauserCap.TYPE_QNAME,
@@ -137,7 +137,7 @@ export namespace bascule {
 
   export namespace BasculeReporterCap {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::BasculeReporterCap";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::BasculeReporterCap";
 
     const TYPE = new TypeDescriptor<BasculeReporterCap>(
       BasculeReporterCap.TYPE_QNAME,
@@ -154,7 +154,7 @@ export namespace bascule {
 
   export namespace DepositReported {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::DepositReported";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::DepositReported";
 
     const TYPE = new TypeDescriptor<DepositReported>(
       DepositReported.TYPE_QNAME,
@@ -178,7 +178,7 @@ export namespace bascule {
 
   export namespace UpdateValidateThreshold {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::UpdateValidateThreshold";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::UpdateValidateThreshold";
 
     const TYPE = new TypeDescriptor<UpdateValidateThreshold>(
       UpdateValidateThreshold.TYPE_QNAME,
@@ -202,7 +202,7 @@ export namespace bascule {
 
   export namespace WithdrawalNotValidated {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::WithdrawalNotValidated";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::WithdrawalNotValidated";
 
     const TYPE = new TypeDescriptor<WithdrawalNotValidated>(
       WithdrawalNotValidated.TYPE_QNAME,
@@ -226,7 +226,7 @@ export namespace bascule {
 
   export namespace WithdrawalValidated {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::WithdrawalValidated";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::WithdrawalValidated";
 
     const TYPE = new TypeDescriptor<WithdrawalValidated>(
       WithdrawalValidated.TYPE_QNAME,
@@ -261,7 +261,7 @@ export namespace bascule {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::add_withdrawal_validator",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::add_withdrawal_validator",
         arguments: _args,
       });
     }
@@ -279,7 +279,7 @@ export namespace bascule {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::deposit_is_reported",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::deposit_is_reported",
         arguments: _args,
       });
     }
@@ -297,7 +297,7 @@ export namespace bascule {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::deposit_is_unreported",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::deposit_is_unreported",
         arguments: _args,
       });
     }
@@ -315,7 +315,7 @@ export namespace bascule {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::deposit_is_withdrawn",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::deposit_is_withdrawn",
         arguments: _args,
       });
     }
@@ -333,7 +333,7 @@ export namespace bascule {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::get_deposit_state",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::get_deposit_state",
         arguments: _args,
       });
     }
@@ -347,7 +347,7 @@ export namespace bascule {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::get_validate_threshold",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::get_validate_threshold",
         arguments: _args,
       });
     }
@@ -365,7 +365,7 @@ export namespace bascule {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::grant_pauser",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::grant_pauser",
         arguments: _args,
       });
     }
@@ -383,7 +383,7 @@ export namespace bascule {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::grant_reporter",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::grant_reporter",
         arguments: _args,
       });
     }
@@ -397,7 +397,7 @@ export namespace bascule {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::is_paused",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::is_paused",
         arguments: _args,
       });
     }
@@ -411,7 +411,7 @@ export namespace bascule {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::is_reported",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::is_reported",
         arguments: _args,
       });
     }
@@ -429,7 +429,7 @@ export namespace bascule {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::is_validator",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::is_validator",
         arguments: _args,
       });
     }
@@ -443,7 +443,7 @@ export namespace bascule {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::is_withdrawn",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::is_withdrawn",
         arguments: _args,
       });
     }
@@ -461,7 +461,7 @@ export namespace bascule {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::pause",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::pause",
         arguments: _args,
       });
     }
@@ -482,7 +482,7 @@ export namespace bascule {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::remove_withdrawal_validator",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::remove_withdrawal_validator",
         arguments: _args,
       });
     }
@@ -503,7 +503,7 @@ export namespace bascule {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::report_deposit",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::report_deposit",
         arguments: _args,
       });
     }
@@ -521,7 +521,7 @@ export namespace bascule {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::unpause",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::unpause",
         arguments: _args,
       });
     }
@@ -542,7 +542,7 @@ export namespace bascule {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::update_validate_threshold",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::update_validate_threshold",
         arguments: _args,
       });
     }
@@ -577,7 +577,7 @@ export namespace bascule {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bascule::validate_withdrawal",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bascule::validate_withdrawal",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -788,7 +788,7 @@ export namespace bitcoin_utils {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bitcoin_utils::get_P2TR_output_type",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bitcoin_utils::get_P2TR_output_type",
         arguments: _args,
       });
     }
@@ -801,7 +801,7 @@ export namespace bitcoin_utils {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bitcoin_utils::get_P2WPKH_output_type",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bitcoin_utils::get_P2WPKH_output_type",
         arguments: _args,
       });
     }
@@ -814,7 +814,7 @@ export namespace bitcoin_utils {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bitcoin_utils::get_P2WSH_output_type",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bitcoin_utils::get_P2WSH_output_type",
         arguments: _args,
       });
     }
@@ -835,7 +835,7 @@ export namespace bitcoin_utils {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bitcoin_utils::get_dust_limit_for_output",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bitcoin_utils::get_dust_limit_for_output",
         arguments: _args,
       });
     }
@@ -849,7 +849,7 @@ export namespace bitcoin_utils {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bitcoin_utils::get_output_type",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bitcoin_utils::get_output_type",
         arguments: _args,
       });
     }
@@ -862,7 +862,7 @@ export namespace bitcoin_utils {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::bitcoin_utils::get_unsupported_output_type",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::bitcoin_utils::get_unsupported_output_type",
         arguments: _args,
       });
     }
@@ -966,14 +966,13 @@ export namespace consortium {
     id: _0x2.object$.UID;
     epoch: bigint;
     validator_set: _0x2.table.Table<bigint, consortium.ValidatorSet>;
-    used_payloads: _0x2.table.Table<number[], boolean>;
     valset_action: number;
     admins: string[];
   }
 
   export namespace Consortium {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::consortium::Consortium";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::consortium::Consortium";
 
     const TYPE = new TypeDescriptor<Consortium>(Consortium.TYPE_QNAME);
 
@@ -990,7 +989,7 @@ export namespace consortium {
 
   export namespace ValidatorSet {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::consortium::ValidatorSet";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::consortium::ValidatorSet";
 
     const TYPE = new TypeDescriptor<ValidatorSet>(ValidatorSet.TYPE_QNAME);
 
@@ -1014,7 +1013,7 @@ export namespace consortium {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::consortium::add_admin",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::consortium::add_admin",
         arguments: _args,
       });
     }
@@ -1028,7 +1027,7 @@ export namespace consortium {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::consortium::get_epoch",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::consortium::get_epoch",
         arguments: _args,
       });
     }
@@ -1046,25 +1045,7 @@ export namespace consortium {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::consortium::get_validator_set",
-        arguments: _args,
-      });
-    }
-    export function isPayloadUsed(
-      tx: Transaction,
-      args: [
-        string | TransactionObjectArgument | TransactionArgument,
-        (string | TransactionObjectArgument)[] | TransactionArgument,
-      ],
-    ): TransactionArgument & [TransactionArgument, TransactionArgument] {
-      const _args: any[] = [];
-      _args.push(transactionArgumentOrObject(args[0], tx));
-      _args.push(transactionArgumentOrVec(args[1], tx));
-
-      // @ts-ignore
-      return tx.moveCall({
-        target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::consortium::is_payload_used",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::consortium::get_validator_set",
         arguments: _args,
       });
     }
@@ -1082,7 +1063,7 @@ export namespace consortium {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::consortium::remove_admin",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::consortium::remove_admin",
         arguments: _args,
       });
     }
@@ -1100,7 +1081,7 @@ export namespace consortium {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::consortium::set_initial_validator_set",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::consortium::set_initial_validator_set",
         arguments: _args,
       });
     }
@@ -1121,7 +1102,7 @@ export namespace consortium {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::consortium::set_next_validator_set",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::consortium::set_next_validator_set",
         arguments: _args,
       });
     }
@@ -1139,11 +1120,11 @@ export namespace consortium {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::consortium::set_valset_action",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::consortium::set_valset_action",
         arguments: _args,
       });
     }
-    export function validateAndStorePayload(
+    export function validatePayload(
       tx: Transaction,
       args: [
         string | TransactionObjectArgument | TransactionArgument,
@@ -1160,7 +1141,7 @@ export namespace consortium {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::consortium::validate_and_store_payload",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::consortium::validate_payload",
         arguments: _args,
       });
     }
@@ -1194,7 +1175,7 @@ export namespace consortium {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::consortium::validate_signatures",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::consortium::validate_signatures",
         arguments: _args,
       });
     }
@@ -1242,21 +1223,6 @@ export namespace consortium {
       });
 
       return (await getMoveCoder(client)).decodeDevInspectResult<[string]>(
-        inspectRes,
-      );
-    }
-    export async function isPayloadUsed(
-      client: SuiClient,
-      args: [string, string[]],
-    ): Promise<TypedDevInspectResults<[boolean]>> {
-      const tx = new Transaction();
-      builder.isPayloadUsed(tx, args);
-      const inspectRes = await client.devInspectTransactionBlock({
-        transactionBlock: tx,
-        sender: ZERO_ADDRESS,
-      });
-
-      return (await getMoveCoder(client)).decodeDevInspectResult<[boolean]>(
         inspectRes,
       );
     }
@@ -1320,12 +1286,12 @@ export namespace consortium {
         inspectRes,
       );
     }
-    export async function validateAndStorePayload(
+    export async function validatePayload(
       client: SuiClient,
       args: [string, string[], string[]],
     ): Promise<TypedDevInspectResults<[]>> {
       const tx = new Transaction();
-      builder.validateAndStorePayload(tx, args);
+      builder.validatePayload(tx, args);
       const inspectRes = await client.devInspectTransactionBlock({
         transactionBlock: tx,
         sender: ZERO_ADDRESS,
@@ -1360,7 +1326,7 @@ export namespace lbtc {
 
   export namespace LBTC {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::lbtc::LBTC";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::lbtc::LBTC";
 
     const TYPE = new TypeDescriptor<LBTC>(LBTC.TYPE_QNAME);
 
@@ -1392,7 +1358,7 @@ export namespace multisig {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::multisig::derive_multisig_address",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::multisig::derive_multisig_address",
         arguments: _args,
       });
     }
@@ -1406,7 +1372,7 @@ export namespace multisig {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::multisig::ed25519_key_to_address",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::multisig::ed25519_key_to_address",
         arguments: _args,
       });
     }
@@ -1427,7 +1393,7 @@ export namespace multisig {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::multisig::is_sender_multisig",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::multisig::is_sender_multisig",
         arguments: _args,
       });
     }
@@ -1441,7 +1407,7 @@ export namespace multisig {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::multisig::secp256k1_key_to_address",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::multisig::secp256k1_key_to_address",
         arguments: _args,
       });
     }
@@ -1455,7 +1421,7 @@ export namespace multisig {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::multisig::secp256r1_key_to_address",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::multisig::secp256r1_key_to_address",
         arguments: _args,
       });
     }
@@ -1551,7 +1517,7 @@ export namespace payload_decoder {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::payload_decoder::decode_fee_payload",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::payload_decoder::decode_fee_payload",
         arguments: _args,
       });
     }
@@ -1565,7 +1531,7 @@ export namespace payload_decoder {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::payload_decoder::decode_mint_payload",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::payload_decoder::decode_mint_payload",
         arguments: _args,
       });
     }
@@ -1579,7 +1545,7 @@ export namespace payload_decoder {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::payload_decoder::decode_signatures",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::payload_decoder::decode_signatures",
         arguments: _args,
       });
     }
@@ -1593,7 +1559,7 @@ export namespace payload_decoder {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::payload_decoder::decode_valset",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::payload_decoder::decode_valset",
         arguments: _args,
       });
     }
@@ -1678,7 +1644,7 @@ export namespace pk_util {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::pk_util::is_valid_key",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::pk_util::is_valid_key",
         arguments: _args,
       });
     }
@@ -1692,7 +1658,7 @@ export namespace pk_util {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::pk_util::validate_pks",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::pk_util::validate_pks",
         arguments: _args,
       });
     }
@@ -1713,7 +1679,7 @@ export namespace pk_util {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::pk_util::validate_signature",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::pk_util::validate_signature",
         arguments: _args,
       });
     }
@@ -1774,13 +1740,59 @@ export namespace treasury {
 
   export namespace AdminCap {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::AdminCap";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::AdminCap";
 
     const TYPE = new TypeDescriptor<AdminCap>(AdminCap.TYPE_QNAME);
 
     export function type(): TypeDescriptor<AdminCap> {
       return TYPE.apply();
     }
+  }
+
+  export interface BasculeCheckEvent {
+    bascule_check: boolean;
+  }
+
+  export namespace BasculeCheckEvent {
+    export const TYPE_QNAME =
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::BasculeCheckEvent";
+
+    const TYPE = new TypeDescriptor<BasculeCheckEvent>(
+      BasculeCheckEvent.TYPE_QNAME,
+    );
+
+    export function type(): TypeDescriptor<BasculeCheckEvent> {
+      return TYPE.apply();
+    }
+  }
+
+  export interface BasculeCheckEventInstance
+    extends TypedEventInstance<BasculeCheckEvent> {
+    data_decoded: BasculeCheckEvent;
+    type_arguments: [];
+  }
+
+  export interface BurnCommissionEvent {
+    burn_commission: bigint;
+  }
+
+  export namespace BurnCommissionEvent {
+    export const TYPE_QNAME =
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::BurnCommissionEvent";
+
+    const TYPE = new TypeDescriptor<BurnCommissionEvent>(
+      BurnCommissionEvent.TYPE_QNAME,
+    );
+
+    export function type(): TypeDescriptor<BurnCommissionEvent> {
+      return TYPE.apply();
+    }
+  }
+
+  export interface BurnCommissionEventInstance
+    extends TypedEventInstance<BurnCommissionEvent> {
+    data_decoded: BurnCommissionEvent;
+    type_arguments: [];
   }
 
   export interface BurnEvent<T0> {
@@ -1790,7 +1802,7 @@ export namespace treasury {
 
   export namespace BurnEvent {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::BurnEvent";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::BurnEvent";
 
     const TYPE = new TypeDescriptor<BurnEvent<any>>(BurnEvent.TYPE_QNAME);
 
@@ -1807,13 +1819,34 @@ export namespace treasury {
     type_arguments: [string];
   }
 
+  export interface ChainIdEvent {
+    chain_id: bigint;
+  }
+
+  export namespace ChainIdEvent {
+    export const TYPE_QNAME =
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::ChainIdEvent";
+
+    const TYPE = new TypeDescriptor<ChainIdEvent>(ChainIdEvent.TYPE_QNAME);
+
+    export function type(): TypeDescriptor<ChainIdEvent> {
+      return TYPE.apply();
+    }
+  }
+
+  export interface ChainIdEventInstance
+    extends TypedEventInstance<ChainIdEvent> {
+    data_decoded: ChainIdEvent;
+    type_arguments: [];
+  }
+
   export interface ClaimerCap {
     dummy_field: boolean;
   }
 
   export namespace ClaimerCap {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::ClaimerCap";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::ClaimerCap";
 
     const TYPE = new TypeDescriptor<ClaimerCap>(ClaimerCap.TYPE_QNAME);
 
@@ -1832,7 +1865,7 @@ export namespace treasury {
 
   export namespace ControlledTreasury {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::ControlledTreasury";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::ControlledTreasury";
 
     const TYPE = new TypeDescriptor<ControlledTreasury<any>>(
       ControlledTreasury.TYPE_QNAME,
@@ -1845,19 +1878,88 @@ export namespace treasury {
     }
   }
 
+  export interface DustFeeRateEvent {
+    dust_fee_rate: bigint;
+  }
+
+  export namespace DustFeeRateEvent {
+    export const TYPE_QNAME =
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::DustFeeRateEvent";
+
+    const TYPE = new TypeDescriptor<DustFeeRateEvent>(
+      DustFeeRateEvent.TYPE_QNAME,
+    );
+
+    export function type(): TypeDescriptor<DustFeeRateEvent> {
+      return TYPE.apply();
+    }
+  }
+
+  export interface DustFeeRateEventInstance
+    extends TypedEventInstance<DustFeeRateEvent> {
+    data_decoded: DustFeeRateEvent;
+    type_arguments: [];
+  }
+
+  export interface FeeActionBytesEvent {
+    action_bytes: number;
+  }
+
+  export namespace FeeActionBytesEvent {
+    export const TYPE_QNAME =
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::FeeActionBytesEvent";
+
+    const TYPE = new TypeDescriptor<FeeActionBytesEvent>(
+      FeeActionBytesEvent.TYPE_QNAME,
+    );
+
+    export function type(): TypeDescriptor<FeeActionBytesEvent> {
+      return TYPE.apply();
+    }
+  }
+
+  export interface FeeActionBytesEventInstance
+    extends TypedEventInstance<FeeActionBytesEvent> {
+    data_decoded: FeeActionBytesEvent;
+    type_arguments: [];
+  }
+
   export interface LBTCWitness {
     dummy_field: boolean;
   }
 
   export namespace LBTCWitness {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::LBTCWitness";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::LBTCWitness";
 
     const TYPE = new TypeDescriptor<LBTCWitness>(LBTCWitness.TYPE_QNAME);
 
     export function type(): TypeDescriptor<LBTCWitness> {
       return TYPE.apply();
     }
+  }
+
+  export interface MintActionBytesEvent {
+    action_bytes: number;
+  }
+
+  export namespace MintActionBytesEvent {
+    export const TYPE_QNAME =
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::MintActionBytesEvent";
+
+    const TYPE = new TypeDescriptor<MintActionBytesEvent>(
+      MintActionBytesEvent.TYPE_QNAME,
+    );
+
+    export function type(): TypeDescriptor<MintActionBytesEvent> {
+      return TYPE.apply();
+    }
+  }
+
+  export interface MintActionBytesEventInstance
+    extends TypedEventInstance<MintActionBytesEvent> {
+    data_decoded: MintActionBytesEvent;
+    type_arguments: [];
   }
 
   export interface MintEvent<T0> {
@@ -1869,7 +1971,7 @@ export namespace treasury {
 
   export namespace MintEvent {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::MintEvent";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::MintEvent";
 
     const TYPE = new TypeDescriptor<MintEvent<any>>(MintEvent.TYPE_QNAME);
 
@@ -1886,6 +1988,53 @@ export namespace treasury {
     type_arguments: [string];
   }
 
+  export interface MintFeeEvent {
+    maximum_fee: bigint;
+  }
+
+  export namespace MintFeeEvent {
+    export const TYPE_QNAME =
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::MintFeeEvent";
+
+    const TYPE = new TypeDescriptor<MintFeeEvent>(MintFeeEvent.TYPE_QNAME);
+
+    export function type(): TypeDescriptor<MintFeeEvent> {
+      return TYPE.apply();
+    }
+  }
+
+  export interface MintFeeEventInstance
+    extends TypedEventInstance<MintFeeEvent> {
+    data_decoded: MintFeeEvent;
+    type_arguments: [];
+  }
+
+  export interface MintWithWitnessEvent<T0> {
+    amount: bigint;
+    to: string;
+  }
+
+  export namespace MintWithWitnessEvent {
+    export const TYPE_QNAME =
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::MintWithWitnessEvent";
+
+    const TYPE = new TypeDescriptor<MintWithWitnessEvent<any>>(
+      MintWithWitnessEvent.TYPE_QNAME,
+    );
+
+    export function type<T0>(
+      arg0: TypeDescriptor<T0> = ANY_TYPE,
+    ): TypeDescriptor<MintWithWitnessEvent<T0>> {
+      return TYPE.apply(arg0);
+    }
+  }
+
+  export interface MintWithWitnessEventInstance
+    extends TypedEventInstance<MintWithWitnessEvent<any>> {
+    data_decoded: MintWithWitnessEvent<any>;
+    type_arguments: [string];
+  }
+
   export interface MinterCap {
     limit: bigint;
     epoch: bigint;
@@ -1894,7 +2043,7 @@ export namespace treasury {
 
   export namespace MinterCap {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::MinterCap";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::MinterCap";
 
     const TYPE = new TypeDescriptor<MinterCap>(MinterCap.TYPE_QNAME);
 
@@ -1909,7 +2058,7 @@ export namespace treasury {
 
   export namespace OperatorCap {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::OperatorCap";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::OperatorCap";
 
     const TYPE = new TypeDescriptor<OperatorCap>(OperatorCap.TYPE_QNAME);
 
@@ -1924,7 +2073,7 @@ export namespace treasury {
 
   export namespace PauserCap {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::PauserCap";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::PauserCap";
 
     const TYPE = new TypeDescriptor<PauserCap>(PauserCap.TYPE_QNAME);
 
@@ -1939,7 +2088,7 @@ export namespace treasury {
 
   export namespace RoleKey {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::RoleKey";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::RoleKey";
 
     const TYPE = new TypeDescriptor<RoleKey<any>>(RoleKey.TYPE_QNAME);
 
@@ -1955,6 +2104,29 @@ export namespace treasury {
     type_arguments: [string];
   }
 
+  export interface TreasuryAddressEvent {
+    treasury_address: string;
+  }
+
+  export namespace TreasuryAddressEvent {
+    export const TYPE_QNAME =
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::TreasuryAddressEvent";
+
+    const TYPE = new TypeDescriptor<TreasuryAddressEvent>(
+      TreasuryAddressEvent.TYPE_QNAME,
+    );
+
+    export function type(): TypeDescriptor<TreasuryAddressEvent> {
+      return TYPE.apply();
+    }
+  }
+
+  export interface TreasuryAddressEventInstance
+    extends TypedEventInstance<TreasuryAddressEvent> {
+    data_decoded: TreasuryAddressEvent;
+    type_arguments: [];
+  }
+
   export interface UnstakeRequestEvent<T0> {
     from: string;
     script_pubkey: number[];
@@ -1963,7 +2135,7 @@ export namespace treasury {
 
   export namespace UnstakeRequestEvent {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::UnstakeRequestEvent";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::UnstakeRequestEvent";
 
     const TYPE = new TypeDescriptor<UnstakeRequestEvent<any>>(
       UnstakeRequestEvent.TYPE_QNAME,
@@ -1982,13 +2154,36 @@ export namespace treasury {
     type_arguments: [string];
   }
 
+  export interface WithdrawalEnabledEvent {
+    withdrawal_enabled: boolean;
+  }
+
+  export namespace WithdrawalEnabledEvent {
+    export const TYPE_QNAME =
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::WithdrawalEnabledEvent";
+
+    const TYPE = new TypeDescriptor<WithdrawalEnabledEvent>(
+      WithdrawalEnabledEvent.TYPE_QNAME,
+    );
+
+    export function type(): TypeDescriptor<WithdrawalEnabledEvent> {
+      return TYPE.apply();
+    }
+  }
+
+  export interface WithdrawalEnabledEventInstance
+    extends TypedEventInstance<WithdrawalEnabledEvent> {
+    data_decoded: WithdrawalEnabledEvent;
+    type_arguments: [];
+  }
+
   export interface WitnessRoleKey<T0> {
     owner: _0x1.ascii.String;
   }
 
   export namespace WitnessRoleKey {
     export const TYPE_QNAME =
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::WitnessRoleKey";
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::WitnessRoleKey";
 
     const TYPE = new TypeDescriptor<WitnessRoleKey<any>>(
       WitnessRoleKey.TYPE_QNAME,
@@ -2026,7 +2221,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::add_capability",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::add_capability",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2056,7 +2251,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::add_witness_mint_capability",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::add_witness_mint_capability",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2080,7 +2275,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::burn",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::burn",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2100,7 +2295,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::deconstruct",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::deconstruct",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2137,7 +2332,31 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::disable_global_pause",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::disable_global_pause",
+        arguments: _args,
+        typeArguments: [
+          typeof typeArguments[0] === "string"
+            ? typeArguments[0]
+            : typeArguments[0].getSignature(),
+        ],
+      });
+    }
+    export function disableGlobalPauseV2<T0 = any>(
+      tx: Transaction,
+      args: [
+        string | TransactionObjectArgument | TransactionArgument,
+        string | TransactionObjectArgument | TransactionArgument,
+      ],
+      typeArguments: [TypeDescriptor<T0> | string],
+    ): TransactionArgument & [TransactionArgument, TransactionArgument] {
+      const _args: any[] = [];
+      _args.push(transactionArgumentOrObject(args[0], tx));
+      _args.push(transactionArgumentOrObject(args[1], tx));
+
+      // @ts-ignore
+      return tx.moveCall({
+        target:
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::disable_global_pause_v2",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2174,7 +2393,31 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::enable_global_pause",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::enable_global_pause",
+        arguments: _args,
+        typeArguments: [
+          typeof typeArguments[0] === "string"
+            ? typeArguments[0]
+            : typeArguments[0].getSignature(),
+        ],
+      });
+    }
+    export function enableGlobalPauseV2<T0 = any>(
+      tx: Transaction,
+      args: [
+        string | TransactionObjectArgument | TransactionArgument,
+        string | TransactionObjectArgument | TransactionArgument,
+      ],
+      typeArguments: [TypeDescriptor<T0> | string],
+    ): TransactionArgument & [TransactionArgument, TransactionArgument] {
+      const _args: any[] = [];
+      _args.push(transactionArgumentOrObject(args[0], tx));
+      _args.push(transactionArgumentOrObject(args[1], tx));
+
+      // @ts-ignore
+      return tx.moveCall({
+        target:
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::enable_global_pause_v2",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2194,7 +2437,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::get_burn_commission",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::get_burn_commission",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2214,7 +2457,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::get_chain_id",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::get_chain_id",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2234,7 +2477,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::get_dust_fee_rate",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::get_dust_fee_rate",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2254,7 +2497,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::get_fee_action_bytes",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::get_fee_action_bytes",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2274,7 +2517,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::get_mint_action_bytes",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::get_mint_action_bytes",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2294,7 +2537,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::get_mint_fee",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::get_mint_fee",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2314,7 +2557,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::get_treasury_address",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::get_treasury_address",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2338,7 +2581,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::get_witness_minter_cap_left",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::get_witness_minter_cap_left",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2362,7 +2605,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::has_cap",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::has_cap",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2385,7 +2628,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::is_bascule_check_enabled",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::is_bascule_check_enabled",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2405,7 +2648,31 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::is_global_pause_enabled",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::is_global_pause_enabled",
+        arguments: _args,
+        typeArguments: [
+          typeof typeArguments[0] === "string"
+            ? typeArguments[0]
+            : typeArguments[0].getSignature(),
+        ],
+      });
+    }
+    export function isPayloadUsed<T0 = any>(
+      tx: Transaction,
+      args: [
+        string | TransactionObjectArgument | TransactionArgument,
+        (string | TransactionObjectArgument)[] | TransactionArgument,
+      ],
+      typeArguments: [TypeDescriptor<T0> | string],
+    ): TransactionArgument & [TransactionArgument, TransactionArgument] {
+      const _args: any[] = [];
+      _args.push(transactionArgumentOrObject(args[0], tx));
+      _args.push(transactionArgumentOrVec(args[1], tx));
+
+      // @ts-ignore
+      return tx.moveCall({
+        target:
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::is_payload_used",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2425,7 +2692,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::is_withdrawal_enabled",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::is_withdrawal_enabled",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2449,7 +2716,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::list_roles",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::list_roles",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2489,7 +2756,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::mint",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::mint",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2538,7 +2805,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::mint_and_transfer",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::mint_and_transfer",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2590,7 +2857,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::mint_with_fee",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::mint_with_fee",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2627,7 +2894,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::mint_with_witness",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::mint_with_witness",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2657,7 +2924,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::new",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::new",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2675,7 +2942,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::new_admin_cap",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::new_admin_cap",
         arguments: _args,
       });
     }
@@ -2688,7 +2955,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::new_claimer_cap",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::new_claimer_cap",
         arguments: _args,
       });
     }
@@ -2702,7 +2969,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::new_minter_cap",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::new_minter_cap",
         arguments: _args,
       });
     }
@@ -2715,7 +2982,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::new_operator_cap",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::new_operator_cap",
         arguments: _args,
       });
     }
@@ -2728,7 +2995,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::new_pauser_cap",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::new_pauser_cap",
         arguments: _args,
       });
     }
@@ -2750,7 +3017,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::redeem",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::redeem",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2774,7 +3041,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::remove_capability",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::remove_capability",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2801,7 +3068,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::remove_witness_mint_capability",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::remove_witness_mint_capability",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2825,7 +3092,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::set_burn_commission",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::set_burn_commission",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2849,7 +3116,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::set_chain_id",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::set_chain_id",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2873,7 +3140,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::set_dust_fee_rate",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::set_dust_fee_rate",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2897,7 +3164,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::set_fee_action_bytes",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::set_fee_action_bytes",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2921,7 +3188,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::set_mint_action_bytes",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::set_mint_action_bytes",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2945,7 +3212,27 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::set_mint_fee",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::set_mint_fee",
+        arguments: _args,
+        typeArguments: [
+          typeof typeArguments[0] === "string"
+            ? typeArguments[0]
+            : typeArguments[0].getSignature(),
+        ],
+      });
+    }
+    export function setPayloadTable<T0 = any>(
+      tx: Transaction,
+      args: [string | TransactionObjectArgument | TransactionArgument],
+      typeArguments: [TypeDescriptor<T0> | string],
+    ): TransactionArgument & [TransactionArgument] {
+      const _args: any[] = [];
+      _args.push(transactionArgumentOrObject(args[0], tx));
+
+      // @ts-ignore
+      return tx.moveCall({
+        target:
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::set_payload_table",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2969,7 +3256,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::set_treasury_address",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::set_treasury_address",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -2989,7 +3276,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::share",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::share",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -3009,7 +3296,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::toggle_bascule_check",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::toggle_bascule_check",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -3029,7 +3316,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::toggle_withdrawal",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::toggle_withdrawal",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -3053,7 +3340,7 @@ export namespace treasury {
       // @ts-ignore
       return tx.moveCall({
         target:
-          "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64::treasury::witness_has_minter_cap",
+          "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa::treasury::witness_has_minter_cap",
         arguments: _args,
         typeArguments: [
           typeof typeArguments[0] === "string"
@@ -3148,6 +3435,22 @@ export namespace treasury {
         inspectRes,
       );
     }
+    export async function disableGlobalPauseV2<T0 = any>(
+      client: SuiClient,
+      args: [string, string],
+      typeArguments: [TypeDescriptor<T0> | string],
+    ): Promise<TypedDevInspectResults<[]>> {
+      const tx = new Transaction();
+      builder.disableGlobalPauseV2(tx, args, typeArguments);
+      const inspectRes = await client.devInspectTransactionBlock({
+        transactionBlock: tx,
+        sender: ZERO_ADDRESS,
+      });
+
+      return (await getMoveCoder(client)).decodeDevInspectResult<[]>(
+        inspectRes,
+      );
+    }
     export async function enableGlobalPause<T0 = any>(
       client: SuiClient,
       args: [string, string, string[], string[], number],
@@ -3155,6 +3458,22 @@ export namespace treasury {
     ): Promise<TypedDevInspectResults<[]>> {
       const tx = new Transaction();
       builder.enableGlobalPause(tx, args, typeArguments);
+      const inspectRes = await client.devInspectTransactionBlock({
+        transactionBlock: tx,
+        sender: ZERO_ADDRESS,
+      });
+
+      return (await getMoveCoder(client)).decodeDevInspectResult<[]>(
+        inspectRes,
+      );
+    }
+    export async function enableGlobalPauseV2<T0 = any>(
+      client: SuiClient,
+      args: [string, string],
+      typeArguments: [TypeDescriptor<T0> | string],
+    ): Promise<TypedDevInspectResults<[]>> {
+      const tx = new Transaction();
+      builder.enableGlobalPauseV2(tx, args, typeArguments);
       const inspectRes = await client.devInspectTransactionBlock({
         transactionBlock: tx,
         sender: ZERO_ADDRESS,
@@ -3331,6 +3650,22 @@ export namespace treasury {
     ): Promise<TypedDevInspectResults<[boolean]>> {
       const tx = new Transaction();
       builder.isGlobalPauseEnabled(tx, args, typeArguments);
+      const inspectRes = await client.devInspectTransactionBlock({
+        transactionBlock: tx,
+        sender: ZERO_ADDRESS,
+      });
+
+      return (await getMoveCoder(client)).decodeDevInspectResult<[boolean]>(
+        inspectRes,
+      );
+    }
+    export async function isPayloadUsed<T0 = any>(
+      client: SuiClient,
+      args: [string, string[]],
+      typeArguments: [TypeDescriptor<T0> | string],
+    ): Promise<TypedDevInspectResults<[boolean]>> {
+      const tx = new Transaction();
+      builder.isPayloadUsed(tx, args, typeArguments);
       const inspectRes = await client.devInspectTransactionBlock({
         transactionBlock: tx,
         sender: ZERO_ADDRESS,
@@ -3692,6 +4027,22 @@ export namespace treasury {
         inspectRes,
       );
     }
+    export async function setPayloadTable<T0 = any>(
+      client: SuiClient,
+      args: [string],
+      typeArguments: [TypeDescriptor<T0> | string],
+    ): Promise<TypedDevInspectResults<[]>> {
+      const tx = new Transaction();
+      builder.setPayloadTable(tx, args, typeArguments);
+      const inspectRes = await client.devInspectTransactionBlock({
+        transactionBlock: tx,
+        sender: ZERO_ADDRESS,
+      });
+
+      return (await getMoveCoder(client)).decodeDevInspectResult<[]>(
+        inspectRes,
+      );
+    }
     export async function setTreasuryAddress<T0 = any>(
       client: SuiClient,
       args: [string, string],
@@ -3776,7 +4127,7 @@ export namespace treasury {
 }
 
 const MODULES = JSON.parse(
-  '{"bascule":{"fileFormatVersion":7,"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","name":"bascule","friends":[],"structs":{"AlreadyReported":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[],"fields":[{"name":"deposit_id","type":"U256"},{"name":"status","type":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"DepositState","typeArguments":[]}}}]},"BASCULE":{"abilities":{"abilities":["Drop"]},"typeParameters":[],"fields":[{"name":"dummy_field","type":"Bool"}]},"Bascule":{"abilities":{"abilities":["Key"]},"typeParameters":[],"fields":[{"name":"id","type":{"Struct":{"address":"0x2","module":"object","name":"UID","typeArguments":[]}}},{"name":"mIsPaused","type":"Bool"},{"name":"mWithdrawalValidators","type":{"Struct":{"address":"0x2","module":"vec_set","name":"VecSet","typeArguments":[{"Struct":{"address":"0x1","module":"ascii","name":"String","typeArguments":[]}}]}}},{"name":"mValidateThreshold","type":"U64"},{"name":"mDepositHistory","type":{"Struct":{"address":"0x2","module":"table","name":"Table","typeArguments":["U256",{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"DepositState","typeArguments":[]}}]}}}]},"BasculeOwnerCap":{"abilities":{"abilities":["Store","Key"]},"typeParameters":[],"fields":[{"name":"id","type":{"Struct":{"address":"0x2","module":"object","name":"UID","typeArguments":[]}}}]},"BasculePauserCap":{"abilities":{"abilities":["Store","Key"]},"typeParameters":[],"fields":[{"name":"id","type":{"Struct":{"address":"0x2","module":"object","name":"UID","typeArguments":[]}}}]},"BasculeReporterCap":{"abilities":{"abilities":["Store","Key"]},"typeParameters":[],"fields":[{"name":"id","type":{"Struct":{"address":"0x2","module":"object","name":"UID","typeArguments":[]}}}]},"DepositReported":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[],"fields":[{"name":"deposit_id","type":"U256"}]},"UpdateValidateThreshold":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[],"fields":[{"name":"old_threshold","type":"U64"},{"name":"new_threshold","type":"U64"}]},"WithdrawalNotValidated":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[],"fields":[{"name":"deposit_id","type":"U256"},{"name":"amount","type":"U64"}]},"WithdrawalValidated":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[],"fields":[{"name":"deposit_id","type":"U256"},{"name":"amount","type":"U64"}]}},"enums":{"DepositState":{"abilities":{"abilities":["Copy","Drop","Store"]},"typeParameters":[],"variants":{"Reported":[],"Withdrawn":[]}}},"exposedFunctions":{"add_withdrawal_validator":{"visibility":"Private","isEntry":true,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"BasculeOwnerCap","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"Bascule","typeArguments":[]}}},{"Struct":{"address":"0x1","module":"ascii","name":"String","typeArguments":[]}},{"Reference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"deposit_is_reported":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"Bascule","typeArguments":[]}}},"U256"],"return":["Bool"]},"deposit_is_unreported":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"Bascule","typeArguments":[]}}},"U256"],"return":["Bool"]},"deposit_is_withdrawn":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"Bascule","typeArguments":[]}}},"U256"],"return":["Bool"]},"get_deposit_state":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"Bascule","typeArguments":[]}}},"U256"],"return":[{"Struct":{"address":"0x1","module":"option","name":"Option","typeArguments":[{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"DepositState","typeArguments":[]}}]}}]},"get_validate_threshold":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"Bascule","typeArguments":[]}}}],"return":["U64"]},"grant_pauser":{"visibility":"Private","isEntry":true,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"BasculeOwnerCap","typeArguments":[]}}},"Address",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"grant_reporter":{"visibility":"Private","isEntry":true,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"BasculeOwnerCap","typeArguments":[]}}},"Address",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"is_paused":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"Bascule","typeArguments":[]}}}],"return":["Bool"]},"is_reported":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"DepositState","typeArguments":[]}}}],"return":["Bool"]},"is_validator":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"Bascule","typeArguments":[]}}},{"Struct":{"address":"0x1","module":"ascii","name":"String","typeArguments":[]}}],"return":["Bool"]},"is_withdrawn":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"DepositState","typeArguments":[]}}}],"return":["Bool"]},"pause":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"BasculePauserCap","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"Bascule","typeArguments":[]}}},{"Reference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"remove_withdrawal_validator":{"visibility":"Private","isEntry":true,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"BasculeOwnerCap","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"Bascule","typeArguments":[]}}},{"Struct":{"address":"0x1","module":"ascii","name":"String","typeArguments":[]}},{"Reference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"report_deposit":{"visibility":"Private","isEntry":true,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"BasculeReporterCap","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"Bascule","typeArguments":[]}}},"U256",{"Reference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"unpause":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"BasculePauserCap","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"Bascule","typeArguments":[]}}},{"Reference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"update_validate_threshold":{"visibility":"Private","isEntry":true,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"BasculeOwnerCap","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"Bascule","typeArguments":[]}}},"U64",{"Reference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"validate_withdrawal":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":["Drop"]}],"parameters":[{"TypeParameter":0},{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"Bascule","typeArguments":[]}}},"Address","U64",{"Vector":"U8"},"U32"],"return":[]}}},"bitcoin_utils":{"fileFormatVersion":7,"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","name":"bitcoin_utils","friends":[],"structs":{},"enums":{"OutputType":{"abilities":{"abilities":["Copy","Drop","Store"]},"typeParameters":[],"variants":{"P2TR":[],"P2WPKH":[],"P2WSH":[],"Unsupported":[]}}},"exposedFunctions":{"get_P2TR_output_type":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[],"return":[{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bitcoin_utils","name":"OutputType","typeArguments":[]}}]},"get_P2WPKH_output_type":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[],"return":[{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bitcoin_utils","name":"OutputType","typeArguments":[]}}]},"get_P2WSH_output_type":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[],"return":[{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bitcoin_utils","name":"OutputType","typeArguments":[]}}]},"get_dust_limit_for_output":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bitcoin_utils","name":"OutputType","typeArguments":[]}},{"Reference":{"Vector":"U8"}},"U64"],"return":["U64"]},"get_output_type":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Vector":"U8"}}],"return":[{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bitcoin_utils","name":"OutputType","typeArguments":[]}}]},"get_unsupported_output_type":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[],"return":[{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bitcoin_utils","name":"OutputType","typeArguments":[]}}]}}},"consortium":{"fileFormatVersion":6,"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","name":"consortium","friends":[],"structs":{"Consortium":{"abilities":{"abilities":["Key"]},"typeParameters":[],"fields":[{"name":"id","type":{"Struct":{"address":"0x2","module":"object","name":"UID","typeArguments":[]}}},{"name":"epoch","type":"U256"},{"name":"validator_set","type":{"Struct":{"address":"0x2","module":"table","name":"Table","typeArguments":["U256",{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"consortium","name":"ValidatorSet","typeArguments":[]}}]}}},{"name":"used_payloads","type":{"Struct":{"address":"0x2","module":"table","name":"Table","typeArguments":[{"Vector":"U8"},"Bool"]}}},{"name":"valset_action","type":"U32"},{"name":"admins","type":{"Vector":"Address"}}]},"ValidatorSet":{"abilities":{"abilities":["Store"]},"typeParameters":[],"fields":[{"name":"pub_keys","type":{"Vector":{"Vector":"U8"}}},{"name":"weights","type":{"Vector":"U256"}},{"name":"weight_threshold","type":"U256"}]}},"exposedFunctions":{"add_admin":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"consortium","name":"Consortium","typeArguments":[]}}},"Address",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"get_epoch":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"consortium","name":"Consortium","typeArguments":[]}}}],"return":["U256"]},"get_validator_set":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"consortium","name":"Consortium","typeArguments":[]}}},"U256"],"return":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"consortium","name":"ValidatorSet","typeArguments":[]}}}]},"is_payload_used":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"consortium","name":"Consortium","typeArguments":[]}}},{"Vector":"U8"}],"return":["Bool"]},"remove_admin":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"consortium","name":"Consortium","typeArguments":[]}}},"Address",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"set_initial_validator_set":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"consortium","name":"Consortium","typeArguments":[]}}},{"Vector":"U8"},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"set_next_validator_set":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"consortium","name":"Consortium","typeArguments":[]}}},{"Vector":"U8"},{"Vector":"U8"}],"return":[]},"set_valset_action":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"consortium","name":"Consortium","typeArguments":[]}}},"U32",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"validate_and_store_payload":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"consortium","name":"Consortium","typeArguments":[]}}},{"Vector":"U8"},{"Vector":"U8"}],"return":[]},"validate_signatures":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":{"Vector":"U8"}},{"Vector":{"Vector":"U8"}},{"Vector":"U256"},"U256",{"Vector":"U8"},{"Vector":"U8"}],"return":["Bool"]}}},"lbtc":{"fileFormatVersion":6,"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","name":"lbtc","friends":[],"structs":{"LBTC":{"abilities":{"abilities":["Drop"]},"typeParameters":[],"fields":[{"name":"dummy_field","type":"Bool"}]}},"exposedFunctions":{}},"multisig":{"fileFormatVersion":6,"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","name":"multisig","friends":[],"structs":{},"exposedFunctions":{"derive_multisig_address":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":{"Vector":"U8"}},{"Vector":"U8"},"U16"],"return":["Address"]},"ed25519_key_to_address":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Vector":"U8"}}],"return":["Address"]},"is_sender_multisig":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":{"Vector":"U8"}},{"Vector":"U8"},"U16",{"Reference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":["Bool"]},"secp256k1_key_to_address":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Vector":"U8"}}],"return":["Address"]},"secp256r1_key_to_address":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Vector":"U8"}}],"return":["Address"]}}},"payload_decoder":{"fileFormatVersion":6,"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","name":"payload_decoder","friends":[],"structs":{},"exposedFunctions":{"decode_fee_payload":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":"U8"}],"return":["U32","U256","U256"]},"decode_mint_payload":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":"U8"}],"return":["U32","U256","Address","U256","U256","U256"]},"decode_signatures":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":"U8"}],"return":[{"Vector":{"Vector":"U8"}}]},"decode_valset":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":"U8"}],"return":["U32","U256",{"Vector":{"Vector":"U8"}},{"Vector":"U256"},"U256"]}}},"pk_util":{"fileFormatVersion":7,"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","name":"pk_util","friends":[{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","name":"multisig"}],"structs":{},"enums":{"KeyType":{"abilities":{"abilities":[]},"typeParameters":[],"variants":{"Ed25519":[],"Invalid":[],"Secp256k1":[],"Secp256r1":[]}}},"exposedFunctions":{"is_valid_key":{"visibility":"Friend","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Vector":"U8"}}],"return":["Bool"]},"validate_pks":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Vector":{"Vector":"U8"}}}],"return":[]},"validate_signature":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":"U8"},{"Vector":"U8"},{"Reference":{"Vector":"U8"}}],"return":["Bool"]}}},"treasury":{"fileFormatVersion":6,"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","name":"treasury","friends":[],"structs":{"AdminCap":{"abilities":{"abilities":["Drop","Store"]},"typeParameters":[],"fields":[{"name":"dummy_field","type":"Bool"}]},"BurnEvent":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[{"constraints":{"abilities":[]},"isPhantom":true}],"fields":[{"name":"amount","type":"U64"},{"name":"from","type":"Address"}]},"ClaimerCap":{"abilities":{"abilities":["Drop","Store"]},"typeParameters":[],"fields":[{"name":"dummy_field","type":"Bool"}]},"ControlledTreasury":{"abilities":{"abilities":["Key"]},"typeParameters":[{"constraints":{"abilities":[]},"isPhantom":true}],"fields":[{"name":"id","type":{"Struct":{"address":"0x2","module":"object","name":"UID","typeArguments":[]}}},{"name":"admin_count","type":"U8"},{"name":"treasury_cap","type":{"Struct":{"address":"0x2","module":"coin","name":"TreasuryCap","typeArguments":[{"TypeParameter":0}]}}},{"name":"deny_cap","type":{"Struct":{"address":"0x2","module":"coin","name":"DenyCapV2","typeArguments":[{"TypeParameter":0}]}}},{"name":"roles","type":{"Struct":{"address":"0x2","module":"bag","name":"Bag","typeArguments":[]}}}]},"LBTCWitness":{"abilities":{"abilities":["Drop"]},"typeParameters":[],"fields":[{"name":"dummy_field","type":"Bool"}]},"MintEvent":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[{"constraints":{"abilities":[]},"isPhantom":true}],"fields":[{"name":"amount","type":"U64"},{"name":"to","type":"Address"},{"name":"tx_id","type":{"Vector":"U8"}},{"name":"index","type":"U32"}]},"MinterCap":{"abilities":{"abilities":["Drop","Store"]},"typeParameters":[],"fields":[{"name":"limit","type":"U64"},{"name":"epoch","type":"U64"},{"name":"left","type":"U64"}]},"OperatorCap":{"abilities":{"abilities":["Drop","Store"]},"typeParameters":[],"fields":[{"name":"dummy_field","type":"Bool"}]},"PauserCap":{"abilities":{"abilities":["Drop","Store"]},"typeParameters":[],"fields":[{"name":"dummy_field","type":"Bool"}]},"RoleKey":{"abilities":{"abilities":["Copy","Drop","Store"]},"typeParameters":[{"constraints":{"abilities":[]},"isPhantom":true}],"fields":[{"name":"owner","type":"Address"}]},"UnstakeRequestEvent":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[{"constraints":{"abilities":[]},"isPhantom":true}],"fields":[{"name":"from","type":"Address"},{"name":"script_pubkey","type":{"Vector":"U8"}},{"name":"amount_after_fee","type":"U64"}]},"WitnessRoleKey":{"abilities":{"abilities":["Copy","Drop","Store"]},"typeParameters":[{"constraints":{"abilities":[]},"isPhantom":true}],"fields":[{"name":"owner","type":{"Struct":{"address":"0x1","module":"ascii","name":"String","typeArguments":[]}}}]}},"exposedFunctions":{"add_capability":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]},{"abilities":["Drop","Store"]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"Address",{"TypeParameter":1},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"add_witness_mint_capability":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"Struct":{"address":"0x1","module":"ascii","name":"String","typeArguments":[]}},{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"MinterCap","typeArguments":[]}},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"burn":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"Struct":{"address":"0x2","module":"coin","name":"Coin","typeArguments":[{"TypeParameter":0}]}},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"deconstruct":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[{"Struct":{"address":"0x2","module":"coin","name":"TreasuryCap","typeArguments":[{"TypeParameter":0}]}},{"Struct":{"address":"0x2","module":"coin","name":"DenyCapV2","typeArguments":[{"TypeParameter":0}]}},{"Struct":{"address":"0x2","module":"bag","name":"Bag","typeArguments":[]}}]},"disable_global_pause":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"MutableReference":{"Struct":{"address":"0x2","module":"deny_list","name":"DenyList","typeArguments":[]}}},{"Vector":{"Vector":"U8"}},{"Vector":"U8"},"U16",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"enable_global_pause":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"MutableReference":{"Struct":{"address":"0x2","module":"deny_list","name":"DenyList","typeArguments":[]}}},{"Vector":{"Vector":"U8"}},{"Vector":"U8"},"U16",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"get_burn_commission":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}}],"return":["U64"]},"get_chain_id":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}}],"return":["U256"]},"get_dust_fee_rate":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}}],"return":["U64"]},"get_fee_action_bytes":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}}],"return":["U32"]},"get_mint_action_bytes":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}}],"return":["U32"]},"get_mint_fee":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}}],"return":["U64"]},"get_treasury_address":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}}],"return":[{"Reference":"Address"}]},"get_witness_minter_cap_left":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"Struct":{"address":"0x1","module":"ascii","name":"String","typeArguments":[]}}],"return":["U64"]},"has_cap":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]},{"abilities":["Store"]}],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"Address"],"return":["Bool"]},"is_bascule_check_enabled":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}}],"return":["Bool"]},"is_global_pause_enabled":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x2","module":"deny_list","name":"DenyList","typeArguments":[]}}}],"return":["Bool"]},"is_withdrawal_enabled":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}}],"return":["Bool"]},"list_roles":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"Address"],"return":[{"Vector":{"Struct":{"address":"0x1","module":"string","name":"String","typeArguments":[]}}}]},"mint":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"consortium","name":"Consortium","typeArguments":[]}}},{"Reference":{"Struct":{"address":"0x2","module":"deny_list","name":"DenyList","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"Bascule","typeArguments":[]}}},{"Vector":"U8"},{"Vector":"U8"},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"mint_and_transfer":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"U64","Address",{"Reference":{"Struct":{"address":"0x2","module":"deny_list","name":"DenyList","typeArguments":[]}}},{"Vector":{"Vector":"U8"}},{"Vector":"U8"},"U16",{"Vector":"U8"},"U32",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"mint_with_fee":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"consortium","name":"Consortium","typeArguments":[]}}},{"Reference":{"Struct":{"address":"0x2","module":"deny_list","name":"DenyList","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"bascule","name":"Bascule","typeArguments":[]}}},{"Vector":"U8"},{"Vector":"U8"},{"Vector":"U8"},{"Vector":"U8"},{"Vector":"U8"},{"Reference":{"Struct":{"address":"0x2","module":"clock","name":"Clock","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"mint_with_witness":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]},{"abilities":["Drop"]}],"parameters":[{"TypeParameter":1},{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"U64","Address",{"Reference":{"Struct":{"address":"0x2","module":"deny_list","name":"DenyList","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"new":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Struct":{"address":"0x2","module":"coin","name":"TreasuryCap","typeArguments":[{"TypeParameter":0}]}},{"Struct":{"address":"0x2","module":"coin","name":"DenyCapV2","typeArguments":[{"TypeParameter":0}]}},"Address",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}]},"new_admin_cap":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[],"return":[{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"AdminCap","typeArguments":[]}}]},"new_claimer_cap":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[],"return":[{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ClaimerCap","typeArguments":[]}}]},"new_minter_cap":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":["U64",{"Reference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"MinterCap","typeArguments":[]}}]},"new_operator_cap":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[],"return":[{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"OperatorCap","typeArguments":[]}}]},"new_pauser_cap":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[],"return":[{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"PauserCap","typeArguments":[]}}]},"redeem":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"Struct":{"address":"0x2","module":"coin","name":"Coin","typeArguments":[{"TypeParameter":0}]}},{"Vector":"U8"},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"remove_capability":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]},{"abilities":["Drop","Store"]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"Address",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"remove_witness_mint_capability":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"Struct":{"address":"0x1","module":"ascii","name":"String","typeArguments":[]}},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"set_burn_commission":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"U64",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"set_chain_id":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"U256",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"set_dust_fee_rate":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"U64",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"set_fee_action_bytes":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"U32",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"set_mint_action_bytes":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"U32",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"set_mint_fee":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"U64",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"set_treasury_address":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"Address",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"share":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}],"return":[]},"toggle_bascule_check":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"toggle_withdrawal":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"witness_has_minter_cap":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"Struct":{"address":"0x1","module":"ascii","name":"String","typeArguments":[]}}],"return":["Bool"]}}}}',
+  '{"bascule":{"fileFormatVersion":7,"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","name":"bascule","friends":[],"structs":{"AlreadyReported":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[],"fields":[{"name":"deposit_id","type":"U256"},{"name":"status","type":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"DepositState","typeArguments":[]}}}]},"BASCULE":{"abilities":{"abilities":["Drop"]},"typeParameters":[],"fields":[{"name":"dummy_field","type":"Bool"}]},"Bascule":{"abilities":{"abilities":["Key"]},"typeParameters":[],"fields":[{"name":"id","type":{"Struct":{"address":"0x2","module":"object","name":"UID","typeArguments":[]}}},{"name":"mIsPaused","type":"Bool"},{"name":"mWithdrawalValidators","type":{"Struct":{"address":"0x2","module":"vec_set","name":"VecSet","typeArguments":[{"Struct":{"address":"0x1","module":"ascii","name":"String","typeArguments":[]}}]}}},{"name":"mValidateThreshold","type":"U64"},{"name":"mDepositHistory","type":{"Struct":{"address":"0x2","module":"table","name":"Table","typeArguments":["U256",{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"DepositState","typeArguments":[]}}]}}}]},"BasculeOwnerCap":{"abilities":{"abilities":["Store","Key"]},"typeParameters":[],"fields":[{"name":"id","type":{"Struct":{"address":"0x2","module":"object","name":"UID","typeArguments":[]}}}]},"BasculePauserCap":{"abilities":{"abilities":["Store","Key"]},"typeParameters":[],"fields":[{"name":"id","type":{"Struct":{"address":"0x2","module":"object","name":"UID","typeArguments":[]}}}]},"BasculeReporterCap":{"abilities":{"abilities":["Store","Key"]},"typeParameters":[],"fields":[{"name":"id","type":{"Struct":{"address":"0x2","module":"object","name":"UID","typeArguments":[]}}}]},"DepositReported":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[],"fields":[{"name":"deposit_id","type":"U256"}]},"UpdateValidateThreshold":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[],"fields":[{"name":"old_threshold","type":"U64"},{"name":"new_threshold","type":"U64"}]},"WithdrawalNotValidated":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[],"fields":[{"name":"deposit_id","type":"U256"},{"name":"amount","type":"U64"}]},"WithdrawalValidated":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[],"fields":[{"name":"deposit_id","type":"U256"},{"name":"amount","type":"U64"}]}},"enums":{"DepositState":{"abilities":{"abilities":["Copy","Drop","Store"]},"typeParameters":[],"variants":{"Reported":[],"Withdrawn":[]}}},"exposedFunctions":{"add_withdrawal_validator":{"visibility":"Private","isEntry":true,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"BasculeOwnerCap","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"Bascule","typeArguments":[]}}},{"Struct":{"address":"0x1","module":"ascii","name":"String","typeArguments":[]}},{"Reference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"deposit_is_reported":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"Bascule","typeArguments":[]}}},"U256"],"return":["Bool"]},"deposit_is_unreported":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"Bascule","typeArguments":[]}}},"U256"],"return":["Bool"]},"deposit_is_withdrawn":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"Bascule","typeArguments":[]}}},"U256"],"return":["Bool"]},"get_deposit_state":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"Bascule","typeArguments":[]}}},"U256"],"return":[{"Struct":{"address":"0x1","module":"option","name":"Option","typeArguments":[{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"DepositState","typeArguments":[]}}]}}]},"get_validate_threshold":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"Bascule","typeArguments":[]}}}],"return":["U64"]},"grant_pauser":{"visibility":"Private","isEntry":true,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"BasculeOwnerCap","typeArguments":[]}}},"Address",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"grant_reporter":{"visibility":"Private","isEntry":true,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"BasculeOwnerCap","typeArguments":[]}}},"Address",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"is_paused":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"Bascule","typeArguments":[]}}}],"return":["Bool"]},"is_reported":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"DepositState","typeArguments":[]}}}],"return":["Bool"]},"is_validator":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"Bascule","typeArguments":[]}}},{"Struct":{"address":"0x1","module":"ascii","name":"String","typeArguments":[]}}],"return":["Bool"]},"is_withdrawn":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"DepositState","typeArguments":[]}}}],"return":["Bool"]},"pause":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"BasculePauserCap","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"Bascule","typeArguments":[]}}},{"Reference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"remove_withdrawal_validator":{"visibility":"Private","isEntry":true,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"BasculeOwnerCap","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"Bascule","typeArguments":[]}}},{"Struct":{"address":"0x1","module":"ascii","name":"String","typeArguments":[]}},{"Reference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"report_deposit":{"visibility":"Private","isEntry":true,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"BasculeReporterCap","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"Bascule","typeArguments":[]}}},"U256",{"Reference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"unpause":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"BasculePauserCap","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"Bascule","typeArguments":[]}}},{"Reference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"update_validate_threshold":{"visibility":"Private","isEntry":true,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"BasculeOwnerCap","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"Bascule","typeArguments":[]}}},"U64",{"Reference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"validate_withdrawal":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":["Drop"]}],"parameters":[{"TypeParameter":0},{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"Bascule","typeArguments":[]}}},"Address","U64",{"Vector":"U8"},"U32"],"return":[]}}},"bitcoin_utils":{"fileFormatVersion":7,"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","name":"bitcoin_utils","friends":[],"structs":{},"enums":{"OutputType":{"abilities":{"abilities":["Copy","Drop","Store"]},"typeParameters":[],"variants":{"P2TR":[],"P2WPKH":[],"P2WSH":[],"Unsupported":[]}}},"exposedFunctions":{"get_P2TR_output_type":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[],"return":[{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bitcoin_utils","name":"OutputType","typeArguments":[]}}]},"get_P2WPKH_output_type":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[],"return":[{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bitcoin_utils","name":"OutputType","typeArguments":[]}}]},"get_P2WSH_output_type":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[],"return":[{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bitcoin_utils","name":"OutputType","typeArguments":[]}}]},"get_dust_limit_for_output":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bitcoin_utils","name":"OutputType","typeArguments":[]}},{"Reference":{"Vector":"U8"}},"U64"],"return":["U64"]},"get_output_type":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Vector":"U8"}}],"return":[{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bitcoin_utils","name":"OutputType","typeArguments":[]}}]},"get_unsupported_output_type":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[],"return":[{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bitcoin_utils","name":"OutputType","typeArguments":[]}}]}}},"consortium":{"fileFormatVersion":6,"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","name":"consortium","friends":[],"structs":{"Consortium":{"abilities":{"abilities":["Key"]},"typeParameters":[],"fields":[{"name":"id","type":{"Struct":{"address":"0x2","module":"object","name":"UID","typeArguments":[]}}},{"name":"epoch","type":"U256"},{"name":"validator_set","type":{"Struct":{"address":"0x2","module":"table","name":"Table","typeArguments":["U256",{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"consortium","name":"ValidatorSet","typeArguments":[]}}]}}},{"name":"valset_action","type":"U32"},{"name":"admins","type":{"Vector":"Address"}}]},"ValidatorSet":{"abilities":{"abilities":["Store"]},"typeParameters":[],"fields":[{"name":"pub_keys","type":{"Vector":{"Vector":"U8"}}},{"name":"weights","type":{"Vector":"U256"}},{"name":"weight_threshold","type":"U256"}]}},"exposedFunctions":{"add_admin":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"consortium","name":"Consortium","typeArguments":[]}}},"Address",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"get_epoch":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"consortium","name":"Consortium","typeArguments":[]}}}],"return":["U256"]},"get_validator_set":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"consortium","name":"Consortium","typeArguments":[]}}},"U256"],"return":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"consortium","name":"ValidatorSet","typeArguments":[]}}}]},"remove_admin":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"consortium","name":"Consortium","typeArguments":[]}}},"Address",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"set_initial_validator_set":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"consortium","name":"Consortium","typeArguments":[]}}},{"Vector":"U8"},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"set_next_validator_set":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"consortium","name":"Consortium","typeArguments":[]}}},{"Vector":"U8"},{"Vector":"U8"}],"return":[]},"set_valset_action":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"consortium","name":"Consortium","typeArguments":[]}}},"U32",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"validate_payload":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"consortium","name":"Consortium","typeArguments":[]}}},{"Vector":"U8"},{"Vector":"U8"}],"return":[]},"validate_signatures":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":{"Vector":"U8"}},{"Vector":{"Vector":"U8"}},{"Vector":"U256"},"U256",{"Vector":"U8"},{"Vector":"U8"}],"return":["Bool"]}}},"lbtc":{"fileFormatVersion":6,"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","name":"lbtc","friends":[],"structs":{"LBTC":{"abilities":{"abilities":["Drop"]},"typeParameters":[],"fields":[{"name":"dummy_field","type":"Bool"}]}},"exposedFunctions":{}},"multisig":{"fileFormatVersion":6,"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","name":"multisig","friends":[],"structs":{},"exposedFunctions":{"derive_multisig_address":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":{"Vector":"U8"}},{"Vector":"U8"},"U16"],"return":["Address"]},"ed25519_key_to_address":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Vector":"U8"}}],"return":["Address"]},"is_sender_multisig":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":{"Vector":"U8"}},{"Vector":"U8"},"U16",{"Reference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":["Bool"]},"secp256k1_key_to_address":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Vector":"U8"}}],"return":["Address"]},"secp256r1_key_to_address":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Vector":"U8"}}],"return":["Address"]}}},"payload_decoder":{"fileFormatVersion":6,"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","name":"payload_decoder","friends":[],"structs":{},"exposedFunctions":{"decode_fee_payload":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":"U8"}],"return":["U32","U256","U256"]},"decode_mint_payload":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":"U8"}],"return":["U32","U256","Address","U256","U256","U256"]},"decode_signatures":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":"U8"}],"return":[{"Vector":{"Vector":"U8"}}]},"decode_valset":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":"U8"}],"return":["U32","U256",{"Vector":{"Vector":"U8"}},{"Vector":"U256"},"U256"]}}},"pk_util":{"fileFormatVersion":7,"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","name":"pk_util","friends":[{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","name":"multisig"}],"structs":{},"enums":{"KeyType":{"abilities":{"abilities":[]},"typeParameters":[],"variants":{"Ed25519":[],"Invalid":[],"Secp256k1":[],"Secp256r1":[]}}},"exposedFunctions":{"is_valid_key":{"visibility":"Friend","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Vector":"U8"}}],"return":["Bool"]},"validate_pks":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Reference":{"Vector":{"Vector":"U8"}}}],"return":[]},"validate_signature":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[{"Vector":"U8"},{"Vector":"U8"},{"Reference":{"Vector":"U8"}}],"return":["Bool"]}}},"treasury":{"fileFormatVersion":6,"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","name":"treasury","friends":[],"structs":{"AdminCap":{"abilities":{"abilities":["Drop","Store"]},"typeParameters":[],"fields":[{"name":"dummy_field","type":"Bool"}]},"BasculeCheckEvent":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[],"fields":[{"name":"bascule_check","type":"Bool"}]},"BurnCommissionEvent":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[],"fields":[{"name":"burn_commission","type":"U64"}]},"BurnEvent":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[{"constraints":{"abilities":[]},"isPhantom":true}],"fields":[{"name":"amount","type":"U64"},{"name":"from","type":"Address"}]},"ChainIdEvent":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[],"fields":[{"name":"chain_id","type":"U256"}]},"ClaimerCap":{"abilities":{"abilities":["Drop","Store"]},"typeParameters":[],"fields":[{"name":"dummy_field","type":"Bool"}]},"ControlledTreasury":{"abilities":{"abilities":["Key"]},"typeParameters":[{"constraints":{"abilities":[]},"isPhantom":true}],"fields":[{"name":"id","type":{"Struct":{"address":"0x2","module":"object","name":"UID","typeArguments":[]}}},{"name":"admin_count","type":"U8"},{"name":"treasury_cap","type":{"Struct":{"address":"0x2","module":"coin","name":"TreasuryCap","typeArguments":[{"TypeParameter":0}]}}},{"name":"deny_cap","type":{"Struct":{"address":"0x2","module":"coin","name":"DenyCapV2","typeArguments":[{"TypeParameter":0}]}}},{"name":"roles","type":{"Struct":{"address":"0x2","module":"bag","name":"Bag","typeArguments":[]}}}]},"DustFeeRateEvent":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[],"fields":[{"name":"dust_fee_rate","type":"U64"}]},"FeeActionBytesEvent":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[],"fields":[{"name":"action_bytes","type":"U32"}]},"LBTCWitness":{"abilities":{"abilities":["Drop"]},"typeParameters":[],"fields":[{"name":"dummy_field","type":"Bool"}]},"MintActionBytesEvent":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[],"fields":[{"name":"action_bytes","type":"U32"}]},"MintEvent":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[{"constraints":{"abilities":[]},"isPhantom":true}],"fields":[{"name":"amount","type":"U64"},{"name":"to","type":"Address"},{"name":"tx_id","type":{"Vector":"U8"}},{"name":"index","type":"U32"}]},"MintFeeEvent":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[],"fields":[{"name":"maximum_fee","type":"U64"}]},"MintWithWitnessEvent":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[{"constraints":{"abilities":[]},"isPhantom":true}],"fields":[{"name":"amount","type":"U64"},{"name":"to","type":"Address"}]},"MinterCap":{"abilities":{"abilities":["Drop","Store"]},"typeParameters":[],"fields":[{"name":"limit","type":"U64"},{"name":"epoch","type":"U64"},{"name":"left","type":"U64"}]},"OperatorCap":{"abilities":{"abilities":["Drop","Store"]},"typeParameters":[],"fields":[{"name":"dummy_field","type":"Bool"}]},"PauserCap":{"abilities":{"abilities":["Drop","Store"]},"typeParameters":[],"fields":[{"name":"dummy_field","type":"Bool"}]},"RoleKey":{"abilities":{"abilities":["Copy","Drop","Store"]},"typeParameters":[{"constraints":{"abilities":[]},"isPhantom":true}],"fields":[{"name":"owner","type":"Address"}]},"TreasuryAddressEvent":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[],"fields":[{"name":"treasury_address","type":"Address"}]},"UnstakeRequestEvent":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[{"constraints":{"abilities":[]},"isPhantom":true}],"fields":[{"name":"from","type":"Address"},{"name":"script_pubkey","type":{"Vector":"U8"}},{"name":"amount_after_fee","type":"U64"}]},"WithdrawalEnabledEvent":{"abilities":{"abilities":["Copy","Drop"]},"typeParameters":[],"fields":[{"name":"withdrawal_enabled","type":"Bool"}]},"WitnessRoleKey":{"abilities":{"abilities":["Copy","Drop","Store"]},"typeParameters":[{"constraints":{"abilities":[]},"isPhantom":true}],"fields":[{"name":"owner","type":{"Struct":{"address":"0x1","module":"ascii","name":"String","typeArguments":[]}}}]}},"exposedFunctions":{"add_capability":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]},{"abilities":["Drop","Store"]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"Address",{"TypeParameter":1},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"add_witness_mint_capability":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"Struct":{"address":"0x1","module":"ascii","name":"String","typeArguments":[]}},{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"MinterCap","typeArguments":[]}},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"burn":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"Struct":{"address":"0x2","module":"coin","name":"Coin","typeArguments":[{"TypeParameter":0}]}},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"deconstruct":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[{"Struct":{"address":"0x2","module":"coin","name":"TreasuryCap","typeArguments":[{"TypeParameter":0}]}},{"Struct":{"address":"0x2","module":"coin","name":"DenyCapV2","typeArguments":[{"TypeParameter":0}]}},{"Struct":{"address":"0x2","module":"bag","name":"Bag","typeArguments":[]}}]},"disable_global_pause":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"MutableReference":{"Struct":{"address":"0x2","module":"deny_list","name":"DenyList","typeArguments":[]}}},{"Vector":{"Vector":"U8"}},{"Vector":"U8"},"U16",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"disable_global_pause_v2":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"MutableReference":{"Struct":{"address":"0x2","module":"deny_list","name":"DenyList","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"enable_global_pause":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"MutableReference":{"Struct":{"address":"0x2","module":"deny_list","name":"DenyList","typeArguments":[]}}},{"Vector":{"Vector":"U8"}},{"Vector":"U8"},"U16",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"enable_global_pause_v2":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"MutableReference":{"Struct":{"address":"0x2","module":"deny_list","name":"DenyList","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"get_burn_commission":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}}],"return":["U64"]},"get_chain_id":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}}],"return":["U256"]},"get_dust_fee_rate":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}}],"return":["U64"]},"get_fee_action_bytes":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}}],"return":["U32"]},"get_mint_action_bytes":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}}],"return":["U32"]},"get_mint_fee":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}}],"return":["U64"]},"get_treasury_address":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}}],"return":[{"Reference":"Address"}]},"get_witness_minter_cap_left":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"Struct":{"address":"0x1","module":"ascii","name":"String","typeArguments":[]}}],"return":["U64"]},"has_cap":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]},{"abilities":["Store"]}],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"Address"],"return":["Bool"]},"is_bascule_check_enabled":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}}],"return":["Bool"]},"is_global_pause_enabled":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x2","module":"deny_list","name":"DenyList","typeArguments":[]}}}],"return":["Bool"]},"is_payload_used":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"Vector":"U8"}],"return":["Bool"]},"is_withdrawal_enabled":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}}],"return":["Bool"]},"list_roles":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"Address"],"return":[{"Vector":{"Struct":{"address":"0x1","module":"string","name":"String","typeArguments":[]}}}]},"mint":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"consortium","name":"Consortium","typeArguments":[]}}},{"Reference":{"Struct":{"address":"0x2","module":"deny_list","name":"DenyList","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"Bascule","typeArguments":[]}}},{"Vector":"U8"},{"Vector":"U8"},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"mint_and_transfer":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"U64","Address",{"Reference":{"Struct":{"address":"0x2","module":"deny_list","name":"DenyList","typeArguments":[]}}},{"Vector":{"Vector":"U8"}},{"Vector":"U8"},"U16",{"Vector":"U8"},"U32",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"mint_with_fee":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"consortium","name":"Consortium","typeArguments":[]}}},{"Reference":{"Struct":{"address":"0x2","module":"deny_list","name":"DenyList","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"bascule","name":"Bascule","typeArguments":[]}}},{"Vector":"U8"},{"Vector":"U8"},{"Vector":"U8"},{"Vector":"U8"},{"Vector":"U8"},{"Reference":{"Struct":{"address":"0x2","module":"clock","name":"Clock","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"mint_with_witness":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]},{"abilities":["Drop"]}],"parameters":[{"TypeParameter":1},{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"U64","Address",{"Reference":{"Struct":{"address":"0x2","module":"deny_list","name":"DenyList","typeArguments":[]}}},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"new":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Struct":{"address":"0x2","module":"coin","name":"TreasuryCap","typeArguments":[{"TypeParameter":0}]}},{"Struct":{"address":"0x2","module":"coin","name":"DenyCapV2","typeArguments":[{"TypeParameter":0}]}},"Address",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}]},"new_admin_cap":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[],"return":[{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"AdminCap","typeArguments":[]}}]},"new_claimer_cap":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[],"return":[{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ClaimerCap","typeArguments":[]}}]},"new_minter_cap":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":["U64",{"Reference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"MinterCap","typeArguments":[]}}]},"new_operator_cap":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[],"return":[{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"OperatorCap","typeArguments":[]}}]},"new_pauser_cap":{"visibility":"Public","isEntry":false,"typeParameters":[],"parameters":[],"return":[{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"PauserCap","typeArguments":[]}}]},"redeem":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"Struct":{"address":"0x2","module":"coin","name":"Coin","typeArguments":[{"TypeParameter":0}]}},{"Vector":"U8"},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"remove_capability":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]},{"abilities":["Drop","Store"]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"Address",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"remove_witness_mint_capability":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"Struct":{"address":"0x1","module":"ascii","name":"String","typeArguments":[]}},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"set_burn_commission":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"U64",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"set_chain_id":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"U256",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"set_dust_fee_rate":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"U64",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"set_fee_action_bytes":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"U32",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"set_mint_action_bytes":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"U32",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"set_mint_fee":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"U64",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"set_payload_table":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"set_treasury_address":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},"Address",{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"share":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}],"return":[]},"toggle_bascule_check":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"toggle_withdrawal":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"MutableReference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"MutableReference":{"Struct":{"address":"0x2","module":"tx_context","name":"TxContext","typeArguments":[]}}}],"return":[]},"witness_has_minter_cap":{"visibility":"Public","isEntry":false,"typeParameters":[{"abilities":[]}],"parameters":[{"Reference":{"Struct":{"address":"0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa","module":"treasury","name":"ControlledTreasury","typeArguments":[{"TypeParameter":0}]}}},{"Struct":{"address":"0x1","module":"ascii","name":"String","typeArguments":[]}}],"return":["Bool"]}}}}',
 );
 
 export function loadAllTypes(coder: MoveCoder) {
@@ -3785,7 +4136,7 @@ export function loadAllTypes(coder: MoveCoder) {
   for (const m of Object.values(MODULES)) {
     coder.load(
       m as any,
-      "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
+      "0x50454d0b0fbad1288a6ab74f2e8ce0905a3317870673ab7787ebcf6f322b45fa",
     );
   }
 }

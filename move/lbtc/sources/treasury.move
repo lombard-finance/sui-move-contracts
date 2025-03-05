@@ -639,6 +639,8 @@ public fun mint_with_fee_v2<T>(
         mint_fee = fee;
     };
     let final_amount = amount - mint_fee;
+    // Underflow check
+    assert!(final_amount <= amount);
 
     // Store the used payload
     let used_payloads = 

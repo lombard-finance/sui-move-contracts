@@ -1,0 +1,821 @@
+[
+	{
+		"fileFormatVersion": 7,
+		"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+		"name": "bascule",
+		"friends": [],
+		"structs": {
+			"AlreadyReported": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "deposit_id",
+						"type": "U256"
+					},
+					{
+						"name": "status",
+						"type": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "DepositState",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"BASCULE": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "dummy_field",
+						"type": "Bool"
+					}
+				]
+			},
+			"Bascule": {
+				"abilities": {
+					"abilities": [
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "mIsPaused",
+						"type": "Bool"
+					},
+					{
+						"name": "mWithdrawalValidators",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "vec_set",
+								"name": "VecSet",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x1",
+											"module": "ascii",
+											"name": "String",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "mValidateThreshold",
+						"type": "U64"
+					},
+					{
+						"name": "mDepositHistory",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "table",
+								"name": "Table",
+								"typeArguments": [
+									"U256",
+									{
+										"Struct": {
+											"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+											"module": "bascule",
+											"name": "DepositState",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					}
+				]
+			},
+			"BasculeOwnerCap": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"BasculePauserCap": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"BasculeReporterCap": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"DepositReported": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "deposit_id",
+						"type": "U256"
+					}
+				]
+			},
+			"UpdateValidateThreshold": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "old_threshold",
+						"type": "U64"
+					},
+					{
+						"name": "new_threshold",
+						"type": "U64"
+					}
+				]
+			},
+			"WithdrawalNotValidated": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "deposit_id",
+						"type": "U256"
+					},
+					{
+						"name": "amount",
+						"type": "U64"
+					}
+				]
+			},
+			"WithdrawalValidated": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "deposit_id",
+						"type": "U256"
+					},
+					{
+						"name": "amount",
+						"type": "U64"
+					}
+				]
+			}
+		},
+		"enums": {
+			"DepositState": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop",
+						"Store"
+					]
+				},
+				"typeParameters": [],
+				"variants": {
+					"Reported": [],
+					"Withdrawn": []
+				}
+			}
+		},
+		"exposedFunctions": {
+			"add_withdrawal_validator": {
+				"visibility": "Private",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "BasculeOwnerCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "Bascule",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "ascii",
+							"name": "String",
+							"typeArguments": []
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"deposit_is_reported": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "Bascule",
+								"typeArguments": []
+							}
+						}
+					},
+					"U256"
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"deposit_is_unreported": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "Bascule",
+								"typeArguments": []
+							}
+						}
+					},
+					"U256"
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"deposit_is_withdrawn": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "Bascule",
+								"typeArguments": []
+							}
+						}
+					},
+					"U256"
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"get_deposit_state": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "Bascule",
+								"typeArguments": []
+							}
+						}
+					},
+					"U256"
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "option",
+							"name": "Option",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+										"module": "bascule",
+										"name": "DepositState",
+										"typeArguments": []
+									}
+								}
+							]
+						}
+					}
+				]
+			},
+			"get_validate_threshold": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "Bascule",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"grant_pauser": {
+				"visibility": "Private",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "BasculeOwnerCap",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"grant_reporter": {
+				"visibility": "Private",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "BasculeOwnerCap",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"is_paused": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "Bascule",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"is_reported": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "DepositState",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"is_validator": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "Bascule",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "ascii",
+							"name": "String",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"is_withdrawn": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "DepositState",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"pause": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "BasculePauserCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "Bascule",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"remove_withdrawal_validator": {
+				"visibility": "Private",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "BasculeOwnerCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "Bascule",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "ascii",
+							"name": "String",
+							"typeArguments": []
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"report_deposit": {
+				"visibility": "Private",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "BasculeReporterCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "Bascule",
+								"typeArguments": []
+							}
+						}
+					},
+					"U256",
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"unpause": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "BasculePauserCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "Bascule",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"update_validate_threshold": {
+				"visibility": "Private",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "BasculeOwnerCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "Bascule",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"validate_withdrawal": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 0
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xff2c46f430582f4ea1842e584e7e6f99719d258c886b704509e65bc95c16e61b",
+								"module": "bascule",
+								"name": "Bascule",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					"U64",
+					{
+						"Vector": "U8"
+					},
+					"U32"
+				],
+				"return": []
+			}
+		}
+	}
+]

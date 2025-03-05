@@ -1,0 +1,426 @@
+{
+  "consortium": {
+    "fileFormatVersion": 6,
+    "address": "0xac06835e991ab38bbd69a41a0fca6ecad49c80bcc8ab498cc4abb978eff7f069",
+    "name": "consortium",
+    "friends": [],
+    "structs": {
+      "Consortium": {
+        "abilities": {
+          "abilities": [
+            "Key"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "UID",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "epoch",
+            "type": "U256"
+          },
+          {
+            "name": "validator_set",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "table",
+                "name": "Table",
+                "typeArguments": [
+                  "U256",
+                  {
+                    "Struct": {
+                      "address": "0xac06835e991ab38bbd69a41a0fca6ecad49c80bcc8ab498cc4abb978eff7f069",
+                      "module": "consortium",
+                      "name": "ValidatorSet",
+                      "typeArguments": []
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "valset_action",
+            "type": "U32"
+          },
+          {
+            "name": "admins",
+            "type": {
+              "Vector": "Address"
+            }
+          }
+        ]
+      },
+      "ValidatorSet": {
+        "abilities": {
+          "abilities": [
+            "Store"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "pub_keys",
+            "type": {
+              "Vector": {
+                "Vector": "U8"
+              }
+            }
+          },
+          {
+            "name": "weights",
+            "type": {
+              "Vector": "U256"
+            }
+          },
+          {
+            "name": "weight_threshold",
+            "type": "U256"
+          }
+        ]
+      }
+    },
+    "exposedFunctions": {
+      "add_admin": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xac06835e991ab38bbd69a41a0fca6ecad49c80bcc8ab498cc4abb978eff7f069",
+                "module": "consortium",
+                "name": "Consortium",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address",
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "get_epoch": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xac06835e991ab38bbd69a41a0fca6ecad49c80bcc8ab498cc4abb978eff7f069",
+                "module": "consortium",
+                "name": "Consortium",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "U256"
+        ]
+      },
+      "get_validator_set": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xac06835e991ab38bbd69a41a0fca6ecad49c80bcc8ab498cc4abb978eff7f069",
+                "module": "consortium",
+                "name": "Consortium",
+                "typeArguments": []
+              }
+            }
+          },
+          "U256"
+        ],
+        "return": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xac06835e991ab38bbd69a41a0fca6ecad49c80bcc8ab498cc4abb978eff7f069",
+                "module": "consortium",
+                "name": "ValidatorSet",
+                "typeArguments": []
+              }
+            }
+          }
+        ]
+      },
+      "remove_admin": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xac06835e991ab38bbd69a41a0fca6ecad49c80bcc8ab498cc4abb978eff7f069",
+                "module": "consortium",
+                "name": "Consortium",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address",
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "set_initial_validator_set": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xac06835e991ab38bbd69a41a0fca6ecad49c80bcc8ab498cc4abb978eff7f069",
+                "module": "consortium",
+                "name": "Consortium",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Vector": "U8"
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "set_next_validator_set": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xac06835e991ab38bbd69a41a0fca6ecad49c80bcc8ab498cc4abb978eff7f069",
+                "module": "consortium",
+                "name": "Consortium",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Vector": "U8"
+          },
+          {
+            "Vector": "U8"
+          }
+        ],
+        "return": []
+      },
+      "set_valset_action": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xac06835e991ab38bbd69a41a0fca6ecad49c80bcc8ab498cc4abb978eff7f069",
+                "module": "consortium",
+                "name": "Consortium",
+                "typeArguments": []
+              }
+            }
+          },
+          "U32",
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "validate_payload": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xac06835e991ab38bbd69a41a0fca6ecad49c80bcc8ab498cc4abb978eff7f069",
+                "module": "consortium",
+                "name": "Consortium",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Vector": "U8"
+          },
+          {
+            "Vector": "U8"
+          }
+        ],
+        "return": []
+      },
+      "validate_signatures": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Vector": {
+              "Vector": "U8"
+            }
+          },
+          {
+            "Vector": {
+              "Vector": "U8"
+            }
+          },
+          {
+            "Vector": "U256"
+          },
+          "U256",
+          {
+            "Vector": "U8"
+          },
+          {
+            "Vector": "U8"
+          }
+        ],
+        "return": [
+          "Bool"
+        ]
+      }
+    }
+  },
+  "payload_decoder": {
+    "fileFormatVersion": 6,
+    "address": "0xac06835e991ab38bbd69a41a0fca6ecad49c80bcc8ab498cc4abb978eff7f069",
+    "name": "payload_decoder",
+    "friends": [],
+    "structs": {},
+    "exposedFunctions": {
+      "decode_fee_payload": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Vector": "U8"
+          }
+        ],
+        "return": [
+          "U32",
+          "U256",
+          "Address",
+          "U256",
+          "U256"
+        ]
+      },
+      "decode_mint_payload": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Vector": "U8"
+          }
+        ],
+        "return": [
+          "U32",
+          "U256",
+          "Address",
+          "U256",
+          "U256",
+          "U256"
+        ]
+      },
+      "decode_signatures": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Vector": "U8"
+          }
+        ],
+        "return": [
+          {
+            "Vector": {
+              "Vector": "U8"
+            }
+          }
+        ]
+      },
+      "decode_valset": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Vector": "U8"
+          }
+        ],
+        "return": [
+          "U32",
+          "U256",
+          {
+            "Vector": {
+              "Vector": "U8"
+            }
+          },
+          {
+            "Vector": "U256"
+          },
+          "U256"
+        ]
+      }
+    }
+  }
+}
