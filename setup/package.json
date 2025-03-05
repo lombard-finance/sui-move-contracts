@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "config": {
-    "package_id": "0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64",
-    "consortium_package_id": "0xfbdac15ba12ae49aa7499e2d62c9151777cc551bde39e830d11f03462ba281d6"
+    "package_id": "0x2721ad6e939baca77b36f415ab91edb1c91b256cbc8614f8f6c84bf06faf74af",
+    "consortium_package_id": "0x2bb0d9394d607371dc8246ccbba62fc1413c94dcd67d8d64dc04afb4bf4de52b"
   },
   "scripts": {
     "generateTypes": "env-cmd -f .env pnpm typemove-sui --target-dir=./src/types --abi-dir=./src/abis $npm_package_config_package_id --network=testnet",
@@ -15,6 +15,7 @@
     "testAddMinter": "env-cmd -f .env ts-node src/tests/testAddMinter.ts",
     "testRemoveMinter": "env-cmd -f .env ts-node src/tests/testRemoveMinter.ts",
     "testAddPauser": "env-cmd -f .env ts-node src/tests/testAddPauser.ts",
+    "testAddOperator": "env-cmd -f .env ts-node src/tests/testAddOperator.ts",
     "testRemovePauser": "env-cmd -f .env ts-node src/tests/testRemovePauser.ts",
     "testMintAndTransfer": "env-cmd -f .env ts-node src/tests/testMintAndTransfer.ts",
     "testMintWithWitness": "env-cmd -f .env ts-node src/tests/testMintWithWitness.ts",
@@ -28,7 +29,23 @@
     "testE2E": "env-cmd -f .env ts-node src/e2e/main.ts",
     "testE2EConsortium": "env-cmd -f .env ts-node src/e2e/consortium-main.ts",
     "testListCapabilities": "env-cmd -f .env ts-node src/tests/testListCapabilities.ts",
-    "testLedgerSigning": "env-cmd -f .env ts-node src/tests/testLedgerSigning.ts"
+    "testLedgerSigning": "env-cmd -f .env ts-node src/tests/testLedgerSigning.ts",
+    "testSetValsetActionBytes": "env-cmd -f .env ts-node src/tests/testSetValsetActionBytes.ts",
+    "testSetBurnCommission": "env-cmd -f .env ts-node src/tests/testSetBurnCommission.ts",
+    "testSetChainId": "env-cmd -f .env ts-node src/tests/testSetChainId.ts",
+    "testSetDustFeeRate": "env-cmd -f .env ts-node src/tests/testSetDustFeeRate.ts",
+    "testSetFeeActionBytes": "env-cmd -f .env ts-node src/tests/testSetFeeActionBytes.ts",
+    "testSetMintActionBytes": "env-cmd -f .env ts-node src/tests/testSetMintActionBytes.ts",
+    "testSetTreasuryAddress": "env-cmd -f .env ts-node src/tests/testSetTreasuryAddress.ts",
+    "testSetMintFee": "env-cmd -f .env ts-node src/tests/testSetMintFee.ts",
+    "testToggleBascule": "env-cmd -f .env ts-node src/tests/testToggleBasculeCheck.ts",
+    "testToggleWithdrawal": "env-cmd -f .env ts-node src/tests/testToggleWithdrawal.ts",
+    "testSetInitialValidatorSet": "env-cmd -f .env ts-node src/tests/testSetInitialValidatorSet.ts",
+    "testSetPayloadTable": "env-cmd -f .env ts-node src/tests/testSetPayloadTable.ts",
+    "testGetChainId": "env-cmd -f .env ts-node src/tests/testGetChainId.ts",
+    "testSetNextValidatorSet": "env-cmd -f .env ts-node src/tests/testSetNextValidatorSet.ts",
+    "testPauseEnabled": "env-cmd -f .env ts-node src/tests/testPauseEnabled.ts",
+    "testEnableGlobalPauseSingular": "env-cmd -f .env ts-node src/tests/testEnableGlobalPauseSingular.ts"
   },
   "keywords": [],
   "author": "",
