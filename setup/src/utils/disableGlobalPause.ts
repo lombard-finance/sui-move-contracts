@@ -1,3 +1,5 @@
+import { SuiClient } from "@mysten/sui/client";
+import { Ed25519Keypair } from "@mysten/sui/keypairs/ed25519";
 import {
   SHARED_CONTROLLED_TREASURY,
   suiClient,
@@ -28,10 +30,13 @@ type SignerConfig =
       };
     };
 
-async function enableGlobalPause(
+export async function disableGlobalPause(
+  client: SuiClient,
   treasuryAddress: string,
   signerConfig: SignerConfig
 ) {
+    const tx = new Transaction();
+
     treasury.builder.disableGlobalPauseV2(
       tx,
       [

@@ -12,6 +12,7 @@ async function testBurn() {
     // Execute the mint and transfer logic
     console.log("pause")
     const result = await enableGlobalPause(
+      suiClient,
         "0xf9621182bf6af94142e81f5c268d1a959991df2766a5b0755c528b70e5b33531",
       {
         simpleSigner: Ed25519Keypair.fromSecretKey("yourprivkey"),
