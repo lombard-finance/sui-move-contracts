@@ -23,6 +23,7 @@ async function testBurn() {
     // Fetch public key for verification later
     const bip32Path = "m/44'/784'/0'/0'/0'";
     const { publicKey, address } = await sui.getPublicKey(bip32Path, true);
+    console.log(address);
 
     // Execute the mint and transfer logic
     console.log("unpause")
@@ -43,8 +44,10 @@ async function testBurn() {
     const bytes = await tx.build({ client: suiClient });
     const { signature } = await sui.signTransaction(bip32Path, bytes);
     console.log("Signature:", signature);
+    const flag = Buffer.from([0]);
+    const sig = Buffer.concat([flag, signature, publicKey]);
 
-    await suiClient.executeTransactionBlock({ signature: signature.toString('base64'), transactionBlock: bytes });
+    await suiClient.executeTransactionBlock({ signature: Buffer.from(sig).toString('base64'), transactionBlock: bytes });
     console.log("done transaction executed successfully");
   } catch (error) {
     console.error("Error in val:", error);
