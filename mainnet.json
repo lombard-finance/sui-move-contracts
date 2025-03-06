@@ -11,6 +11,7 @@
     "objects": {
         "treasury": "0x1adadbca040f368abd554ac55e7c216ea6df2ff891fc647f037d66669661584a",
         "consortium": "0x9f68fe752d0879d615415e39207f0363a6fc8e0b3b335e976f5f18b31f55faf3",
-        "bascule": "0x138938cb496cf0900be970dde1407d86497b8c69182cb5aa22dc4767c92bedcc"
+        "bascule": "0x138938cb496cf0900be970dde1407d86497b8c69182cb5aa22dc4767c92bedcc",
+        "vault": "0x87435c239911f412aca52e1d08bae36624b24a1d55af2b0f5722e3f151fefe7a"
     }
 }
