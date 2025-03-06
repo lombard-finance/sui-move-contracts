@@ -40,7 +40,13 @@ async function testBurn() {
     tx.setGasBudget(500000000);
 
     const bytes = await tx.build({ client: suiClient });
-    const { signature } = await sui.signTransaction(bip32Path, bytes);
+    // Add the intent message to the payload
+    const intentMessage = messageWithIntent("TransactionData", bytes);
+
+    // Generate the digest to be signed
+    const digest = blake2b(intentMessage, { dkLen: 32 });
+    console.log("Digest:", digest);
+    const { signature } = await sui.signTransaction(bip32Path, digest);
     console.log("Signature:", signature);
     const flag = Buffer.from([0]);
     const sig = Buffer.concat([flag, signature, publicKey]);

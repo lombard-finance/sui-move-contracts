@@ -7,6 +7,7 @@ import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
 import Sui from "@mysten/ledgerjs-hw-app-sui";
 import { treasury } from "../types/0x2721ad6e939baca77b36f415ab91edb1c91b256cbc8614f8f6c84bf06faf74af";
 import { Transaction } from "@mysten/sui/transactions";
+import { messageWithIntent } from "@mysten/sui/cryptography";
 
 async function testBurn() {
   try {
@@ -40,7 +41,13 @@ async function testBurn() {
     tx.setGasBudget(500000000);
 
     const bytes = await tx.build({ client: suiClient });
-    const { signature } = await sui.signTransaction(bip32Path, bytes);
+    // Add the intent message to the payload
+    const intentMessage = messageWithIntent("TransactionData", bytes);
+
+    // Generate the digest to be signed
+    const digest = blake2b(intentMessage, { dkLen: 32 });
+    console.log("Digest:", digest);
+    const { signature } = await sui.signTransaction(bip32Path, digest);
     console.log("Signature:", signature);
     const flag = Buffer.from([0]);
     const sig = Buffer.concat([flag, signature, publicKey]);
