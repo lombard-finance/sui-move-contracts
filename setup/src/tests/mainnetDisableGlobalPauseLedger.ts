@@ -51,10 +51,8 @@ async function testBurn() {
     console.log("Digest:", digest);
     const { signature } = await sui.signTransaction(bip32Path, digest);
     console.log("Signature:", signature);
-    const flag = Buffer.from([0]);
-    const sig = Buffer.concat([flag, signature, publicKey]);
 
-    await suiClient.executeTransactionBlock({ signature: Buffer.from(sig).toString('base64'), transactionBlock: bytes });
+    await suiClient.executeTransactionBlock({ signature: Buffer.from(signature).toString('base64'), transactionBlock: bytes });
     console.log("done transaction executed successfully");
   } catch (error) {
     console.error("Error in val:", error);
