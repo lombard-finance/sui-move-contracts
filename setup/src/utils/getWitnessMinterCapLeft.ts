@@ -1,5 +1,5 @@
 import { SuiClient } from "@mysten/sui/client";
-import { treasury } from "../types/0x3048a09b0fe21d9e4c2a861b7cf453e34ef0689af08508b8a354591efa850c64";
+import { treasury } from "../types/0x818430a456ff977f7320f78650d19801f90758d200a01dd3c2c679472c521357";
 import { LBTC_COIN_TYPE } from "../config";
 
 /**
@@ -14,7 +14,7 @@ export async function getWitnessMinterCapLeft(
     const result = await treasury.view.getWitnessMinterCapLeft(
       client,
       [treasuryAddress, owner],
-      [LBTC_COIN_TYPE]
+      ["0x3e8e9423d80e1774a7ca128fccd8bf5f1f7753be658c5e645929037f7c819040::lbtc::LBTC"]
     );
     return result.results_decoded[0];
   } catch (error) {
