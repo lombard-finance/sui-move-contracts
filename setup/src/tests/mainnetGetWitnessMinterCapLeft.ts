@@ -9,7 +9,7 @@ async function testSetChainId() {
       "0x1adadbca040f368abd554ac55e7c216ea6df2ff891fc647f037d66669661584a", "a1ae9afcd3ee1f7b082580c100cb3dbcba03713112638f86d8b5a5026b025253::bridge_vault::BridgeWitness",
     );
 
-    console.log("Transaction executed successfully:", result);
+    console.log("Transaction executed successfully:", Number(result) / 10**8);
   } catch (error) {
     console.error("Error in testAssignMinter:", error);
   }
