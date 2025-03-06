@@ -7,6 +7,7 @@ import TransportNodeHid from "@ledgerhq/hw-transport-node-hid";
 import Sui from "@mysten/ledgerjs-hw-app-sui";
 import { treasury } from "../types/0x2721ad6e939baca77b36f415ab91edb1c91b256cbc8614f8f6c84bf06faf74af";
 import { Transaction } from "@mysten/sui/transactions";
+import { blake2b } from "@noble/hashes/blake2b";
 
 async function testBurn() {
   try {
