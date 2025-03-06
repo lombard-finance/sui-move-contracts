@@ -52,7 +52,8 @@
     "mainnetEnableGlobalPauseLedger": "env-cmd -f .env ts-node src/tests/mainnetEnableGlobalPauseLedger.ts",
     "mainnetDisableGlobalPauseLedger": "env-cmd -f .env ts-node src/tests/mainnetDisableGlobalPauseLedger.ts",
     "mainnetEnableGlobalPauseSingular": "env-cmd -f .env ts-node src/tests/mainnetEnableGlobalPauseSingular.ts",
-    "mainnetDisableGlobalPauseSingular": "env-cmd -f .env ts-node src/tests/mainnetDisableGlobalPauseSingular.ts"
+    "mainnetDisableGlobalPauseSingular": "env-cmd -f .env ts-node src/tests/mainnetDisableGlobalPauseSingular.ts",
+    "mainnetGetWitnessMinterCapLeft": "env-cmd -f .env ts-node src/tests/mainnetGetWitnessMinterCapLeft.ts"
   },
   "keywords": [],
   "author": "",
